@@ -35,7 +35,7 @@ export default function ComplaintsTable({
       Create={
         <CreateBtn
           Label="Add New Complaint"
-          href="/authenticated/complaints/create"
+          href="/crm/complaints/create"
         />
       }
       View={View}
