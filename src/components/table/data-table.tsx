@@ -19,7 +19,17 @@ import { DataTablePagination } from "./Pagination"
 import { DataTableViewOptions } from "./columnToggle"
 import { DataTableFiltersToolbar } from "./filters/data-table-adavnced-toolbar"
 import { DataTableSortable } from "./filters/data-table-sort-list"
-
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+  } from "../ui/dropdown-menu";
+import { Button } from "../ui/button"
+import { MoreHorizontal } from "lucide-react"
+import DeleteDialog from "./delete-dialog"
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: {
@@ -28,6 +38,9 @@ interface DataTableProps<TData, TValue> {
     }
     FacedFilter?: React.ReactNode
     Create?: React.ReactNode
+    View?: React.ComponentType<any>;
+    Update?: React.ComponentType<any>;
+    deletePermission?:boolean
 }
 
 export function DataTable<TData, TValue>({
@@ -35,6 +48,9 @@ export function DataTable<TData, TValue>({
     data,
     FacedFilter,
     Create,
+    View, 
+    Update,
+    deletePermission=false
 }: DataTableProps<TData, TValue>) {
     const table = useReactTable({
         data: data.data,
@@ -75,6 +91,9 @@ export function DataTable<TData, TValue>({
                                         </TableHead>
                                     )
                                 })}
+                                 <TableHead >
+                                           Actions
+                                        </TableHead>
                             </TableRow>
                         ))}
                     </TableHeader>
@@ -92,6 +111,27 @@ export function DataTable<TData, TValue>({
                                             {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                         </TableCell>
                                     ))}
+                                      <TableCell onClick={(e) => e.stopPropagation()}>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="w-8 h-8 p-0">
+                          <span className="sr-only">Open menu</span>
+                          <MoreHorizontal className="w-4 h-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        {View && <View row={row.original} />}
+                        {Update && <Update row={row.original} />}
+                        {deletePermission &&
+                        <>
+                        <DropdownMenuSeparator />
+                        <DeleteDialog row={row.original} />
+                        </>
+                        }
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
                                 </TableRow>
                             ))
                         ) : (

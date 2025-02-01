@@ -2,10 +2,12 @@ import { buildQueryParams } from '@/actions/get-url-params'
 import DataFetcher from '@/components/table/DataFetcher'
 import ComplaintsTable from '@/components/tables/complaints-table'
 import { API_URL, COMPLAINTS } from '@/lib/apiEndPoints'
+import { getUserDetails } from '@/lib/getUserDetails'
 import React from 'react'
 
-export default function page({searchParams}:{searchParams:any}) {
-const params = buildQueryParams(
+export default async function page({searchParams}:{searchParams:any}) {
+const {userDetails} = await getUserDetails();
+  const params = buildQueryParams(
   {
     q:searchParams?.q,
     status:searchParams.status,
@@ -14,7 +16,7 @@ const params = buildQueryParams(
 )
   return (
     <div className="">
-      <DataFetcher endPoint={`${API_URL + COMPLAINTS}?${params}`} pageEndPoint="/complaints" role="complaints" Table={ComplaintsTable} />
+      <DataFetcher role={userDetails?.role || "user"} endPoint={`${API_URL + COMPLAINTS}?${params}`} pageEndPoint="/complaints" Table={ComplaintsTable} />
     </div>
   )
 }

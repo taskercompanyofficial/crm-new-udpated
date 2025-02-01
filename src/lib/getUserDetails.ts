@@ -2,7 +2,7 @@ import { API_URL } from "@/lib/apiEndPoints";
 import axios, { AxiosError } from "axios";
 import { auth } from "auth";
 import { signOut } from "next-auth/react";
-import { User } from "next-auth";
+import { User } from "@/types";
 
 interface UserDetailsWithToken {
   userDetails: User | null;

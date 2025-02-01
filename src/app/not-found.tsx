@@ -37,7 +37,7 @@ export default function NotFound() {
 
         <div className="mt-10 flex justify-center">
           <Link
-            href="/authenticated"
+            href="/crm"
             className="group relative inline-flex items-center justify-center overflow-hidden rounded-lg bg-primary px-8 py-3 font-medium text-primary-foreground transition duration-300 hover:scale-105"
           >
             <span className="absolute inset-0 bg-gradient-to-r from-primary/80 to-primary opacity-0 transition-opacity group-hover:opacity-100" />

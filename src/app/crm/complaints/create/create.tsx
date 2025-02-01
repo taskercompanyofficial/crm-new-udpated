@@ -6,7 +6,7 @@ import { Plus } from "lucide-react";
 export default function CreateComplaint() {
   return (
     <Link
-      href="/authenticated/complaints/create"
+      href="/crm/complaints/create"
       className={`flex h-8 w-full items-center gap-1 sm:w-fit ${buttonVariants({
         variant: "default",
         size: "sm",
