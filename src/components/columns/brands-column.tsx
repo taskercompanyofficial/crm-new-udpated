@@ -31,7 +31,6 @@ export const BrandsColumns = (): ColumnDef<BrandsType>[] => [
     enableSorting: false,
     enableHiding: false,
   },
-  
 
   {
     accessorKey: "image",
@@ -45,9 +44,7 @@ export const BrandsColumns = (): ColumnDef<BrandsType>[] => [
         <>
           <Avatar>
             <AvatarImage src={getImageUrl(path)} />
-            <AvatarFallback>
-              {path.charAt(0).toUpperCase()}
-            </AvatarFallback>
+            <AvatarFallback>{path.charAt(0).toUpperCase()}</AvatarFallback>
           </Avatar>
         </>
       );

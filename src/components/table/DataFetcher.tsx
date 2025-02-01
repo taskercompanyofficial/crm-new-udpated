@@ -14,7 +14,7 @@ const DataFetcher: React.FC<DataFetcherProps> = async ({
   endPoint,
   pageEndPoint,
   Table,
-  role
+  role,
 }) => {
   const response = await fetchData({ endPoint });
   return (

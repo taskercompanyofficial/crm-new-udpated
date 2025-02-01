@@ -1,13 +1,12 @@
-"use client"
-
 import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ComplaintsType } from "@/types";
 import { formatDate } from "@/lib/utils";
+import { DataTableColumnHeader } from "@/components/table/data-table-column-header";
+import Status from "@/components/table/status";
 import Link from "next/link";
-import { DataTableColumnHeader } from "../table/data-table-column-header";
-import { StatusBadge } from "../table/status-badge";
+import ReadMore from "@/components/custom/readmore";
 
 export const ComplaintsColumns = (): ColumnDef<ComplaintsType>[] => [
   {
@@ -34,7 +33,7 @@ export const ComplaintsColumns = (): ColumnDef<ComplaintsType>[] => [
   },
   {
     accessorKey: "id",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Sr.No" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title="#" />,
     cell: ({ row, table }) => {
       const pageSize = table.getState().pagination.pageSize;
       const pageIndex = table.getState().pagination.pageIndex;
@@ -95,13 +94,21 @@ export const ComplaintsColumns = (): ColumnDef<ComplaintsType>[] => [
     accessorKey: "applicant_adress",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Applicant Address" />
-    )
+    ),
+    cell: ({ row }) => {
+      const applicant_adress = row.getValue("applicant_adress") as string;
+      return <ReadMore text={applicant_adress} />;
+    },
   },
   {
     accessorKey: "description",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Description" />
-    )
+    ),
+    cell: ({ row }) => {
+      const description = row.getValue("description") as string;
+      return <ReadMore text={description} />;
+    },
   },
 
   {
@@ -145,6 +152,10 @@ export const ComplaintsColumns = (): ColumnDef<ComplaintsType>[] => [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Model" />
     ),
+    cell: ({ row }) => {
+      const model = row.getValue("model") as string;
+      return <ReadMore text={model} />;
+    },
   },
   {
     accessorKey: "serial_number_ind",
@@ -205,13 +216,21 @@ export const ComplaintsColumns = (): ColumnDef<ComplaintsType>[] => [
     accessorKey: "working_details",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Working Details" />
-    )
+    ),
+    cell: ({ row }) => {
+      const working_details = row.getValue("working_details") as string;
+      return <ReadMore text={working_details} />;
+    },
   },
   {
     accessorKey: "happy_call_remarks",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Happy Call Remarks" />
-    )
+    ),
+    cell: ({ row }) => {
+      const happy_call_remarks = row.getValue("happy_call_remarks") as string;
+      return <ReadMore text={happy_call_remarks} />;
+    },
   },
   {
     accessorKey: "created_at",
@@ -232,7 +251,9 @@ export const ComplaintsColumns = (): ColumnDef<ComplaintsType>[] => [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Status" />
     ),
-    cell: ({ cell }) => <StatusBadge status={cell.getValue() as string} />,
+    cell: ({ row }) => {
+      const status = String(row.getValue("status"));
+      return <Status status={status}  />;
+    },
   },
 ];
-

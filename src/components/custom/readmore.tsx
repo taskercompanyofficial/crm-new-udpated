@@ -8,7 +8,7 @@ interface ReadMoreProps {
 
 const ReadMore: React.FC<ReadMoreProps> = ({ 
     text, 
-    maxLength = 50,
+    maxLength = 30,
     charsPerLine = 100 
 }) => {
     const [isReadMore, setIsReadMore] = useState(true);
