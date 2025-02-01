@@ -17,7 +17,7 @@ export function Messages() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" className="relative">
-          <MessageSquare className="h-5 w-5" />
+          <MessageSquare className="w-5 h-5" />
           <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground">
             3
           </span>
@@ -56,7 +56,7 @@ export function Messages() {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="text-center font-medium">
+        <DropdownMenuItem className="font-medium text-center">
           View all messages
         </DropdownMenuItem>
       </DropdownMenuContent>
