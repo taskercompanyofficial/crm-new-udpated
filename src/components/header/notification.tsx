@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Pusher from "pusher-js";
+import { revalidate } from "@/actions/revalidate";
 
 const pusher = new Pusher("ce68911272e6c689efde", {
   cluster: "ap2",
@@ -32,6 +33,7 @@ export function NotificationComponent() {
           setNotifications((prev) => [data, ...prev]);
           setUnreadCount((prev) => prev + 1);
           toast.info("A New Notification Has Been Received!");
+          revalidate({ path: "/" });
           const audio = new Audio("/notification-1.mp3");
           audio.play();
         });
