@@ -19,9 +19,10 @@ export default function ComplaintsTable({
 }) {
   const deletable = role === "administrator" ? true : false;
   return (
+    
     <DataTable
       columns={ComplaintsColumns()}
-      data={data}
+      data={data.data}
       FacedFilter={
         <TableFacedFilter>
           <SearchInput />

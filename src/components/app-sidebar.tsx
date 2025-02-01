@@ -1,14 +1,10 @@
-"use client"
+"use client";
 
-import * as React from "react"
-  import {
-  Laptop,
-  LifeBuoy,
-  Send,
-} from "lucide-react"
+import * as React from "react";
+import { Laptop, LifeBuoy, Send } from "lucide-react";
 
-import { NavMain } from "@/components/nav-main"
-import { NavUser } from "@/components/nav-user"
+import { NavMain } from "@/components/nav-main";
+import { NavUser } from "@/components/nav-user";
 import {
   Sidebar,
   SidebarContent,
@@ -18,9 +14,9 @@ import {
   SidebarMenu,
   SidebarRail,
   SidebarMenuButton,
-} from "@/components/ui/sidebar"
-import { NavSecondary } from "@/components/nav-secondary"
-import { useSession } from "next-auth/react"
+} from "@/components/ui/sidebar";
+import { NavSecondary } from "@/components/nav-secondary";
+import { useSession } from "next-auth/react";
 import { User } from "@/types";
 import useFetch from "@/hooks/usefetch";
 import { API_URL } from "@/lib/apiEndPoints";
@@ -34,18 +30,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     isLoading,
   } = useFetch<User>(API_URL + "/user", token);
   return (
-    <Sidebar collapsible="icon" {...props}>
-          <SidebarHeader>
+    <Sidebar collapsible="icon" {...props} className="bg-sidebar-background">
+      <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <a href="#">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
                   <Laptop className="size-4" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">Tasker Company</span>
-                  <span className="truncate text-xs uppercase">{user?.role}</span>
+                  <span className="truncate text-xs uppercase">
+                    {user?.role}
+                  </span>
                 </div>
               </a>
             </SidebarMenuButton>
@@ -53,17 +51,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain role={user?.role} isLoading={isLoading}/>
-        <NavSecondary items={[ {
-          title: "Support",
-          url: "/support",
-          icon: LifeBuoy,
-        },
-        {
-          title: "Feedback",
-          url: "#",
-          icon: Send,
-        },]}
+        <NavMain role={user?.role} isLoading={isLoading} />
+        <NavSecondary
+          items={[
+            {
+              title: "Support",
+              url: "/support",
+              icon: LifeBuoy,
+            },
+            {
+              title: "Feedback",
+              url: "#",
+              icon: Send,
+            },
+          ]}
         />
       </SidebarContent>
       <SidebarFooter>
@@ -71,5 +72,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }

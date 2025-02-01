@@ -6,7 +6,6 @@ import SelectInput from "../table/filters/select-input";
 import TableFacedFilter from "../table/table-faced-filter";
 import { StatusOptions } from "@/lib/otpions";
 import SearchInput from "../table/filters/search-input";
-import CreateBtn from "../table/create-btn";
 import { Button } from "@/components/ui/button";
 import {
   Credenza,
@@ -18,25 +17,29 @@ import {
 } from "@/components/custom/credenza";
 import { Edit, Plus } from "lucide-react";
 import BrandsForm from "../forms/brands-form";
+import { PageChart } from "../charts/page-chart";
 export default function BrandsTable({ data }: { data: any }) {
   return (
-    <DataTable
-      columns={BrandsColumns()}
-      data={data}
-      FacedFilter={
-        <TableFacedFilter>
-          <SearchInput />
-          <SelectInput
-            param="status"
-            label="Select Status"
-            options={StatusOptions}
-          />
-        </TableFacedFilter>
-      }
-      Create={<Create />}
-      Update={Update}
-      deletePermission
-    />
+    <div className="space-y-4">
+      <PageChart chartData={data.chart_data} />
+      <DataTable
+        columns={BrandsColumns()}
+        data={data.data}
+        FacedFilter={
+          <TableFacedFilter>
+            <SearchInput />
+            <SelectInput
+              param="status"
+              label="Select Status"
+              options={StatusOptions}
+            />
+          </TableFacedFilter>
+        }
+        Create={<Create />}
+        Update={Update}
+        deletePermission
+      />
+    </div>
   );
 }
 

@@ -20,7 +20,7 @@ const DataFetcher: React.FC<DataFetcherProps> = async ({
   return (
     <>
       {response?.data ? (
-        <Table data={response.data} endPoint={pageEndPoint} role={role} />
+        <Table data={response} endPoint={pageEndPoint} role={role} />
       ) : (
         <ErrorTable error={response?.message} />
       )}

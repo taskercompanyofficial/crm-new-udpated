@@ -22,13 +22,19 @@ import { getMenuList } from "@/lib/menu-list";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
-export function NavMain({ role, isLoading }: { role?: string, isLoading: boolean }) {
+export function NavMain({
+  role,
+  isLoading,
+}: {
+  role?: string;
+  isLoading: boolean;
+}) {
   const pathname = usePathname();
-  const menuList = getMenuList(pathname, role);
+  const items = getMenuList(pathname, role);
 
   if (isLoading) {
     return (
-      <div className="h-[400px] flex justify-center items-center p-4">
+      <div className="flex h-[400px] items-center justify-center p-4">
         <Loader className="h-4 w-4 animate-spin" />
       </div>
     );
@@ -36,24 +42,37 @@ export function NavMain({ role, isLoading }: { role?: string, isLoading: boolean
 
   return (
     <>
-      {menuList.map((group) => (
+      {items.map((group) => (
         <SidebarGroup key={group.groupLabel}>
           <SidebarGroupLabel>{group.groupLabel}</SidebarGroupLabel>
           <SidebarMenu>
-            {group.menus.map((item) => (
-              <Collapsible key={item.href} asChild>
+            {group.menus.map((menu) => (
+              <Collapsible
+                key={menu.label}
+                asChild
+                defaultOpen={
+                  menu.active || menu.submenus.some((submenu) => submenu.active)
+                }
+              >
                 <SidebarMenuItem>
                   <SidebarMenuButton
                     asChild
-                    tooltip={item.label}
-                    isActive={item.active}
+                    tooltip={menu.label}
+                    isActive={menu.active}
                   >
-                    <Link href={item.href}>
-                      {item.icon && <item.icon />}
-                      <span>{item.label}</span>
-                    </Link>
+                    {!menu.active ? (
+                      <Link href={menu.href}>
+                        <menu.icon />
+                        <span>{menu.label}</span>
+                      </Link>
+                    ) : (
+                      <span className="cursor-not-allowed">
+                        <menu.icon />
+                        <span>{menu.label}</span>
+                      </span>
+                    )}
                   </SidebarMenuButton>
-                  {item.submenus?.length > 0 ? (
+                  {menu.submenus.length > 0 ? (
                     <>
                       <CollapsibleTrigger asChild>
                         <SidebarMenuAction className="data-[state=open]:rotate-90">
@@ -63,14 +82,14 @@ export function NavMain({ role, isLoading }: { role?: string, isLoading: boolean
                       </CollapsibleTrigger>
                       <CollapsibleContent>
                         <SidebarMenuSub>
-                          {item.submenus.map((subItem) => (
-                            <SidebarMenuSubItem key={subItem.href}>
+                          {menu.submenus.map((submenu) => (
+                            <SidebarMenuSubItem key={submenu.label}>
                               <SidebarMenuSubButton
                                 asChild
-                                isActive={subItem.active}
+                                isActive={submenu.active}
                               >
-                                <Link href={subItem.href}>
-                                  <span>{subItem.label}</span>
+                                <Link href={submenu.href}>
+                                  <span>{submenu.label}</span>
                                 </Link>
                               </SidebarMenuSubButton>
                             </SidebarMenuSubItem>
