@@ -1,15 +1,4 @@
-import React from "react";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import React, { useState } from "react";
 import { Button } from "../ui/button";
 import { Trash } from "lucide-react";
 import { usePathname } from "next/navigation";
@@ -19,11 +8,21 @@ import useForm from "@/hooks/use-form";
 import { toast } from "react-toastify";
 import { revalidate } from "@/actions/revalidate";
 import SubmitBtn from "../custom/submit-button";
+import {
+  Credenza,
+  CredenzaClose,
+  CredenzaContent,
+  CredenzaDescription,
+  CredenzaFooter,
+  CredenzaHeader,
+  CredenzaTitle,
+  CredenzaTrigger,
+} from "../custom/credenza";
 export default function DeleteDialog({ row }: { row: any }) {
   const session = useSession();
   const token = session.data?.user?.token;
   const { processing, delete: destroy } = useForm({});
-
+  const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const endPoint = "/crm/" + pathname.split("/").slice(2).join("/");
   const handleDelete = async () => {
@@ -33,35 +32,36 @@ export default function DeleteDialog({ row }: { row: any }) {
         onSuccess: (response) => {
           toast.success(response.message);
           revalidate({ path: endPoint });
+          setOpen(false);
         },
         onError: (error) => {
           toast.error(error.message);
         },
       },
-      token
+      token,
     );
   };
   return (
-    <AlertDialog>
-      <AlertDialogTrigger className="w-full">
+    <Credenza open={open} onOpenChange={() => setOpen(!open)}>
+      <CredenzaTrigger className="w-full">
         <Button
           variant="ghost"
-          className="flex items-center justify-between w-full text-red-500 hover:bg-red-500 hover:text-white"
+          className="flex w-full items-center justify-between text-red-500 hover:bg-red-500 hover:text-white"
         >
           Delete
           <Trash />
         </Button>
-      </AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-          <AlertDialogDescription>
+      </CredenzaTrigger>
+      <CredenzaContent>
+        <CredenzaHeader>
+          <CredenzaTitle>Are you absolutely sure?</CredenzaTitle>
+          <CredenzaDescription>
             This action cannot be undone. This will permanently delete the Item
             ({row.name}) from our server.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          </CredenzaDescription>
+        </CredenzaHeader>
+        <CredenzaFooter>
+          <CredenzaClose>Cancel</CredenzaClose>
           <SubmitBtn
             processing={processing}
             variant="destructive"
@@ -69,8 +69,8 @@ export default function DeleteDialog({ row }: { row: any }) {
           >
             Continue
           </SubmitBtn>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+        </CredenzaFooter>
+      </CredenzaContent>
+    </Credenza>
   );
 }
