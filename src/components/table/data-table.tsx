@@ -17,6 +17,8 @@ import {
 } from "@/components/ui/table"
 import { DataTablePagination } from "./Pagination"
 import { DataTableViewOptions } from "./columnToggle"
+import { DataTableFiltersToolbar } from "./filters/data-table-adavnced-toolbar"
+import { DataTableSortable } from "./filters/data-table-sort-list"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -44,11 +46,17 @@ export function DataTable<TData, TValue>({
     return (
         <div className="space-y-4">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex-1">{FacedFilter}</div>
+                <div className="flex gap-2">
+            {FacedFilter}
+                <DataTableFiltersToolbar  columns={columns}/>
+            <DataTableSortable columns={columns} />
+                </div>
+        {/* <div className="flex-1">{FacedFilter}</div> */}
         <div className="flex items-center gap-2">
           {Create}
           <DataTableViewOptions table={table} />
         </div>
+   
       </div>
             <div className="w-full overflow-x-auto border rounded-md">
                 <Table>

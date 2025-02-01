@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { CheckIcon, PlusCircle,  } from "lucide-react";
+import { CheckIcon, PlusCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -31,18 +31,25 @@ interface SelectInputProps {
 }
 
 const SelectInput: React.FC<SelectInputProps> = ({ options, label, param }) => {
-  const [filterValue, setFilterValue] = useState<string>("");
-
+  // Get initial values from URL parameters
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
-
+  
+  // Initialize selectedValues from URL parameters
+  const initialValues = searchParams.get(param)?.split('.') || [];
+  const [selectedValues, setSelectedValues] = useState<string[]>(initialValues);
+ 
   const handleStatusChange = (value: string) => {
-    setFilterValue(value);
+    const newSelectedValues = selectedValues.includes(value)
+      ? selectedValues.filter((v) => v !== value)
+      : [...selectedValues, value];
+    
+    setSelectedValues(newSelectedValues);
     const params = new URLSearchParams(searchParams.toString());
 
-    if (value && value !== "all") {
-      params.set(param, value);
+    if (newSelectedValues.length > 0) {
+      params.set(param, newSelectedValues.join('.'));
     } else {
       params.delete(param);
     }
@@ -50,30 +57,46 @@ const SelectInput: React.FC<SelectInputProps> = ({ options, label, param }) => {
     router.replace(`${pathname}?${params.toString()}`);
   };
 
+  const clearFilters = () => {
+    setSelectedValues([]);
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete(param);
+    router.replace(`${pathname}?${params.toString()}`);
+  };
+
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          className="w-full overflow-hidden border-dashed md:max-w-[150px] h-8"
+      <Button
+  variant="outline"
+  className="w-full overflow-hidden border-dashed md:max-w-[150px] h-8"
+>
+  {selectedValues.length > 0 ? (
+    <div className="flex gap-1 flex-wrap">
+      {selectedValues.length === 1 ? (
+        <Badge
+          variant="secondary"
+          className="rounded-sm px-1 font-normal"
         >
-          {filterValue ? (
-            <>
-              <Badge
-                variant="secondary"
-                className="w-full overflow-hidden rounded-sm px-1 font-normal"
-              >
-                {options?.find((option) => option.value === filterValue)
-                  ?.label || filterValue}
-              </Badge>
-            </>
-          ) : (
-            <>
-              <PlusCircle className="mr-2 size-4" />
-              {label}
-            </>
-          )}
-        </Button>
+          {options?.find((option) => option.value === selectedValues[0])?.label || selectedValues[0]}
+        </Badge>
+      ) : (
+        <Badge
+          variant="secondary"
+          className="rounded-sm px-1 font-normal"
+        >
+          {selectedValues.length} selected
+        </Badge>
+      )}
+    </div>
+  ) : (
+    <>
+      <PlusCircle className="mr-2 size-4" />
+      {label}
+    </>
+  )}
+</Button>
+
       </PopoverTrigger>
       <PopoverContent className="w-[12.5rem] p-0" align="start">
         <Command>
@@ -82,7 +105,7 @@ const SelectInput: React.FC<SelectInputProps> = ({ options, label, param }) => {
             <CommandEmpty>No results found.</CommandEmpty>
             <CommandGroup className="max-h-[18.75rem] overflow-y-auto">
               {options?.map((option) => {
-                const isSelected = filterValue === option.value;
+                const isSelected = selectedValues.includes(option.value);
                 return (
                   <CommandItem
                     key={option.value}
@@ -102,12 +125,12 @@ const SelectInput: React.FC<SelectInputProps> = ({ options, label, param }) => {
                   </CommandItem>
                 );
               })}
-              {filterValue && (
+              {selectedValues.length > 0 && (
                 <>
                   <CommandSeparator />
                   <CommandGroup>
                     <CommandItem
-                      onSelect={() => handleStatusChange("")}
+                      onSelect={clearFilters}
                       className="justify-center text-center"
                     >
                       Clear filters
