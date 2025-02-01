@@ -32,7 +32,7 @@ export function NotificationComponent() {
         channel.bind("notification-event", (data: any) => {
           setNotifications((prev) => [data, ...prev]);
           setUnreadCount((prev) => prev + 1);
-          toast.info("A New Notification Has Been Received!");
+          toast.info(data.message);
           revalidate({ path: "/" });
           const audio = new Audio("/notification-1.mp3");
           audio.play();
