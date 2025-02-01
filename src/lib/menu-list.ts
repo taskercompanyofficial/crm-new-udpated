@@ -39,30 +39,30 @@ export function getMenuList(
       groupLabel: "Platform",
       menus: [
         {
-          href: "/authenticated",
+          href: "/crm",
           label: "Dashboard",
-          active: pathname === "/authenticated",
+          active: pathname === "/crm",
           icon: Home,
           submenus: [],
         },
         {
-          href: "/authenticated/market-place",
+          href: "/crm/market-place",
           label: "Market Place",
-          active: pathname === "/authenticated/market-place",
+          active: pathname === "/crm/market-place",
           icon: Package,
           submenus: [],
         },
         {
-          href: "/authenticated/complaints",
+          href: "/crm/complaints",
           label: "Complaints",
-          active: pathname.includes("/authenticated//complaints"),
+          active: pathname.includes("/crm//complaints"),
           icon: ClipboardList,
           submenus: [],
         },
         {
-          href: "/authenticated/attendance",
+          href: "/crm/attendance",
           label: "Attendance",
-          active: pathname === "/authenticated/attendance",
+          active: pathname === "/crm/attendance",
           icon: Clock,
           submenus: [],
         },
@@ -73,9 +73,9 @@ export function getMenuList(
   if (role === "admin" || role === "administrator") {
     menuItems[0].menus.push(
       {
-        href: "/authenticated/workers",
+        href: "/crm/workers",
         label: "Workers",
-        active: pathname === "/authenticated/workers",
+        active: pathname === "/crm/workers",
         icon: Users,
         submenus: [],
       },
@@ -83,46 +83,46 @@ export function getMenuList(
         href: "#",
         label: "All Services",
         active:
-          pathname === "/authenticated/services" ||
-          pathname === "/authenticated/categories" ||
-          pathname === "/authenticated/sub-services",
+          pathname === "/crm/services" ||
+          pathname === "/crm/categories" ||
+          pathname === "/crm/sub-services",
         icon: Layers,
         submenus: [
           {
-            href: "/authenticated/sub-services",
+            href: "/crm/sub-services",
             label: "Sub Services",
-            active: pathname === "/authenticated/sub-services",
+            active: pathname === "/crm/sub-services",
           },
           {
-            href: "/authenticated/services",
+            href: "/crm/services",
             label: "Services",
-            active: pathname === "/authenticated/services",
+            active: pathname === "/crm/services",
           },
           {
-            href: "/authenticated/categories",
+            href: "/crm/categories",
             label: "Categories",
-            active: pathname === "/authenticated/categories",
+            active: pathname === "/crm/categories",
           },
         ],
       },
       {
-        href: "/authenticated/branches",
+        href: "/crm/branches",
         label: "Branches",
-        active: pathname === "/authenticated/branches",
+        active: pathname === "/crm/branches",
         icon: MapPin,
         submenus: [],
       },
       {
-        href: "/authenticated/authorized-brands",
+        href: "/crm/authorized-brands",
         label: "Authorized Brands",
-        active: pathname === "/authenticated/authorized-brands",
+        active: pathname === "/crm/authorized-brands",
         icon: Handshake,
         submenus: [],
       },
       {
-        href: "/authenticated/our-projects",
+        href: "/crm/our-projects",
         label: "Our Projects",
-        active: pathname === "/authenticated/our-projects",
+        active: pathname === "/crm/our-projects",
         icon: Briefcase,
         submenus: [],
       },
@@ -133,9 +133,9 @@ export function getMenuList(
     groupLabel: "Settings",
     menus: [
       {
-        href: "/authenticated/account",
+        href: "/crm/account",
         label: "Account",
-        active: pathname === "/authenticated/account",
+        active: pathname === "/crm/account",
         icon: Settings,
         submenus: [],
       },

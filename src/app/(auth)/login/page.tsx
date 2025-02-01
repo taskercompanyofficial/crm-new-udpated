@@ -19,7 +19,7 @@ export default function Login(){
                     email: data.email,
                     password: data.password,
                     redirect: true,
-                    callbackUrl: "/authenticated"
+                    callbackUrl: "/crm"
                 }),
                     {
                         pending: "Credentials being verified...",
