@@ -30,9 +30,10 @@ export function NotificationComponent() {
         const channel = pusher.subscribe("notification-channel");
 
         channel.bind("notification-event", (data: any) => {
+          const type = data.type as keyof typeof toast;
           setNotifications((prev) => [data, ...prev]);
           setUnreadCount((prev) => prev + 1);
-          toast.info(data.message);
+          (toast[type] as (message: string) => void)(data.message);
           revalidate({ path: "/" });
           const audio = new Audio("/notification-1.mp3");
           audio.play();
