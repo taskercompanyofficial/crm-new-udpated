@@ -23,10 +23,8 @@ export default function Table({
   );
   return (
     <DataTable
-      data={data.data}
-      endPoint={endPoint}
+      data={data}
       columns={ComplaintsColumns()}
-      pagination={data.pagination}
       FacedFilter={
         <TableFacedFilter>
           <SearchInput />
