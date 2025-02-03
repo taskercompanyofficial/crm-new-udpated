@@ -1,8 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Marquee from "react-fast-marquee";
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa"; // Importing icons from react-icons
 import { Button } from "../ui/button";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 export default function Announcement({
   username = "user",
@@ -55,7 +55,7 @@ export default function Announcement({
       {/* Marquee with message display */}
       <div className="flex items-center justify-between p-2">
         <Button onClick={handleBack} variant="ghost" size="icon">
-          <FaArrowLeft />
+          <ArrowLeft />
         </Button>
         <div className="flex-grow">
           <Marquee speed={50} gradient={false} direction="left">
@@ -65,7 +65,7 @@ export default function Announcement({
           </Marquee>
         </div>
         <Button variant="ghost" onClick={handleNext} size="icon">
-          <FaArrowRight />
+          <ArrowRight />
         </Button>
       </div>
 

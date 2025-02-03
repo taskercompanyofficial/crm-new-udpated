@@ -36,8 +36,6 @@ const statusConfig: StatusConfigType = {
   },
 };
 
-// Skeleton loader component
-
 // Chart component
 function ComplaintsChart({
   complaintsInRange,
