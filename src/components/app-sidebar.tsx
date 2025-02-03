@@ -30,18 +30,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     isLoading,
   } = useFetch<User>(API_URL + "/user", token);
   return (
-    <Sidebar collapsible="icon" {...props} className="bg-sidebar-background">
+    <Sidebar collapsible="icon" {...props} >
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <a href="#">
-                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+                <div className="flex items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground aspect-square size-8">
                   <Laptop className="size-4" />
                 </div>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">Tasker Company</span>
-                  <span className="truncate text-xs uppercase">
+                <div className="grid flex-1 text-sm leading-tight text-left">
+                  <span className="font-semibold truncate">Tasker Company</span>
+                  <span className="text-xs uppercase truncate">
                     {user?.role}
                   </span>
                 </div>

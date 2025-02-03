@@ -1,4 +1,3 @@
-
 import {
   Briefcase,
   ClipboardList,
@@ -40,10 +39,26 @@ export function getMenuList(
       menus: [
         {
           href: "/crm",
-          label: "Dashboard",
+          label: "Overview",
           active: pathname === "/crm",
           icon: Home,
-          submenus: [],
+          submenus: [
+            {
+              href: "/analytics",
+              label: "Analytics",
+              active: pathname === "/crm/analytics",
+            },
+            {
+              href: "/crm/accounts",
+              label: "Accounts",
+              active: pathname === "/crm/accounts",
+            },
+            {
+              href: "/crm/expenses",
+              label: "Expenses",
+              active: pathname === "/crm/expenses",
+            },
+          ],
         },
         {
           href: "/crm/market-place",

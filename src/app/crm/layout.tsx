@@ -50,7 +50,7 @@ export default async function AuthenticatedLayout({
       <AppSidebar />
       <SidebarInset className="overflow-x-hidden">
         <Header userDetails={userDetails} />
-        <div className="bg-gray-50 dark:bg-gray-950 p-4">{children}</div>
+        <div className="p-4 bg-background">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );

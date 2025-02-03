@@ -35,7 +35,7 @@ export function NavMain({
   if (isLoading) {
     return (
       <div className="flex h-[400px] items-center justify-center p-4">
-        <Loader className="h-4 w-4 animate-spin" />
+        <Loader className="w-4 h-4 animate-spin" />
       </div>
     );
   }
