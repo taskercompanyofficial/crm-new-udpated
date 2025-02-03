@@ -1,23 +1,29 @@
-"use client"
-import React from 'react'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { useSession } from 'next-auth/react'
-import { Skeleton } from '@/components/ui/skeleton'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
-import { Bell, Lock, Settings as SettingsIcon, User } from "lucide-react"
+"use client";
+import React from "react";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useSession } from "next-auth/react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Bell, Lock, Settings as SettingsIcon, User } from "lucide-react";
 
 export default function AccountPage() {
-  const { data: session, status } = useSession()
-  const user = session?.user
+  const { data: session, status } = useSession();
+  const user = session?.user;
 
   if (status === "loading") {
     return (
-      <div className="container mx-auto py-6">
+      <div className="container mx-auto h-screen py-6">
         <Card>
           <CardHeader>
             <CardTitle>Account Details</CardTitle>
@@ -33,7 +39,7 @@ export default function AccountPage() {
           </CardContent>
         </Card>
       </div>
-    )
+    );
   }
 
   return (
@@ -48,7 +54,10 @@ export default function AccountPage() {
             <SettingsIcon className="h-4 w-4" />
             Settings
           </TabsTrigger>
-          <TabsTrigger value="notifications" className="flex items-center gap-2">
+          <TabsTrigger
+            value="notifications"
+            className="flex items-center gap-2"
+          >
             <Bell className="h-4 w-4" />
             Notifications
           </TabsTrigger>
@@ -62,7 +71,9 @@ export default function AccountPage() {
           <Card>
             <CardHeader>
               <CardTitle>Profile</CardTitle>
-              <CardDescription>Manage your public profile information</CardDescription>
+              <CardDescription>
+                Manage your public profile information
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="flex items-center gap-4">
@@ -78,7 +89,9 @@ export default function AccountPage() {
                 <div>
                   <h3 className="text-2xl font-semibold">{user?.name}</h3>
                   <p className="text-muted-foreground">{user?.email}</p>
-                  <p className="text-muted-foreground capitalize">{user?.role}</p>
+                  <p className="capitalize text-muted-foreground">
+                    {user?.role}
+                  </p>
                 </div>
               </div>
 
@@ -107,14 +120,18 @@ export default function AccountPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="font-medium">Dark Mode</p>
-                  <p className="text-sm text-muted-foreground">Toggle dark mode theme</p>
+                  <p className="text-sm text-muted-foreground">
+                    Toggle dark mode theme
+                  </p>
                 </div>
                 <Switch />
               </div>
               <div className="flex items-center justify-between">
                 <div>
                   <p className="font-medium">Email Updates</p>
-                  <p className="text-sm text-muted-foreground">Receive email updates about your account</p>
+                  <p className="text-sm text-muted-foreground">
+                    Receive email updates about your account
+                  </p>
                 </div>
                 <Switch defaultChecked />
               </div>
@@ -126,20 +143,26 @@ export default function AccountPage() {
           <Card>
             <CardHeader>
               <CardTitle>Notifications</CardTitle>
-              <CardDescription>Manage your notification preferences</CardDescription>
+              <CardDescription>
+                Manage your notification preferences
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="font-medium">Push Notifications</p>
-                  <p className="text-sm text-muted-foreground">Receive push notifications</p>
+                  <p className="text-sm text-muted-foreground">
+                    Receive push notifications
+                  </p>
                 </div>
                 <Switch defaultChecked />
               </div>
               <div className="flex items-center justify-between">
                 <div>
                   <p className="font-medium">SMS Notifications</p>
-                  <p className="text-sm text-muted-foreground">Receive SMS notifications</p>
+                  <p className="text-sm text-muted-foreground">
+                    Receive SMS notifications
+                  </p>
                 </div>
                 <Switch />
               </div>
@@ -174,5 +197,5 @@ export default function AccountPage() {
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }

@@ -1,9 +1,6 @@
 import { AppSidebar } from "@/components/app-sidebar";
 
-import {
-  SidebarInset,
-  SidebarProvider,
-} from "@/components/ui/sidebar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { getUserDetails } from "@/lib/getUserDetails";
 import {
   AlertDialog,
@@ -21,7 +18,7 @@ import Header from "@/components/header/header";
 
 export default async function AuthenticatedLayout({
   children,
-}: {  
+}: {
   children: React.ReactNode;
 }) {
   const { error, userDetails } = await getUserDetails();
@@ -50,12 +47,10 @@ export default async function AuthenticatedLayout({
   }
   return (
     <SidebarProvider>
-      <AppSidebar  />
+      <AppSidebar />
       <SidebarInset className="overflow-x-hidden">
         <Header userDetails={userDetails} />
-        <div className="p-4">
-          {children}
-        </div>
+        <div className="bg-gray-50 dark:bg-gray-950 p-4">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );
