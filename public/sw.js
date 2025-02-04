@@ -124,6 +124,7 @@ define(['./workbox-60fe7365'], (function (workbox) { 'use strict';
       }) => "undefined" != typeof self ? self.fallback(e) : Response.error()
     }]
   }), 'GET');
+  self.__WB_DISABLE_DEV_LOGS = true;
 
 }));
 //# sourceMappingURL=sw.js.map
