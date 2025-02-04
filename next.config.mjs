@@ -23,16 +23,20 @@ export default withPWA({
         protocol: "https",
         hostname: "images.unsplash.com",
       },
+      {
+        protocol: "http",
+        hostname: "localhost",
+      },
     ],
   },
   pwa: {
-    dest: 'public',
+    dest: "public",
     register: true,
     skipWaiting: true,
-    disable: process.env.NODE_ENV === 'development',
+    disable: process.env.NODE_ENV === "development",
     fallbacks: {
-      document: '/offline',  // Fallback for document/page requests
-      image: '/images/fallback.png',  // Optional: Add a fallback image
-    }
-  }
+      document: "/offline", // Fallback for document/page requests
+      image: "/images/fallback.png", // Optional: Add a fallback image
+    },
+  },
 });
