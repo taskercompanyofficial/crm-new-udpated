@@ -43,7 +43,7 @@ export default function ViewStaff({ data }: { data: any }) {
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <User className="w-5 h-5 text-gray-500" />
-                <span className="text-gray-600 dark:text-gray-400">Father's Name:</span>
+                <span className="text-gray-600 dark:text-gray-400">Father&aposs Name:</span>
                 <span>{data.father_name}</span>
               </div>
               
