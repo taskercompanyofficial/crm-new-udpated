@@ -137,3 +137,8 @@ export const complaintsCreateMeta = {
   description:
     "Browse detailed sub-services on Tasker for specific maintenance and repair needs. Find exactly the professional service you're looking for.",
 };
+export const billingMeta = {
+  title: "Billings | Tasker Company",
+  description:
+    "Manage and track billing information for Tasker services. View payment history, invoices, and financial transactions for your maintenance and repair services.",
+};

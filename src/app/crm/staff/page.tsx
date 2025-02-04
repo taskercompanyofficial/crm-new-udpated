@@ -1,8 +1,7 @@
 import { buildQueryParams } from "@/actions/get-url-params";
-import { PageHeader } from "@/components/custom/page-header";
 import DataFetcher from "@/components/table/DataFetcher";
-import ComplaintsTable from "@/components/tables/complaints-table";
-import { API_URL, COMPLAINTS } from "@/lib/apiEndPoints";
+import StaffTable from "@/components/tables/staff-table";
+import { API_URL, WORKERS } from "@/lib/apiEndPoints";
 import { getUserDetails } from "@/lib/getUserDetails";
 import React from "react";
 
@@ -15,12 +14,11 @@ export default async function page({ searchParams }: { searchParams: any }) {
   });
   return (
     <div className="space-y-2">
-      <PageHeader />
       <DataFetcher
         role={userDetails?.role || "user"}
-        endPoint={`${API_URL + COMPLAINTS}?${params}`}
+        endPoint={`${API_URL + WORKERS}?${params}`}
         pageEndPoint="/complaints"
-        Table={ComplaintsTable}
+        Table={StaffTable}
       />
     </div>
   );

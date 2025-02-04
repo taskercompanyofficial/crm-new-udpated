@@ -40,23 +40,28 @@ export function getMenuList(
         {
           href: "/crm",
           label: "Overview",
-          active: pathname === "/crm",
+          active: pathname.includes("/overview"),
           icon: Home,
           submenus: [
             {
-              href: "/analytics",
+              href: "/crm/overview/analytics",
               label: "Analytics",
-              active: pathname === "/crm/analytics",
+              active: pathname === "/crm/overview/analytics",
             },
             {
-              href: "/crm/accounts",
+              href: "/crm/overview/accounts",
               label: "Accounts",
-              active: pathname === "/crm/accounts",
+              active: pathname === "/crm/overview/accounts",
             },
             {
-              href: "/crm/expenses",
+              href: "/crm/overview/expenses",
               label: "Expenses",
-              active: pathname === "/crm/expenses",
+              active: pathname === "/crm/overview/expenses",
+            },
+            {
+              href: "/crm/overview/billing",
+              label: "Billing",
+              active: pathname === "/crm/overview/billing",
             },
           ],
         },
@@ -70,7 +75,7 @@ export function getMenuList(
         {
           href: "/crm/complaints",
           label: "Complaints",
-          active: pathname.includes("/crm//complaints"),
+          active: pathname.includes("/crm/complaints"),
           icon: ClipboardList,
           submenus: [],
         },
@@ -88,9 +93,9 @@ export function getMenuList(
   if (role === "admin" || role === "administrator") {
     menuItems[0].menus.push(
       {
-        href: "/crm/workers",
-        label: "Workers",
-        active: pathname === "/crm/workers",
+        href: "/crm/staff",
+        label: "Staff",
+        active: pathname === "/crm/staff",
         icon: Users,
         submenus: [],
       },

@@ -1,17 +1,43 @@
 "use client";
 import { usePathname } from "next/navigation";
 import { DateRangePicker } from "./date-range-picker";
-
+import useFetch from "@/hooks/usefetch";
+import { ROUTESMETA } from "@/lib/apiEndPoints";
+import { Skeleton } from "../ui/skeleton";
+interface Meta {
+  key: string;
+  value: {
+    title: string;
+    description: string;
+  };
+}
 export function PageHeader() {
   const pathname = usePathname();
+  const lastPath = pathname.split("/").pop();
+  const { data, error, isLoading } = useFetch<Meta>(
+    ROUTESMETA + "/" + lastPath,
+  );
   return (
     <div className="flex items-center justify-between">
-      <div className="">
-        <h1 className="text-2xl font-bold">Dashboard</h1>
-        <p className="text-sm text-gray-500">
-          Welcome to the dashboard. Here you can view the status of your
-          complaints and see the latest complaints.
-        </p>
+      <div className="w-full md:w-[70%]">
+        {isLoading ? (
+          <div className="space-y-1">
+            <Skeleton className="h-4 w-[20%]" />
+            <Skeleton className="w-full h-3" />
+            <Skeleton className="h-3 w-[50%]" />
+          </div>
+        ) : (
+          <>
+            {!error && (
+              <>
+                <h1 className="text-lg font-semibold">{data?.value.title}</h1>
+                <p className="text-xs text-gray-500">
+                  {data?.value.description}
+                </p>
+              </>
+            )}
+          </>
+        )}
       </div>
       <DateRangePicker />
     </div>
