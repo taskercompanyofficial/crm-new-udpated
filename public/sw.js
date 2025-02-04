@@ -39,7 +39,7 @@ if (!self.define) {
       .then(() => {
         let promise = registry[uri];
         if (!promise) {
-          throw new Error(`Module ${uri} didn’t register its module`);
+          throw new Error(`Module ${uri} didn't register its module`);
         }
         return promise;
       })
@@ -72,30 +72,101 @@ define(['./workbox-e43f5367'], (function (workbox) { 'use strict';
   importScripts();
   self.skipWaiting();
   workbox.clientsClaim();
-  workbox.registerRoute("/", new workbox.NetworkFirst({
-    "cacheName": "start-url",
-    plugins: [{
-      cacheWillUpdate: async ({
-        request,
-        response,
-        event,
-        state
-      }) => {
-        if (response && response.type === 'opaqueredirect') {
-          return new Response(response.body, {
-            status: 200,
-            statusText: 'OK',
-            headers: response.headers
-          });
+
+  // Cache the Google Fonts stylesheets with a stale-while-revalidate strategy.
+  workbox.registerRoute(
+    /^https:\/\/fonts\.googleapis\.com/,
+    new workbox.StaleWhileRevalidate({
+      cacheName: 'google-fonts-stylesheets',
+    })
+  );
+
+  // Cache the underlying font files with a cache-first strategy for 1 year.
+  workbox.registerRoute(
+    /^https:\/\/fonts\.gstatic\.com/,
+    new workbox.CacheFirst({
+      cacheName: 'google-fonts-webfonts',
+      plugins: [
+        new workbox.CacheableResponsePlugin({
+          statuses: [0, 200],
+        }),
+        new workbox.ExpirationPlugin({
+          maxAgeSeconds: 60 * 60 * 24 * 365,
+          maxEntries: 30,
+        }),
+      ],
+    })
+  );
+
+  // Cache static assets
+  workbox.registerRoute(
+    /\.(?:js|css|png|jpg|jpeg|svg|gif)$/,
+    new workbox.StaleWhileRevalidate({
+      cacheName: 'static-resources',
+    })
+  );
+
+  // Cache API calls
+  workbox.registerRoute(
+    /^https?:\/\/.*\/api\/.*/,
+    new workbox.NetworkFirst({
+      cacheName: 'api-cache',
+      plugins: [
+        new workbox.ExpirationPlugin({
+          maxEntries: 50,
+          maxAgeSeconds: 5 * 60, // 5 minutes
+        }),
+        new workbox.CacheableResponsePlugin({
+          statuses: [0, 200],
+        }),
+      ],
+    })
+  );
+
+  // Cache the main page and offline fallback
+  workbox.registerRoute("/", 
+    new workbox.NetworkFirst({
+      cacheName: "start-url",
+      plugins: [{
+        cacheWillUpdate: async ({request, response, event, state}) => {
+          if (response && response.type === 'opaqueredirect') {
+            return new Response(response.body, {
+              status: 200,
+              statusText: 'OK',
+              headers: response.headers
+            });
+          }
+          return response;
         }
-        return response;
-      }
-    }]
-  }), 'GET');
-  workbox.registerRoute(/.*/i, new workbox.NetworkOnly({
-    "cacheName": "dev",
-    plugins: []
-  }), 'GET');
+      }]
+    }), 
+    'GET'
+  );
+
+  // Offline fallback
+  workbox.registerRoute(
+    ({request}) => request.mode === 'navigate',
+    new workbox.NetworkOnly({
+      plugins: [{
+        handlerDidError: async () => await caches.match('/offline')
+      }]
+    })
+  );
+
+  // Default handler for everything else
+  workbox.registerRoute(
+    /.*/i,
+    new workbox.NetworkFirst({
+      cacheName: "others",
+      plugins: [
+        new workbox.ExpirationPlugin({
+          maxEntries: 50,
+          maxAgeSeconds: 24 * 60 * 60 // 24 hours
+        })
+      ]
+    }),
+    'GET'
+  );
 
 }));
 //# sourceMappingURL=sw.js.map

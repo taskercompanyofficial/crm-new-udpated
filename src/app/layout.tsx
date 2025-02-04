@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import AuthProvider from "@/providers/AuthProvider";
@@ -7,6 +7,7 @@ import { ModeToggle } from "@/components/custom/mode-switcher";
 import { ToastContainer } from "react-toastify";
 import NextTopLoader from "nextjs-toploader";
 import { description, keywords, title } from "@/lib/Meta";
+import ServiceWorker from "@/components/ServiceWorker";
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -47,6 +48,13 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  maximumScale: 1,
+  minimumScale: 1,
+  initialScale: 1,
+  userScalable: false,
+  viewportFit: "cover",
+};
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -66,6 +74,7 @@ export default function RootLayout({
                 color="hsl(var(--primary))"
               />
               {children}
+              <ServiceWorker />
             </div>
             <div className="fixed bottom-4 right-4">
               <ModeToggle />
