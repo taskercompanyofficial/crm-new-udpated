@@ -143,13 +143,23 @@ define(['./workbox-e43f5367'], (function (workbox) { 'use strict';
     'GET'
   );
 
-  // Offline fallback
+  // Replace the offline fallback registration with this:
   workbox.registerRoute(
     ({request}) => request.mode === 'navigate',
-    new workbox.NetworkOnly({
-      plugins: [{
-        handlerDidError: async () => await caches.match('/offline')
-      }]
+    new workbox.NetworkFirst({
+      cacheName: 'pages',
+      plugins: [
+        new workbox.ExpirationPlugin({
+          maxEntries: 25
+        }),
+        {
+          handlerDidError: async () => {
+            return await caches.match('/offline', {
+              ignoreSearch: true
+            });
+          }
+        }
+      ]
     })
   );
 
