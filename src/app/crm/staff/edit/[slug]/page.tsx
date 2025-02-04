@@ -20,7 +20,7 @@ export async function generateMetadata({
 
     if (!response || !response.data) {
       throw new Error("Failed to fetch complaint data");
-    }   
+    }
 
     return {
       title: `${response.data.full_name} | Complaints ${title}`, // Dynamic title
@@ -55,7 +55,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
   }
 }
 
-export function notFound() {
+const notFound = () => {
   return (
     <div className="flex min-h-[400px] flex-col items-center justify-center space-y-4">
       <h1 className="text-4xl font-bold">404</h1>
@@ -65,4 +65,4 @@ export function notFound() {
       </p>
     </div>
   );
-}
+};

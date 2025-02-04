@@ -1,6 +1,5 @@
 import React from "react";
 import { API_URL, WORKERS } from "@/lib/apiEndPoints";
-import { getImageUrl } from "@/lib/utils";
 import { description, keywords, title } from "@/lib/Meta";
 import { fetchData } from "@/hooks/fetchData";
 import ViewStaff from "../components/view";
@@ -55,7 +54,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
   }
 }
 
-export function notFound() {
+const notFound = () => {
   return (
     <div className="flex min-h-[400px] flex-col items-center justify-center space-y-4">
       <h1 className="text-4xl font-bold">404</h1>
@@ -65,4 +64,4 @@ export function notFound() {
       </p>
     </div>
   );
-}
+};
