@@ -32,7 +32,7 @@ export default function StaffTable({
           />
         </TableFacedFilter>
       }
-      Create={<CreateBtn Label="Add New User" href="/crm/complaints/create" />}
+      Create={<CreateBtn Label="Add New User" href="/crm/staff/create" />}
       View={View}
       Update={Update}
       deletePermission={deletable}
@@ -46,7 +46,7 @@ const Update = ({ row }: { row: any }) => {
       variant="ghost"
       size="sm"
       className="flex items-center justify-between w-full"
-      onClick={() => window.open(`/crm/complaints/edit/${row.id}`, "_blank")}
+      onClick={() => window.open(`/crm/staff/edit/${row.id}`, "_blank")}
     >
       Update
       <Edit />
@@ -60,7 +60,7 @@ const View = ({ row }: { row: any }) => {
       variant="ghost"
       size="sm"
       className="flex items-center justify-between w-full"
-      onClick={() => window.open(`/crm/complaints/${row.id}`, "_blank")}
+      onClick={() => window.open(`/crm/staff/${row.id}`, "_blank")}
     >
       View
       <Eye />

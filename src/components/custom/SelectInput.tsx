@@ -40,7 +40,7 @@ export function SelectInput({
       {label && <Label>{label}</Label>}
       <Select value={selected} onValueChange={onChange}>
         <SelectTrigger
-          className={`text-xs bg-gray-50 dark:bg-slate-950 ${errorMessage ? "border-red-500" : ""} ${buttonVariants({ variant: "secondary" })}`}
+          className={`text-xs bg-gray-50 dark:bg-slate-900 ${errorMessage ? "border-red-500" : ""} ${buttonVariants({ variant: "secondary" })}`}
         >
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>

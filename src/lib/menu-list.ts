@@ -95,7 +95,7 @@ export function getMenuList(
       {
         href: "/crm/staff",
         label: "Staff",
-        active: pathname === "/crm/staff",
+        active: pathname.includes("/crm/staff"),
         icon: Users,
         submenus: [],
       },

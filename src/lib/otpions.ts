@@ -1,4 +1,5 @@
 export const getRoleOptions = [
+  { value: "administrator", label: "Administrator" },
   { value: "general-manager", label: "General Manager" },
   { value: "branch-manager", label: "Branch Manager" },
   { value: "technician", label: "Technician" },

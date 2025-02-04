@@ -36,7 +36,7 @@ export function TextareaInput({
         id={id}
         {...props}
         onChange={handleChange}
-        className={`bg-gray-50 dark:bg-slate-950 ${props.className} ${errorMessage ? "border-red-500" : ""}`}
+        className={`bg-gray-50 dark:bg-gray-900 ${props.className} ${errorMessage ? "border-red-500" : ""}`}
       />
       <div className="flex justify-between text-sm text-gray-500">
         {description && <p>{description}</p>}

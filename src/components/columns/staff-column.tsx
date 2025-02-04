@@ -71,17 +71,6 @@ export const StaffCoulmns = (): ColumnDef<WorkersType>[] => [
       <DataTableColumnHeader column={column} title="Full Address" />
     ),
   },
-
-  {
-    accessorKey: "status",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Status" />
-    ),
-    cell: ({ row }) => {
-      const status = String(row.getValue("status"));
-      return <Status status={status} />;
-    },
-  },
   {
     accessorKey: "created_at",
     header: ({ column }) => (

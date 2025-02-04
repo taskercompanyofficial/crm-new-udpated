@@ -65,10 +65,10 @@ export function NavUser({
       <SidebarMenu>
         <SidebarMenuItem>
           <SidebarMenuButton size="lg">
-            <Skeleton className="h-8 w-8 rounded-lg" />
+            <Skeleton className="w-8 h-8 rounded-lg" />
             <div className="grid flex-1 gap-1">
-              <Skeleton className="h-4 w-24" />
-              <Skeleton className="h-3 w-32" />
+              <Skeleton className="w-24 h-4" />
+              <Skeleton className="w-32 h-3" />
             </div>
           </SidebarMenuButton>
         </SidebarMenuItem>
@@ -86,7 +86,7 @@ export function NavUser({
                 size="lg"
                 className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
               >
-                <Avatar className="h-8 w-8 rounded-lg">
+                <Avatar className="w-8 h-8 rounded-lg bg-sidebar-primary">
                   <AvatarImage src={user?.profile_image} alt={user?.full_name} />
                   <AvatarFallback className="rounded-lg">
                     {user?.full_name
@@ -95,9 +95,9 @@ export function NavUser({
                       .join("")}
                   </AvatarFallback>
                 </Avatar>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">{user?.full_name}</span>
-                  <span className="truncate text-xs">{user?.contact_email}</span>
+                <div className="grid flex-1 text-sm leading-tight text-left">
+                  <span className="font-semibold truncate">{user?.full_name}</span>
+                  <span className="text-xs truncate">{user?.contact_email}</span>
                 </div>
                 <ChevronsUpDown className="ml-auto size-4" />
               </SidebarMenuButton>
@@ -110,7 +110,7 @@ export function NavUser({
             >
               <DropdownMenuLabel className="p-0 font-normal">
                 <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                  <Avatar className="h-8 w-8 rounded-lg">
+                  <Avatar className="w-8 h-8 rounded-lg">
                     <AvatarImage src={user?.profile_image} alt={user?.full_name} />
                     <AvatarFallback className="rounded-lg">
                       {user?.full_name
@@ -119,9 +119,9 @@ export function NavUser({
                         .join("")}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-semibold">{user?.full_name}</span>
-                    <span className="truncate text-xs">{user?.contact_email}</span>
+                  <div className="grid flex-1 text-sm leading-tight text-left">
+                    <span className="font-semibold truncate">{user?.full_name}</span>
+                    <span className="text-xs truncate">{user?.contact_email}</span>
                   </div>
                 </div>
               </DropdownMenuLabel>

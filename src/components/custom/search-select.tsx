@@ -102,7 +102,7 @@ export default function SearchSelect({
             role="combobox"
             aria-expanded={open}
             className={cn(
-              "justify-between bg-gray-50 dark:bg-slate-950 h-8",
+              "justify-between bg-gray-50 dark:bg-slate-900 h-8",
               width === "full" ? "w-full" : "w-[250px]"
             )}
           >
