@@ -73,7 +73,7 @@ export function DataTable<TData, TValue>({
           <DataTableViewOptions table={table} />
         </div>
       </div>
-      <div className="w-full overflow-x-auto border rounded-md">
+      <div className="w-full overflow-x-auto rounded-md border">
         <Table>
           <TableHeader className="bg-gray-200 dark:bg-gray-900">
             {table.getHeaderGroups().map((headerGroup) => (
@@ -114,9 +114,9 @@ export function DataTable<TData, TValue>({
                   <TableCell onClick={(e) => e.stopPropagation()}>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="w-8 h-8 p-0">
+                        <Button variant="ghost" className="h-8 w-8 p-0">
                           <span className="sr-only">Open menu</span>
-                          <MoreHorizontal className="w-4 h-4" />
+                          <MoreHorizontal className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">

@@ -9,6 +9,7 @@ import {
   Package,
   Settings,
   Users,
+  PackageSearch,
 } from "lucide-react";
 type Submenu = {
   href: string;
@@ -97,6 +98,13 @@ export function getMenuList(
         label: "Staff",
         active: pathname.includes("/crm/staff"),
         icon: Users,
+        submenus: [],
+      },
+      {
+        href: "/crm/inventory",
+        label: "Inventory",
+        active: pathname.includes("/crm/inventory"),
+        icon: PackageSearch,
         submenus: [],
       },
       {
