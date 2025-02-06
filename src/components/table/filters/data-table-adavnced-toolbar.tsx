@@ -87,7 +87,6 @@ export function DataTableFiltersToolbar({ columns }: FilterToolbarProps) {
   }
 
   const [filters, setFilters] = React.useState<Filter[]>(initialFilters);
-  // Only initialize logic state if there are multiple filters
   const [logic, setLogic] = React.useState<"AND" | "OR">(
     initialFilters.length > 1
       ? (searchParams.get("logic") as "AND" | "OR") || "AND"
@@ -98,26 +97,21 @@ export function DataTableFiltersToolbar({ columns }: FilterToolbarProps) {
   React.useEffect(() => {
     if (typeof window !== "undefined") {
       const currentPath = window.location.pathname;
-      const searchParams = new URLSearchParams();
+      const currentParams = new URLSearchParams(window.location.search);
+      const searchParams = new URLSearchParams(currentParams);
 
-      // Only add filters if there are any
       if (filters.length > 0) {
         searchParams.set("filters", JSON.stringify(filters));
-        // Only add logic parameter if there are multiple filters
         if (filters.length > 1) {
           searchParams.set("logic", logic);
+        } else {
+          searchParams.delete("logic");
         }
+      } else {
+        searchParams.delete("filters");
+        searchParams.delete("logic");
       }
 
-      // Get other existing params that we want to preserve
-      const currentParams = new URLSearchParams(window.location.search);
-      ["page", "per_page", "sort"].forEach((param) => {
-        if (currentParams.has(param)) {
-          searchParams.set(param, currentParams.get(param)!);
-        }
-      });
-
-      // Update URL only if there are parameters, otherwise use clean URL
       const queryString = searchParams.toString();
       const newUrl = queryString
         ? `${currentPath}?${queryString}`
@@ -137,13 +131,10 @@ export function DataTableFiltersToolbar({ columns }: FilterToolbarProps) {
           ["like", "not like"].includes(newFilter.condition) &&
           newFilter.value
         ) {
-          // Only add % if it's not already there
-          const value = newFilter.value.startsWith("%")
-            ? newFilter.value
-            : `%${newFilter.value}`;
+          const value = newFilter.value.trim();
           return {
             ...newFilter,
-            value: value.endsWith("%") ? value : `${value}%`,
+            value: value ? `%${value.replace(/%/g, '')}%` : "", // Remove existing % and wrap value with % if not empty
           };
         }
         return newFilter;
@@ -169,7 +160,6 @@ export function DataTableFiltersToolbar({ columns }: FilterToolbarProps) {
   const removeFilter = (index: number) => {
     setFilters((prev) => {
       const newFilters = prev.filter((_, i) => i !== index);
-      // If we're removing a filter and only one remains, no need for logic anymore
       if (newFilters.length <= 1) {
         setLogic("AND");
       }
@@ -240,7 +230,7 @@ export function DataTableFiltersToolbar({ columns }: FilterToolbarProps) {
         onChange={(e) =>
           updateFilter(filters.indexOf(filter), {
             ...filter,
-            value: e.target.value,
+            value: e.target.value.replace(/%/g, ''), // Remove existing % from input
           })
         }
         placeholder="Enter value"

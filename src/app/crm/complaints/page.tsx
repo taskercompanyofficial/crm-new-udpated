@@ -17,6 +17,8 @@ export default async function page({ searchParams }: { searchParams: any }) {
     sort: searchParams.sort,
     page: searchParams.page,
     per_page: searchParams.per_page,
+    from: searchParams.from,
+    to: searchParams.to,
   });
   return (
     <div className="space-y-2">

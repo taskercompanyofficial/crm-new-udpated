@@ -93,9 +93,10 @@ export function DataTableSortable<TData, TValue>({
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
       const currentPath = window.location.pathname;
-      // Construct the query string exactly as desired.
-      const query = `sort=${JSON.stringify(sortState)}`;
-      window.history.replaceState(null, "", `${currentPath}?${query}`);
+      const params = new URLSearchParams(window.location.search);
+      // Construct the query string with existing params and the new sort state.
+      params.set('sort', JSON.stringify(sortState));
+      window.history.replaceState(null, "", `${currentPath}?${params.toString()}`);
     }
   }, [sortState]);
 
@@ -127,14 +128,30 @@ export function DataTableSortable<TData, TValue>({
    * Remove a sort row at a given index.
    */
   const removeSort = (index: number) => {
-    setSortState((prev) => prev.filter((_, i) => i !== index));
+    setSortState((prev) => {
+      const newSortState = prev.filter((_, i) => i !== index);
+      // Update the URL with the new sort state while preserving other params.
+      if (typeof window !== 'undefined') {
+        const currentPath = window.location.pathname;
+        const params = new URLSearchParams(window.location.search);
+        params.set('sort', JSON.stringify(newSortState));
+        window.history.replaceState(null, "", `${currentPath}?${params.toString()}`);
+      }
+      return newSortState;
+    });
   };
 
   /**
-   * Reset the entire sort state.
+   * Reset the entire sort state and remove the sort param from the URL.
    */
   const resetSort = () => {
     setSortState([]);
+    if (typeof window !== 'undefined') {
+      const currentPath = window.location.pathname;
+      const params = new URLSearchParams(window.location.search);
+      params.delete('sort'); // Remove the sort param
+      window.history.replaceState(null, "", `${currentPath}?${params.toString()}`);
+    }
   };
 
   return (

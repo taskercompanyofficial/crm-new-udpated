@@ -51,7 +51,7 @@ export const ComplaintsColumns = (): ColumnDef<ComplaintsType>[] => [
       const id = row.getValue("id") as number;
       return (
         <Link
-          href={`/authenticated/complaints/${id}`}
+          href={`/crm/complaints/${id}`}
           className="underline"
           target="_blank"
         >

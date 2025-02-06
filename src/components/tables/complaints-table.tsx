@@ -7,7 +7,7 @@ import TableFacedFilter from "../table/table-faced-filter";
 import { ComplaintStatusOptions } from "@/lib/otpions";
 import SearchInput from "../table/filters/search-input";
 import CreateBtn from "../table/create-btn";
-import { Edit, Eye } from "lucide-react";
+import { Edit, Eye, Redo2 } from "lucide-react";
 import { Button } from "../ui/button";
 import { useSession } from "next-auth/react";
 
@@ -52,7 +52,7 @@ const Update = ({ row }: { row: any }) => {
       size="sm"
       className="flex w-full items-center justify-between"
       onClick={() => window.open(`/crm/complaints/edit/${row.id}`, "_blank")}
-      disabled={row.status === 'closed' && role !== "administrator"}
+      disabled={row.status === "closed" && role !== "administrator"}
     >
       Update
       <Edit />
@@ -62,14 +62,28 @@ const Update = ({ row }: { row: any }) => {
 
 const View = ({ row }: { row: any }) => {
   return (
-    <Button
-      variant="ghost"
-      size="sm"
-      className="flex w-full items-center justify-between"
-      onClick={() => window.open(`/crm/complaints/${row.id}`, "_blank")}
-    >
-      View
-      <Eye />
-    </Button>
+    <>
+     <Button
+        variant="ghost"
+        size="sm"
+        className="flex w-full items-center justify-between"
+        onClick={() =>
+          window.open(`/crm/complaints/duplicate/${row.id}`, "_blank")
+        }
+      >
+        Duplicate
+        <Redo2 />
+      </Button>
+      <Button
+        variant="ghost"
+        size="sm"
+        className="flex w-full items-center justify-between"
+        onClick={() => window.open(`/crm/complaints/${row.id}`, "_blank")}
+      >
+        View
+        <Eye />
+      </Button>
+     
+    </>
   );
 };
