@@ -118,13 +118,13 @@ export const ComplaintsColumns = (): ColumnDef<ComplaintsType>[] => [
     ),
   },
   {
-    accessorKey: "brand_name",
+    accessorKey: "brand_id",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Brand Name" />
     ),
   },
   {
-    accessorKey: "branch_name",
+    accessorKey: "branch_id",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Branch Name" />
     ),

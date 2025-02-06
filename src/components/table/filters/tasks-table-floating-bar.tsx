@@ -176,10 +176,10 @@ export function TasksTableFloatingBar({ table }: TasksTableFloatingBarProps) {
 
   return (
     <TooltipProvider>
-      <div className="fixed inset-x-0 bottom-4 z-50 mx-auto w-fit px-4">
-        <div className="rounded-lg border bg-card shadow-lg">
+      <div className="fixed inset-x-0 z-50 px-4 mx-auto bottom-4 w-fit">
+        <div className="border rounded-lg shadow-lg bg-card">
           <div className="flex items-center gap-2 p-2">
-            <div className="flex items-center gap-1 rounded-md border border-dashed px-2">
+            <div className="flex items-center gap-1 px-2 border border-dashed rounded-md">
               <span className="text-sm font-medium">
                 {selectedRows.length} selected
               </span>
@@ -188,10 +188,10 @@ export function TasksTableFloatingBar({ table }: TasksTableFloatingBarProps) {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-6 w-6"
+                    className="w-6 h-6"
                     onClick={() => table.toggleAllRowsSelected(false)}
                   >
-                    <X className="h-4 w-4" />
+                    <X className="w-4 h-4" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
@@ -207,10 +207,10 @@ export function TasksTableFloatingBar({ table }: TasksTableFloatingBarProps) {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="h-8 w-8"
+                      className="w-8 h-8"
                       onClick={() => window.open(`${window.location.pathname}/edit/${selectedRows[0].original.id}`, '_blank')}
                     >
-                      <Edit className="h-4 w-4" />
+                      <Edit className="w-4 h-4" />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>Edit record</TooltipContent>
@@ -222,11 +222,11 @@ export function TasksTableFloatingBar({ table }: TasksTableFloatingBarProps) {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-8 w-8"
+                    className="w-8 h-8"
                     onClick={() => copyToClipboard(selectedRows)}
                     disabled={isPending}
                   >
-                    <ClipboardCopyIcon className="h-4 w-4" />
+                    <ClipboardCopyIcon className="w-4 h-4" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>Copy details</TooltipContent>
@@ -237,14 +237,14 @@ export function TasksTableFloatingBar({ table }: TasksTableFloatingBarProps) {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-8 w-8"
+                    className="w-8 h-8"
                     onClick={() => generateImage(selectedRows)}
                     disabled={isPending}
                   >
                     {isPending && activeMethod === "generate-image" ? (
-                      <Loader className="h-4 w-4 animate-spin" />
+                      <Loader className="w-4 h-4 animate-spin" />
                     ) : (
-                      <FileImage className="h-4 w-4" />
+                      <FileImage className="w-4 h-4" />
                     )}
                   </Button>
                 </TooltipTrigger>
@@ -256,7 +256,7 @@ export function TasksTableFloatingBar({ table }: TasksTableFloatingBarProps) {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-8 w-8"
+                    className="w-8 h-8"
                     onClick={() => {
                       setActiveMethod("export");
                       startTransition(() => {
@@ -268,7 +268,7 @@ export function TasksTableFloatingBar({ table }: TasksTableFloatingBarProps) {
                     }}
                     disabled={isPending}
                   >
-                    <DownloadIcon className="h-4 w-4" />
+                    <DownloadIcon className="w-4 h-4" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>Export CSV</TooltipContent>

@@ -5,8 +5,9 @@ import DocumentUploader from "@/components/custom/document-uploader";
 import Link from "next/link";
 import { getImageUrl } from "@/lib/utils";
 import { useSession } from "next-auth/react";
-import myAxios from "@/lib/axios.config";
+import { saveAs } from 'file-saver';
 import { toast } from "react-toastify";
+import JSZip from 'jszip';
 
 export default function FilesForm({
   data,
@@ -24,7 +25,6 @@ export default function FilesForm({
 
   const handleDocumentUpload = (files: any) => {
     if (files && files.length > 0) {
-      // Parse files if they are JSON strings
       const existingFiles = Array.isArray(data.files)
         ? data.files
         : typeof data.files === "string"
@@ -51,7 +51,6 @@ export default function FilesForm({
     setSelectedFiles(selectedFiles.filter(i => i !== index));
   };
 
-  // Parse files if they are a JSON string
   const files =
     typeof data.files === "string" ? JSON.parse(data.files) : data.files || [];
 
@@ -59,23 +58,21 @@ export default function FilesForm({
     try {
       setDownloading(true);
 
-      // Use axios with responseType blob to handle CORS
-      const response = await myAxios.get(getImageUrl(file.document_path), {
-        responseType: 'blob',
+      const response = await fetch(getImageUrl(file.document_path), {
+        method: 'GET',
+        credentials: 'include',
         headers: {
-          Authorization: `Bearer ${token}`,
-        },
+          'Authorization': `Bearer ${token}`
+        }
       });
 
-      const blob = new Blob([response.data]);
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = file.file_name || "download";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
+      if (!response.ok) {
+        throw new Error('Download failed');
+      }
+
+      const blob = await response.blob();
+      saveAs(blob, file.file_name || "download");
+
     } catch (error: any) {
       console.error('Download error:', error);
       toast.error("Failed to download file. Please try again later.");
@@ -84,25 +81,52 @@ export default function FilesForm({
     }
   };
 
-  const handleDownloadSelected = async () => {
+  const downloadFilesAsZip = async (filesToDownload: any[]) => {
     try {
       setDownloading(true);
-      for (const index of selectedFiles) {
-        await handleDownloadFile(files[index]);
+      const zip = new JSZip();
+      
+      for (const file of filesToDownload) {
+        const response = await fetch(getImageUrl(file.document_path), {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        if (!response.ok) throw new Error('Download failed');
+        
+        const blob = await response.blob();
+        zip.file(file.file_name || `file_${Date.now()}`, blob);
       }
+      
+      const zipBlob = await zip.generateAsync({type: 'blob'});
+      const zipName = data.complain_num ? `${data.complain_num}_files.zip` : 'files.zip';
+      saveAs(zipBlob, zipName);
+      
+    } catch (error: any) {
+      console.error('Download error:', error);
+      toast.error("Failed to download files. Please try again later.");
     } finally {
       setDownloading(false);
     }
   };
 
+  const handleDownloadSelected = async () => {
+    const selectedFilesToDownload = selectedFiles.map(index => files[index]);
+    if (selectedFilesToDownload.length > 1) {
+      await downloadFilesAsZip(selectedFilesToDownload);
+    } else if (selectedFilesToDownload.length === 1) {
+      await handleDownloadFile(selectedFilesToDownload[0]);
+    }
+  };
+
   const handleDownloadAll = async () => {
-    try {
-      setDownloading(true);
-      for (const file of files) {
-        await handleDownloadFile(file);
-      }
-    } finally {
-      setDownloading(false);
+    if (files.length > 1) {
+      await downloadFilesAsZip(files);
+    } else if (files.length === 1) {
+      await handleDownloadFile(files[0]);
     }
   };
 
