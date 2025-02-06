@@ -116,7 +116,7 @@ function ChartContent({ complaintStatusData }: ChartsByStatusProps) {
         <Card
           key={index}
           className="group relative cursor-pointer overflow-hidden rounded-xl shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
-          onClick={() => router.push(`/authenticated/complaints${item.status === 'all' ? '' : `?status=${item.status}`}`)}
+          onClick={() => router.push(`/crm/complaints${item.status === 'all' ? '' : `?status=${item.status}`}`)}
         >
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-white/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 

@@ -136,7 +136,7 @@ function ChartContent({ data }: { data: Record<string, { count: number }> }) {
               className="mt-4"
               onClick={(data: any) => {
                 if (data && data.status) {
-                  router.push(`/authenticated/complaints?status=${data.status}`);
+                  router.push(`/crm/complaints?status=${data.status}`);
                 }
               }}
             >
