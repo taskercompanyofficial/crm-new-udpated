@@ -5,6 +5,7 @@ import OtherStatusComplaints from "./other-status-complaints";
 import { Card } from "@/components/ui/card";
 import { fetchData } from "@/hooks/fetchData";
 import { AttendanceStatus } from "../Attendance-status";
+import ComplaintsByBrand from "./complaints-by-brand-chart";
 
 export default async function OverviewTab() {
   const complaintStatusData = await fetchData({
@@ -13,10 +14,13 @@ export default async function OverviewTab() {
   const complaintStatusForBar = await fetchData({
     endPoint: API_URL + "/crm/dashboard-status-data",
   });
+  const complaintStatusByBrands = await fetchData({
+    endPoint: API_URL + "/crm/dashboard-complaints-by-brand",
+  });
   return (
     <div className="space-y-8 antialiased">
       <ChartsByStatus complaintStatusData={complaintStatusData.data} />
-      <div className="grid grid-cols-5 gap-4 ">
+      <div className="grid grid-cols-5 gap-4">
         <div className="col-span-3">
           <OtherStatusComplaints data={complaintStatusForBar.data} />
         </div>
@@ -24,7 +28,7 @@ export default async function OverviewTab() {
           <AttendanceStatus />
         </div>
       </div>
-      <Card className="p-2 shadow-lg"></Card>
+      <ComplaintsByBrand data={complaintStatusByBrands?.data} />
     </div>
   );
 }

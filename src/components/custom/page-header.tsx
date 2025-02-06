@@ -23,16 +23,16 @@ export function PageHeader() {
         {isLoading ? (
           <div className="space-y-1">
             <Skeleton className="h-4 w-[20%]" />
-            <Skeleton className="w-full h-3" />
+            <Skeleton className="h-3 w-full" />
             <Skeleton className="h-3 w-[50%]" />
           </div>
         ) : (
           <>
             {!error && (
               <>
-                <h1 className="text-lg font-semibold">{data?.value.title}</h1>
+                <h1 className="text-lg font-semibold">{data?.value?.title}</h1>
                 <p className="text-xs text-gray-500">
-                  {data?.value.description}
+                  {data?.value?.description}
                 </p>
               </>
             )}
