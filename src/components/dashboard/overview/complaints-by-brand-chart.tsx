@@ -55,6 +55,10 @@ interface BrandData {
 }
 
 function ChartContent({ data }: { data: BrandData }) {
+  if (!data || !data.data || data.data.length === 0) {
+    return <div>No data available</div>;
+  }
+
   const chartConfig = {
     count: {
       label: "Complaint Volume",
@@ -111,8 +115,8 @@ function ChartContent({ data }: { data: BrandData }) {
               tickLine={false}
               axisLine={false}
               interval={0}
-              angle={-15}
-              textAnchor="end"
+              angle={0} // Changed to 0 for straight text
+              textAnchor="middle" // Centered text
               height={60}
             />
             <YAxis
