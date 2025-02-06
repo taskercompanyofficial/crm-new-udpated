@@ -54,6 +54,7 @@
     "react-dom": "^18",
     "react-fast-marquee": "^1.6.5",
     "react-loading-skeleton": "^3.5.0",
+    "react-to-print": "^3.0.5",
     "react-toastify": "^11.0.3",
     "recharts": "^2.15.1",
     "server": "^1.0.41",
