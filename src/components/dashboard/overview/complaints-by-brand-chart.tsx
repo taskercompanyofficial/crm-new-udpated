@@ -55,6 +55,8 @@ interface BrandData {
 }
 
 function ChartContent({ data }: { data: BrandData }) {
+  const router = useRouter(); // Moved useRouter to the top to avoid conditional hook call
+
   if (!data || !data.data || data.data.length === 0) {
     return <div>No data available</div>;
   }
@@ -91,7 +93,6 @@ function ChartContent({ data }: { data: BrandData }) {
     fill: colors[index % colors.length],
   }));
 
-  const router = useRouter();
   return (
     <Card className="shadow-lg">
       <CardHeader>
