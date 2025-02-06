@@ -13,7 +13,11 @@ import { toast } from "react-toastify";
 import BasicForm from "../../components/basic-form";
 import { ComplaintsType } from "@/types";
 
-export default function DuplicateForm({ complaint }: { complaint: ComplaintsType }) {
+export default function DuplicateForm({
+  complaint,
+}: {
+  complaint: ComplaintsType;
+}) {
   const session = useSession();
   const token = session.data?.user?.token || "";
   const [history, setHistory] = useState<any[]>([]);
@@ -33,7 +37,7 @@ export default function DuplicateForm({ complaint }: { complaint: ComplaintsType
     complaint_type: complaint.complaint_type,
     applicant_adress: complaint.applicant_adress,
     description: complaint.description,
-    status: complaint.status,
+    status: "open",
   });
   const router = useRouter();
   const handleSubmit = () => {

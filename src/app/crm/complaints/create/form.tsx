@@ -32,7 +32,7 @@ export default function Form() {
     complaint_type: "",
     applicant_adress: "",
     description: "",
-    status: "",
+    status: "open",
   });
   const router = useRouter();
   const handleSubmit = () => {
@@ -86,16 +86,16 @@ export default function Form() {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (hasUnsavedChanges) {
         e.preventDefault();
-        e.returnValue = '';
+        e.returnValue = "";
       }
     };
 
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, [hasUnsavedChanges]);
 
   return (
-    <div className="p-2 bg-white rounded-lg shadow-md dark:bg-slate-950 md:p-4">
+    <div className="rounded-lg bg-white p-2 shadow-md dark:bg-slate-950 md:p-4">
       <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
@@ -114,7 +114,7 @@ export default function Form() {
               onClick={undo}
               disabled={currentIndex <= 0}
             >
-              <Undo2 className="w-4 h-4" />
+              <Undo2 className="h-4 w-4" />
             </Button>
             <Button
               variant="outline"
@@ -122,7 +122,7 @@ export default function Form() {
               onClick={redo}
               disabled={currentIndex >= history.length - 1}
             >
-              <Redo2 className="w-4 h-4" />
+              <Redo2 className="h-4 w-4" />
             </Button>
           </div>
           <div className="flex-grow md:flex-grow-0">
@@ -136,14 +136,17 @@ export default function Form() {
             className={`${buttonVariants({ effect: "shineHover" })} w-full md:w-auto`}
             processing={processing}
             size={"sm"}
-            onClick={handleSubmit}>Create Complaint</SubmitBtn>
+            onClick={handleSubmit}
+          >
+            Create Complaint
+          </SubmitBtn>
         </div>
       </div>
       <BasicForm data={data} setData={updateData} errors={errors} />
-      <div className="p-4 mt-6 rounded-lg bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-slate-800 dark:to-slate-900">
+      <div className="mt-6 rounded-lg bg-gradient-to-r from-blue-50 to-indigo-50 p-4 dark:from-slate-800 dark:to-slate-900">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <Info className="w-5 h-5 text-blue-500" />
+            <Info className="h-5 w-5 text-blue-500" />
             <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
               Last updated: {new Date().toLocaleDateString()}
             </span>
@@ -152,7 +155,7 @@ export default function Form() {
             <div className="text-sm text-gray-500 dark:text-gray-400">
               Changes saved: {history.length}
             </div>
-            <div className="w-px h-4 bg-gray-300 dark:bg-gray-700" />
+            <div className="h-4 w-px bg-gray-300 dark:bg-gray-700" />
             <div className="text-sm text-gray-500 dark:text-gray-400">
               Form completion: {Object.values(data).filter(Boolean).length}/
               {Object.keys(data).length}
