@@ -250,16 +250,13 @@ export default function Form({
                 className={`${buttonVariants({ effect: "shineHover" })} w-full md:w-auto ${hasUnsavedChanges ? "animate-pulse" : ""}`}
                 processing={processing}
                 size={"sm"}
-               
                 onClick={onSubmit}
               >
-                 {
-                  hasUnsavedChanges
-                    ? "Save Changes*"
-                    : complaint
-                      ? "Save Changes"
-                      : "Create Complaint"
-                }
+                {hasUnsavedChanges
+                  ? "Save Changes*"
+                  : complaint
+                    ? "Save Changes"
+                    : "Create Complaint"}
               </SubmitBtn>
             </div>
           </div>
@@ -286,7 +283,7 @@ export default function Form({
           <Remarks />
         </TabsContent>
         <TabsContent value="history">
-          <History />
+          <History id={complaint?.id} token={token} />
         </TabsContent>
       </Tabs>
 
