@@ -11,9 +11,10 @@ import {
 
 import { exportTableToCSV } from "@/lib/export";
 import { Kbd } from "@/components/ui/kbd";
-import { ClipboardCopyIcon, FileImage, X, DownloadIcon, Loader } from "lucide-react";
+import { ClipboardCopyIcon, FileImage, X, DownloadIcon, Loader, Edit } from "lucide-react";
 import { toast } from "react-toastify";
 import html2canvas from "html2canvas";
+
 interface TasksTableFloatingBarProps {
   table: Table<any>;
 }
@@ -200,6 +201,22 @@ export function TasksTableFloatingBar({ table }: TasksTableFloatingBarProps) {
             </div>
 
             <div className="flex items-center gap-1">
+              {selectedRows.length === 1 && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="h-8 w-8"
+                      onClick={() => window.open(`${window.location.pathname}/edit/${selectedRows[0].original.id}`, '_blank')}
+                    >
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Edit record</TooltipContent>
+                </Tooltip>
+              )}
+
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
