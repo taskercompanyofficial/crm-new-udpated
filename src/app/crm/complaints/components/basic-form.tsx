@@ -121,7 +121,7 @@ export default function BasicForm({
               value={data.brand_id}
               onChange={(e) => setData({ ...data, brand_id: e })}
               width="full"
-              className="mt-1 transition-all duration-200 hover:shadow-md"
+              className="mt-1"
               customizable
             />
           ) : (
