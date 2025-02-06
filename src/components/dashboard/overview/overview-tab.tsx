@@ -8,15 +8,35 @@ import { AttendanceStatus } from "../Attendance-status";
 import ComplaintsByBrand from "./complaints-by-brand-chart";
 
 export default async function OverviewTab() {
-  const complaintStatusData = await fetchData({
-    endPoint: API_URL + "/crm/dashboard-chart-data",
-  });
-  const complaintStatusForBar = await fetchData({
-    endPoint: API_URL + "/crm/dashboard-status-data",
-  });
-  const complaintStatusByBrands = await fetchData({
-    endPoint: API_URL + "/crm/dashboard-complaints-by-brand",
-  });
+  let complaintStatusData, complaintStatusForBar, complaintStatusByBrands;
+
+  try {
+    complaintStatusData = await fetchData({
+      endPoint: API_URL + "/crm/dashboard-chart-data",
+    });
+  } catch (error) {
+    console.error("Error fetching complaint status data:", error);
+    complaintStatusData = { data: [] }; // Fallback to empty data
+  }
+
+  try {
+    complaintStatusForBar = await fetchData({
+      endPoint: API_URL + "/crm/dashboard-status-data",
+    });
+  } catch (error) {
+    console.error("Error fetching complaint status for bar chart:", error);
+    complaintStatusForBar = { data: [] }; // Fallback to empty data
+  }
+
+  try {
+    complaintStatusByBrands = await fetchData({
+      endPoint: API_URL + "/crm/dashboard-complaints-by-brand",
+    });
+  } catch (error) {
+    console.error("Error fetching complaint status by brands:", error);
+    complaintStatusByBrands = { data: [] }; // Fallback to empty data
+  }
+
   return (
     <div className="space-y-8 antialiased">
       <ChartsByStatus complaintStatusData={complaintStatusData.data} />
