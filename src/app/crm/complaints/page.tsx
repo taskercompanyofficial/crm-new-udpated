@@ -12,6 +12,11 @@ export default async function page({ searchParams }: { searchParams: any }) {
     q: searchParams?.q,
     status: searchParams.status,
     brand_id: searchParams.brand_id,
+    filters: searchParams.filters,
+    logic: searchParams.logic,
+    sort: searchParams.sort,
+    page: searchParams.page,
+    per_page: searchParams.per_page,
   });
   return (
     <div className="space-y-2">
