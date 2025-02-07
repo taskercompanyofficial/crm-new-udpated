@@ -50,6 +50,10 @@ const config: Config = {
           "4": "hsl(var(--chart-4))",
           "5": "hsl(var(--chart-5))",
         },
+        navbar: {
+          DEFAULT: "hsl(var(--navbar-background))",
+          foreground: "hsl(var(--navbar-foreground))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
