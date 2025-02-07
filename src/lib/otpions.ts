@@ -45,6 +45,12 @@ import {
   Settings,
   MessageCircle,
   MessagesSquare,
+  PhoneOff,
+  PhoneOutgoing,
+  PhoneMissed,
+  CalendarClock,
+  ThumbsDown,
+  PhoneCall,
 } from "lucide-react";
 
 export const getRoleOptions = [
@@ -161,6 +167,17 @@ export const ComplaintStatusOptions = [
     color: "192, 57, 43",
     icon: XCircleIcon,
   },
+];
+export const CallStatusOptions = [
+  { value: "pending", label: "Pending", icon: CircleDot },
+  { value: "phone-off", label: "Phone Off", icon: PhoneOff },
+  { value: "not-responding", label: "Not Responding", icon: PhoneOutgoing },
+  { value: "wrong-number", label: "Wrong Number", icon: XCircle },
+  { value: "busy", label: "Busy", icon: PhoneMissed },
+  { value: "rescheduled", label: "Rescheduled", icon: CalendarClock },
+  { value: "not-interested", label: "Not Interested", icon: ThumbsDown },
+  { value: "callback-requested", label: "Callback Requested", icon: PhoneCall },
+  { value: "done", label: "Done", icon: CheckCircle },
 ];
 
 export const warrantyTypeOptions = [

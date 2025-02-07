@@ -5,7 +5,7 @@ import useForm from "@/hooks/use-form";
 import { Button, buttonVariants } from "@/components/ui/button";
 import SubmitBtn from "@/components/custom/submit-button";
 import { SelectInput } from "@/components/custom/SelectInput";
-import { ComplaintStatusOptions } from "@/lib/otpions";
+import { CallStatusOptions, ComplaintStatusOptions } from "@/lib/otpions";
 import { Undo2, Redo2, Info } from "lucide-react";
 import { COMPLAINTS } from "@/lib/apiEndPoints";
 import { useSession } from "next-auth/react";
@@ -33,6 +33,7 @@ export default function Form() {
     applicant_adress: "",
     description: "",
     status: "open",
+    call_status: "pending",
   });
   const router = useRouter();
   const handleSubmit = () => {
@@ -125,6 +126,11 @@ export default function Form() {
               <Redo2 className="h-4 w-4" />
             </Button>
           </div>
+          <SelectInput
+            options={CallStatusOptions}
+            selected={data.call_status}
+            onChange={(e) => updateData({ ...data, call_status: e })}
+          />
           <div className="flex-grow md:flex-grow-0">
             <SelectInput
               options={ComplaintStatusOptions}
