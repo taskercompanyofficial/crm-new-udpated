@@ -8,6 +8,7 @@ import { ToastContainer } from "react-toastify";
 import NextTopLoader from "nextjs-toploader";
 import { description, keywords, title } from "@/lib/Meta";
 import ServiceWorker from "@/components/ServiceWorker";
+import { JotaiProvider } from "@/providers/jotai-provider";
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -74,7 +75,7 @@ export default function RootLayout({
                 height={4}
                 color="hsl(var(--primary))"
               />
-              {children}
+              <JotaiProvider>{children}</JotaiProvider>
               <ServiceWorker />
             </div>
             <div className="fixed bottom-4 right-4">

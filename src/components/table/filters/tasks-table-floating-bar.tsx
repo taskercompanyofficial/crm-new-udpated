@@ -132,8 +132,8 @@ export function TasksTableFloatingBar({ table }: TasksTableFloatingBarProps) {
                       Product Details
                     </h3>
                     <p><strong>Product:</strong> ${data.product || "N/A"}</p>
-                    <p><strong>Brand:</strong> ${data.brand_name || "N/A"}</p>
-                    <p><strong>Branch:</strong> ${data.branch_name || "N/A"}</p>
+                    <p><strong>Brand:</strong> ${data.brand_id || "N/A"}</p>
+                    <p><strong>Branch:</strong> ${data.branch_id || "N/A"}</p>
                     <p><strong>Model:</strong> ${data.model || "N/A"}</p>
                     <p><strong>Serial (IND):</strong> ${data.serial_number_ind || "N/A"}</p>
                     <p><strong>Serial (OUD):</strong> ${data.serial_number_oud || "N/A"}</p>
