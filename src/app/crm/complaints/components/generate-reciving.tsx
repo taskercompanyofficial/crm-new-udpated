@@ -1,7 +1,6 @@
 import React, { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Printer } from "lucide-react";
-import { QRCodeSVG } from "qrcode.react";
 
 interface Props {
   complaint: any;
@@ -75,7 +74,7 @@ export default function ProductReceipt({ complaint, username, role }: Props) {
     border: "1px dashed #1f2937",
     display: "flex",
     flexDirection: "column" as const,
-    gap: "8px",
+    gap: "4px",
   };
 
   const headerStyle = {
@@ -83,7 +82,8 @@ export default function ProductReceipt({ complaint, username, role }: Props) {
     textAlign: "center" as const,
     display: "flex",
     flexDirection: "column" as const,
-    gap: "4px",
+    gap: "2px",
+    marginBottom: "2px",
   };
 
   const titleStyle = {
@@ -100,7 +100,6 @@ export default function ProductReceipt({ complaint, username, role }: Props) {
 
   const contactInfoStyle = {
     fontSize: "10px",
-    margin: "0",
   };
 
   const addressStyle = {
@@ -116,9 +115,7 @@ export default function ProductReceipt({ complaint, username, role }: Props) {
     fontSize: "10px",
   };
 
-  const underlinedTextStyle = {
-    borderBottom: "1px dashed #1f2937",
-  };
+  const underlinedTextStyle = {};
 
   const urduTextStyle = {
     fontFamily: "Urdu",
@@ -142,8 +139,6 @@ export default function ProductReceipt({ complaint, username, role }: Props) {
     gap: "8px",
   };
 
-  const trackerUrl = `https://www.taskercompany.com/tracker/${complaint.complain_num}`;
-
   return (
     <div>
       <Button size="sm" variant="outline" onClick={handlePrint}>
@@ -158,22 +153,20 @@ export default function ProductReceipt({ complaint, username, role }: Props) {
             alt="logo"
             style={{
               position: "absolute",
-              top: "40px",
+              top: "30px",
               left: "40px",
               width: "150px",
               height: "auto",
             }}
           />
-          <div style={headerStyle}>
-            <h2 style={titleStyle}>PRODUCT RECEIPT</h2>
-            <h3 style={companyNameStyle}>
-              Tasker Company <span style={{ fontSize: "10px" }}>(ASC)</span>
-            </h3>
-            <p style={contactInfoStyle}>
-              <strong>WHATSAPP</strong> 03025117000 - <strong>Landline</strong>{" "}
-              04236667000
+          <div style={{...headerStyle}}>
+            <h2 style={{...titleStyle, margin: '0px'}}>PRODUCT RECEIPT</h2>
+            <h3 style={{...companyNameStyle, margin: '0px'}}>Tasker Company</h3>
+            <p style={{...contactInfoStyle, margin: '0px'}}>
+              <strong>CALL - WHATSAPP</strong> 03025117000 -{" "}
+              <strong>Landline</strong> 04236667000
             </p>
-            <p style={addressStyle}>
+            <p style={{...addressStyle, margin: '0px'}}>
               St: 09 Iqbal Park DHA Main Boulevard Lahore
             </p>
           </div>
@@ -226,11 +219,11 @@ export default function ProductReceipt({ complaint, username, role }: Props) {
             </div>
           </div>
           <p style={{ textAlign: "center", fontSize: "10px" }}>
-            <strong>Public Dealing Timing:</strong>
-          </p>
-          <p style={{ fontSize: "10px", margin: "0", marginLeft: "8px" }}>
+            <strong>Public Dealing Timing: </strong>
+            <br />
             9:00 AM - 6:00 PM (Monday to Saturday)
           </p>
+
           <div style={urduSectionStyle}>
             <div style={urduTextStyle}>
               <h4 style={{ fontWeight: "bold", fontSize: "10px" }}>
@@ -238,8 +231,8 @@ export default function ProductReceipt({ complaint, username, role }: Props) {
               </h4>
               <div style={{ paddingRight: "16px", textAlign: "right" }}>
                 <p>
-                  مصنوعات کی سروس چارجز کے بارے میں معلومات حاصل کرنے کے لیے کم
-                  از کم دو گھنٹے بعد رابطہ کریں۔
+                  مصنوعات کی رپیرنگ چارجز کے بارے میں معلومات حاصل کرنے کے لیے
+                  کم از کم دو گھنٹے بعد رابطہ کریں۔
                 </p>
                 <p>
                   سروس کسٹمر کی اجازت اور مکمل پیمنٹ کی ادائیگی کے بعد شروع کی
@@ -269,21 +262,20 @@ export default function ProductReceipt({ complaint, username, role }: Props) {
               </div>
             </div>
             <div style={qrCodeStyle}>
-              <QRCodeSVG value={trackerUrl} size={100} />
+              <img
+                src="/qr-code.png"
+                alt="qr-code"
+                style={{ width: "100px", height: "auto" }}
+              />
               <p style={{ fontSize: "8px", textAlign: "center" }}>
-                Track Your Complaint
+                Scan QR Code
               </p>
             </div>
           </div>
-          <p style={{ fontWeight: "600", fontSize: "10px" }}>
-            Prepared By:{" "}
-            <span style={underlinedTextStyle}>
-              {username} -{" "}
-              <span style={{ fontSize: "6px" }}>
-                ({role} in Tasker Company)
-              </span>
-            </span>
-          </p>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <p style={{ fontWeight: "600", fontSize: "10px" }}>Prepared By:</p>
+            <span style={underlinedTextStyle}> {username}</span>
+          </div>
         </div>
       </div>
     </div>

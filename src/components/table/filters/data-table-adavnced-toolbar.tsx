@@ -26,6 +26,11 @@ import {
 import { useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { toast } from "react-toastify";
+import { useSession } from "next-auth/react";
+import { API_URL } from "@/lib/apiEndPoints";
+import useFetch from "@/hooks/usefetch";
+import { dataTypeIds } from "@/types";
+import SearchSelect from "@/components/custom/search-select";
 
 interface Filter {
   id: string;
@@ -58,6 +63,8 @@ const filterConditions = [
   { value: "between", label: "Between" },
 ];
 
+const SEARCH_SELECT_FIELDS = ["brand_id", "branch_id", "technician"];
+
 export function DataTableFiltersToolbar({ columns }: FilterToolbarProps) {
   const options = columns
     .slice(1)
@@ -71,6 +78,19 @@ export function DataTableFiltersToolbar({ columns }: FilterToolbarProps) {
     .filter((option: any) => option.value !== "");
 
   const searchParams = useSearchParams();
+  const session = useSession();
+  const token = session.data?.user?.token || "";
+
+  const { data: brands } = useFetch<dataTypeIds[]>(
+    `${API_URL}/crm/fetch-authorized-brands`,
+  );
+  const { data: branches } = useFetch<dataTypeIds[]>(
+    `${API_URL}/crm/fetch-branches`,
+  );
+  const { data: technicians } = useFetch<dataTypeIds[]>(
+    `${API_URL}/crm/fetch-workers`,
+    token,
+  );
 
   // Initialize filters from URL, but only if there are actual filters
   let initialFilters: Filter[] = [];
@@ -126,6 +146,11 @@ export function DataTableFiltersToolbar({ columns }: FilterToolbarProps) {
       const updatedFilters = prev.map((f, i) => {
         if (i !== index) return f;
 
+        // Reset value when filter type changes
+        if (f.id !== newFilter.id) {
+          newFilter.value = "";
+        }
+
         // Handle like conditions
         if (
           ["like", "not like"].includes(newFilter.condition) &&
@@ -134,7 +159,7 @@ export function DataTableFiltersToolbar({ columns }: FilterToolbarProps) {
           const value = newFilter.value.trim();
           return {
             ...newFilter,
-            value: value ? `%${value.replace(/%/g, '')}%` : "", // Remove existing % and wrap value with % if not empty
+            value: value ? `%${value.replace(/%/g, "")}%` : "", // Remove existing % and wrap value with % if not empty
           };
         }
         return newFilter;
@@ -172,7 +197,37 @@ export function DataTableFiltersToolbar({ columns }: FilterToolbarProps) {
     setLogic("AND");
   };
 
+  const getSearchSelectOptions = (fieldId: string) => {
+    switch (fieldId) {
+      case "brand_id":
+        return brands || [];
+      case "branch_id":
+        return branches || [];
+      case "technician":
+        return technicians || [];
+      default:
+        return [];
+    }
+  };
+
   const renderValueInput = (filter: Filter) => {
+    if (SEARCH_SELECT_FIELDS.includes(filter.id)) {
+      const options = getSearchSelectOptions(filter.id);
+      return (
+        <SearchSelect
+          options={options}
+          className="-mt-1.5"
+          value={filter.value}
+          onChange={(value) =>
+            updateFilter(filters.indexOf(filter), {
+              ...filter,
+              value: value,
+            })
+          }
+        />
+      );
+    }
+
     if (filter.condition === "between") {
       return (
         <div className="flex w-64 gap-2">
@@ -230,7 +285,7 @@ export function DataTableFiltersToolbar({ columns }: FilterToolbarProps) {
         onChange={(e) =>
           updateFilter(filters.indexOf(filter), {
             ...filter,
-            value: e.target.value.replace(/%/g, ''), // Remove existing % from input
+            value: e.target.value.replace(/%/g, ""), // Remove existing % from input
           })
         }
         placeholder="Enter value"
