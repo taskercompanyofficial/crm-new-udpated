@@ -55,13 +55,13 @@ export function TasksTableFloatingBar({ table }: TasksTableFloatingBarProps) {
 
 📦 *Product Details*
 *Product:* ${data.product || "N/A"}
-*Brand:* ${data.brand_name || "N/A"}
+*Brand:* ${data.brand_id || "N/A"}
 *Model:* ${data.model || "N/A"}
 *Serial (IND):* ${data.serial_number_ind || "N/A"}
 *Serial (OUD):* ${data.serial_number_oud || "N/A"}
 
 🔧 *Service Information*
-*Branch:* ${data.branch_name || "N/A"}
+*Branch:* ${data.branch_id || "N/A"}
 *Type:* ${data.complaint_type}
 *Complaint:* ${data.description}
 
