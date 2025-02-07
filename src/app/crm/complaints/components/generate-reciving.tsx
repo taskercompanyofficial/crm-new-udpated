@@ -1,13 +1,15 @@
 import React, { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Printer } from "lucide-react";
+import { QRCodeSVG } from "qrcode.react";
 
 interface Props {
   complaint: any;
-  className?: string;
+  username: string;
+  role: string;
 }
 
-export default function ProductReceipt({ complaint }: Props) {
+export default function ProductReceipt({ complaint, username, role }: Props) {
   const receiptRef = useRef<HTMLDivElement>(null);
 
   const handlePrint = () => {
@@ -60,8 +62,8 @@ export default function ProductReceipt({ complaint }: Props) {
     printWindow.document.close();
   };
 
-
   const receiptContainerStyle = {
+    position: "relative" as const,
     display: "none",
   };
 
@@ -77,6 +79,7 @@ export default function ProductReceipt({ complaint }: Props) {
   };
 
   const headerStyle = {
+    width: "100%",
     textAlign: "center" as const,
     display: "flex",
     flexDirection: "column" as const,
@@ -123,6 +126,24 @@ export default function ProductReceipt({ complaint }: Props) {
     fontSize: "10px",
   };
 
+  const qrCodeStyle = {
+    display: "flex",
+    justifyContent: "center",
+    marginTop: "8px",
+    flexDirection: "column" as const,
+    marginBottom: "8px",
+  };
+
+  const urduSectionStyle = {
+    display: "flex",
+    justifyContent: "space-between",
+    flexDirection: "row-reverse" as const,
+    alignItems: "center",
+    gap: "8px",
+  };
+
+  const trackerUrl = `https://www.taskercompany.com/tracker/${complaint.complain_num}`;
+
   return (
     <div>
       <Button size="sm" variant="outline" onClick={handlePrint}>
@@ -132,17 +153,28 @@ export default function ProductReceipt({ complaint }: Props) {
 
       <div style={receiptContainerStyle}>
         <div ref={receiptRef} style={receiptContentStyle}>
+          <img
+            src="/simple-icon.png"
+            alt="logo"
+            style={{
+              position: "absolute",
+              top: "40px",
+              left: "40px",
+              width: "150px",
+              height: "auto",
+            }}
+          />
           <div style={headerStyle}>
             <h2 style={titleStyle}>PRODUCT RECEIPT</h2>
             <h3 style={companyNameStyle}>
               Tasker Company <span style={{ fontSize: "10px" }}>(ASC)</span>
             </h3>
             <p style={contactInfoStyle}>
-              <strong>UAN</strong> 03316117777 - <strong>WHATSAPP</strong>{" "}
-              03025117000 - <strong>Landline</strong> 04236667000
+              <strong>WHATSAPP</strong> 03025117000 - <strong>Landline</strong>{" "}
+              04236667000
             </p>
             <p style={addressStyle}>
-              <strong>St:</strong> 09 Iqbal Park DHA Main Boulevard Lahore
+              St: 09 Iqbal Park DHA Main Boulevard Lahore
             </p>
           </div>
           <div style={detailsRowStyle}>
@@ -199,41 +231,58 @@ export default function ProductReceipt({ complaint }: Props) {
           <p style={{ fontSize: "10px", margin: "0", marginLeft: "8px" }}>
             9:00 AM - 6:00 PM (Monday to Saturday)
           </p>
-          <div style={urduTextStyle}>
-            <h4 style={{ fontWeight: "bold", fontSize: "10px" }}>
-              شرائط و ضوابط:
-            </h4>
-            <div style={{ paddingRight: "16px", textAlign: "right" }}>
-              <p>
-                مصنوعات کی سروس چارجز کے بارے میں معلومات حاصل کرنے کے لیے کم از
-                کم دو گھنٹے بعد رابطہ کریں۔
-              </p>
-              <p>
-                سروس کسٹمر کی اجازت اور مکمل پیمنٹ کی ادائیگی کے بعد شروع کی
-                جائے گی۔
-              </p>
-              <p>سلپ تاریخ اجرا کے دو مہینے بعد تک کارآمد رہے گی۔</p>
-              <p>اوریجنل رسید کے بغیر مصنوعات نہیں دی جائے گی۔</p>
-              <p>
-                مصنوعات کی معلومات کے لیے اپنا کمپلین نمبر دفتری اوقات میں سروس
-                کے نمائیندے کو بتائیں۔
-              </p>
-              <p>
-                وارنٹی میں سروس حاصل کرنے کے لیے اپنی مصنوعات کا اوریجنل وارنٹی
-                کارڈ بمع فوٹو کاپی ہمراہ لائیں۔
-              </p>
-              <p>
-                ابتدائی معائینہ چارجز یونٹ کی مرمت ہونے یا نہ ہونے دونوں صورتوں
-                میں ادا کرنے ہوں گے۔
-              </p>
-              <p>
-                یوںت کی رپیرنگ مکمل ہونے کے بعد بقایا چارجز آفس میں ادا کرنے
-                ہوں گے۔
+          <div style={urduSectionStyle}>
+            <div style={urduTextStyle}>
+              <h4 style={{ fontWeight: "bold", fontSize: "10px" }}>
+                شرائط و ضوابط:
+              </h4>
+              <div style={{ paddingRight: "16px", textAlign: "right" }}>
+                <p>
+                  مصنوعات کی سروس چارجز کے بارے میں معلومات حاصل کرنے کے لیے کم
+                  از کم دو گھنٹے بعد رابطہ کریں۔
+                </p>
+                <p>
+                  سروس کسٹمر کی اجازت اور مکمل پیمنٹ کی ادائیگی کے بعد شروع کی
+                  جائے گی۔
+                </p>
+                <p>سلپ تاریخ اجرا کے دو مہینے بعد تک کارآمد رہے گی۔</p>
+                <p>اوریجنل رسید کے بغیر مصنوعات نہیں دی جائے گی۔</p>
+                <p>
+                  مصنوعات کی معلومات کے لیے اپنا کمپلین نمبر دفتری اوقات میں
+                  سروس کے نمائیندے کو بتائیں۔
+                </p>
+                <p>
+                  وارنٹی میں سروس حاصل کرنے کے لیے اپنی مصنوعات کا اوریجنل
+                  وارنٹی کارڈ بمع فوٹو کاپی ہمراہ لائیں۔
+                </p>
+                <p>
+                  ابتدائی معائینہ چارجز یونٹ کی مرمت ہونے یا نہ ہونے دونوں
+                  صورتوں میں ادا کرنے ہوں گے۔
+                </p>
+                <p>
+                  یوںٹ کی رپیرنگ مکمل ہونے کے بعد <strong>بقایا چارجز</strong>{" "}
+                  آفس میں یا{" "}
+                  <strong>فیصل بینک اکاؤنٹ نمبر 3287787000003300</strong> ٹاسکر
+                  کمپنی کے نام میں جمع کروائیں۔{" "}
+                  <strong>صرف آفیشل رسید قابل قبول ہوگی۔</strong>
+                </p>
+              </div>
+            </div>
+            <div style={qrCodeStyle}>
+              <QRCodeSVG value={trackerUrl} size={100} />
+              <p style={{ fontSize: "8px", textAlign: "center" }}>
+                Track Your Complaint
               </p>
             </div>
           </div>
           <p style={{ fontWeight: "600", fontSize: "10px" }}>
-            Prepared By: <span style={underlinedTextStyle}></span>
+            Prepared By:{" "}
+            <span style={underlinedTextStyle}>
+              {username} -{" "}
+              <span style={{ fontSize: "6px" }}>
+                ({role} in Tasker Company)
+              </span>
+            </span>
           </p>
         </div>
       </div>

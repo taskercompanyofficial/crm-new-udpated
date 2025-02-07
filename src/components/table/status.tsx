@@ -21,7 +21,7 @@ export default function Status({ status }: { status: string }) {
   ];
 
   // Try to find status in attendance options first, then complaint options
-  let statusOption =
+  const statusOption =
     attendanceOptions.find((option) => option.value === status) ||
     ComplaintStatusOptions.find((option) => option.value === status) ||
     StatusOptions.find((option) => option.value === status) ||

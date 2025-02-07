@@ -5,6 +5,7 @@ import { description, keywords, title } from "@/lib/Meta";
 import { notFound } from "next/navigation";
 import Form from "../form";
 import { fetchData } from "@/hooks/fetchData";
+import { getUserDetails } from "@/lib/getUserDetails";
 
 // Function to dynamically generate metadata
 export async function generateMetadata({
@@ -77,12 +78,19 @@ export default async function Page({ params }: { params: { slug: string } }) {
     const technicians = await fetchData({
       endPoint: `${API_URL}/crm/fetch-workers`,
     });
-
+    const { userDetails } = await getUserDetails();
     if (!response || !response.data) {
       notFound();
     }
 
-    return <Form complaint={response.data} technician={technicians.data} />;
+    return (
+      <Form
+        complaint={response.data}
+        technician={technicians.data}
+        username={userDetails?.full_name || ""}
+        role={userDetails?.role || ""}
+      />
+    );
   } catch (error) {
     console.error("Error fetching complaint:", error);
     notFound();

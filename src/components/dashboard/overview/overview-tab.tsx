@@ -19,7 +19,7 @@ export default async function OverviewTab() {
   return (
     <div className="space-y-8 antialiased">
       <ChartsByStatus complaintStatusData={complaintStatusData.data} />
-      <div className="grid grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-5">
         <div className="col-span-3">
           <OtherStatusComplaints data={complaintStatusForBar.data} />
         </div>
@@ -27,7 +27,7 @@ export default async function OverviewTab() {
           <AttendanceStatus />
         </div>
       </div>
-      <ComplaintsByBrand data={complaintStatusByBrands?.data } />
+      <ComplaintsByBrand data={complaintStatusByBrands?.data} />
     </div>
   );
 }

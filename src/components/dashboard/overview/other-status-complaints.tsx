@@ -79,18 +79,6 @@ function ChartContent({ data }: { data: Record<string, { count: number }> }) {
 
   const totalComplaints = chartData.reduce((sum, item) => sum + item.count, 0);
 
-  const getStatusIcon = (status: string) => {
-    switch (status.toLowerCase()) {
-      case "opened":
-        return <AlertCircle className="h-4 w-4 text-yellow-500" />;
-      case "closed":
-        return <CheckCircle className="h-4 w-4 text-green-500" />;
-      case "rejected":
-        return <XCircle className="h-4 w-4 text-red-500" />;
-      default:
-        return null;
-    }
-  };
   const router = useRouter();
   return (
     <Card className="shadow-lg">
@@ -105,7 +93,7 @@ function ChartContent({ data }: { data: Record<string, { count: number }> }) {
       </CardHeader>
       <CardContent className="h-[300px]">
         <ChartContainer config={chartConfig} className="h-[300px] w-full">
-          <BarChart accessibilityLayer data={chartData} margin={{ left: 40 }}>
+          <BarChart accessibilityLayer data={chartData} margin={{ left: 2 }}>
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="statusLabel"

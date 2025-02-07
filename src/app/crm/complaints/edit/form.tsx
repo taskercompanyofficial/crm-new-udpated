@@ -26,9 +26,13 @@ import ProductReceipt from "../components/generate-reciving";
 export default function Form({
   complaint,
   technician,
+  username,
+  role,
 }: {
   complaint?: ComplaintsType;
   technician?: dataTypeIds[];
+  username?: string;
+  role?: string;
 }) {
   const [tab, setTab] = useState("advanced");
   const session = useSession();
@@ -230,7 +234,11 @@ export default function Form({
               />
             </div>
             <div className="flex items-center gap-2">
-              <ProductReceipt complaint={data} />
+              <ProductReceipt
+                complaint={data}
+                username={username || ""}
+                role={role || ""}
+              />
               <SendMessageCustomerBtn
                 complaint={data}
                 to={data.applicant_whatsapp}
