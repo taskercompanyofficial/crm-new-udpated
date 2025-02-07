@@ -130,12 +130,14 @@ export default function Form() {
             options={CallStatusOptions}
             selected={data.call_status}
             onChange={(e) => updateData({ ...data, call_status: e })}
+            errorMessage={errors.call_status}
           />
           <div className="flex-grow md:flex-grow-0">
             <SelectInput
               options={ComplaintStatusOptions}
               selected={data.status}
               onChange={(e) => updateData({ ...data, status: e })}
+              errorMessage={errors.status}  
             />
           </div>
           <SubmitBtn
