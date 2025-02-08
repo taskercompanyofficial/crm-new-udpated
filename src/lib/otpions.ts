@@ -84,9 +84,7 @@ export const ComplaintStatusOptions = [
   { value: "open", label: "Open", color: "255, 159, 67", icon: CircleDot },
   { value: "hold-by-us", label: "Hold by Us", color: "255, 159, 67", icon: CircleDot },
   { value: "hold-by-brand", label: "Hold by Brand", color: "255, 159, 67", icon: CircleDot },
-  { value: "hold-by-customer", label: "Hold by Customer", color: "255, 159, 67", icon: CircleDot },
-  { value: "open", label: "Open", color: "255, 159, 67", icon: CircleDot },
-  {
+  { value: "hold-by-customer", label: "Hold by Customer", color: "255, 159, 67", icon: CircleDot },  {
     value: "assigned-to-technician",
     label: "Assigned to Technician",
     color: "234, 84, 85",
@@ -97,12 +95,6 @@ export const ComplaintStatusOptions = [
     label: "Part Demand",
     color: "234, 84, 85",
     icon: Package,
-  },
-  {
-    value: "done-by-technition",
-    label: "Done by Technition",
-    color: "234, 84, 85",
-    icon: WrenchIcon,
   },
   {
     value: "service-lifting",
@@ -136,8 +128,8 @@ export const ComplaintStatusOptions = [
   },
   { value: "delivered", label: "Delivered", color: "26, 188, 156", icon: Box },
   {
-    value: "close-pending-by-brand",
-    label: "Closing Pending by Brand",
+    value: "pending-by-brand",
+    label: "Pending by Brand",
     color: "231, 76, 60",
     icon: AlertCircle,
   },
@@ -150,12 +142,6 @@ export const ComplaintStatusOptions = [
   {
     value: "completed",
     label: "Completed",
-    color: "39, 174, 96",
-    icon: CheckCircle,
-  },
-  {
-    value: "completed-hold-by-brand",
-    label: "Completed Hold by Brand",
     color: "39, 174, 96",
     icon: CheckCircle,
   },

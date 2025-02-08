@@ -88,13 +88,6 @@ export function getMenuList(
           icon: Clock,
           submenus: [],
         },
-        {
-          href: "/messages",
-          label: "Messages",
-          active: pathname === "/messages",
-          icon: MessagesSquare,
-          submenus: [],
-        },
       ],
     },
   ];
