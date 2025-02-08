@@ -22,6 +22,7 @@ import Store from "../components/strore";
 import { Checkbox } from "@/components/ui/checkbox";
 import SendMessageCustomerBtn from "../components/send-message-cutomer-btn";
 import ProductReceipt from "../components/generate-reciving";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 export default function Form({
   complaint,
@@ -180,7 +181,7 @@ export default function Form({
     <div className="rounded-lg bg-white p-2 shadow-md dark:bg-slate-950 md:p-4">
       <Tabs defaultValue="basic" value={tab} onValueChange={setTab}>
         <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-          <div className="overflow-x-auto">
+          <ScrollArea >
             <TabsList className="min-w-max">
               {[
                 "basic",
@@ -199,7 +200,8 @@ export default function Form({
                 </TabsTrigger>
               ))}
             </TabsList>
-          </div>
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
           <div className="flex flex-wrap items-center justify-end gap-2">
             <div className="flex flex-wrap gap-2">
               <div className="flex flex-wrap items-center gap-2">
