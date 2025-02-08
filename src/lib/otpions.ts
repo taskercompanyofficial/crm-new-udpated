@@ -154,6 +154,12 @@ export const ComplaintStatusOptions = [
     icon: CheckCircle,
   },
   {
+    value: "completed-hold-by-brand",
+    label: "Completed Hold by Brand",
+    color: "39, 174, 96",
+    icon: CheckCircle,
+  },
+  {
     value: "amount-pending",
     label: "Amount Pending",
     color: "234, 84, 85",
