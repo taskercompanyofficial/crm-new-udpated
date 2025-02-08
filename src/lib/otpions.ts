@@ -82,6 +82,10 @@ export const StatusOptions = [
 
 export const ComplaintStatusOptions = [
   { value: "open", label: "Open", color: "255, 159, 67", icon: CircleDot },
+  { value: "hold-by-us", label: "Hold by Us", color: "255, 159, 67", icon: CircleDot },
+  { value: "hold-by-brand", label: "Hold by Brand", color: "255, 159, 67", icon: CircleDot },
+  { value: "hold-by-customer", label: "Hold by Customer", color: "255, 159, 67", icon: CircleDot },
+  { value: "open", label: "Open", color: "255, 159, 67", icon: CircleDot },
   {
     value: "assigned-to-technician",
     label: "Assigned to Technician",
