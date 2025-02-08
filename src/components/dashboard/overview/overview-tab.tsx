@@ -19,15 +19,15 @@ export default async function OverviewTab() {
   return (
     <div className="space-y-8 antialiased">
       <ChartsByStatus complaintStatusData={complaintStatusData.data} />
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-5">
+      <OtherStatusComplaints data={complaintStatusForBar.data} />
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-5">
         <div className="col-span-3">
-          <OtherStatusComplaints data={complaintStatusForBar.data} />
+        <ComplaintsByBrand data={complaintStatusByBrands?.data} />
         </div>
         <div className="col-span-2">
           <AttendanceStatus />
         </div>
       </div>
-      <ComplaintsByBrand data={complaintStatusByBrands?.data} />
     </div>
   );
 }

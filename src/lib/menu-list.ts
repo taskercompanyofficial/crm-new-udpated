@@ -10,6 +10,7 @@ import {
   Settings,
   Users,
   PackageSearch,
+  MessagesSquare,
 } from "lucide-react";
 type Submenu = {
   href: string;
@@ -85,6 +86,13 @@ export function getMenuList(
           label: "Attendance",
           active: pathname === "/crm/attendance",
           icon: Clock,
+          submenus: [],
+        },
+        {
+          href: "/messages",
+          label: "Messages",
+          active: pathname === "/messages",
+          icon: MessagesSquare,
           submenus: [],
         },
       ],
@@ -165,6 +173,13 @@ export function getMenuList(
         label: "Account",
         active: pathname === "/crm/account",
         icon: Settings,
+        submenus: [],
+      },
+      {
+        href: "/messages",
+        label: "Messages",
+        active: pathname === "/messages",
+        icon: MessagesSquare,
         submenus: [],
       },
     ],
