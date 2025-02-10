@@ -235,7 +235,7 @@ export function AttendanceStatus({ data }: { data: AttendanceData }) {
                             </Avatar>
                           </TableCell>
                           <TableCell>
-                            <Link href={`/crm/staff/${user.id}`} className="underline">{user.full_name}</Link>
+                            <Link href={`/crm/staff/${user.id}?tab=attendance`} className="underline">{user.full_name}</Link>
                           </TableCell>
                           <TableCell className="text-right">
                             {user.assigned_jobs_count}

@@ -36,7 +36,7 @@ export async function generateMetadata({
 }
 
 // Server component function
-export default async function Page({ params }: { params: { slug: string } }) {
+export default async function Page({ params, searchParams }: { params: { slug: string }, searchParams: { [key: string]: string | string[] | undefined } }) {
   const slug = params.slug;
 
   try {
@@ -47,7 +47,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
       notFound();
     }
 
-    return <ViewStaff data={response.data} />;
+    return <ViewStaff data={response.data} searchParams={searchParams} />;
   } catch (error) {
     console.error("Error fetching complaint:", error);
     notFound();
