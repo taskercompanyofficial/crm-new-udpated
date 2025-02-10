@@ -14,6 +14,7 @@ import { Calendar, CheckCircle, XCircle, LogIn, LogOut } from 'lucide-react';
 import { fetchData } from '@/hooks/fetchData';
 import { Button } from '@/components/ui/button';
 import { AttendanceButtons } from './attendance-buttons';
+import { buildQueryParams } from '@/actions/get-url-params';
 
 interface AttendanceRecord {
     created_at: string;
@@ -42,8 +43,13 @@ interface ApiResponse {
 }
 
 export default async function ViewAttendence({ userId, searchParams }: { userId: string, searchParams: { [key: string]: string | string[] | undefined } }) {
-    const response: ApiResponse = await fetchData({ endPoint: `/crm/attendance/by-user/${userId}?from=${searchParams.from}&to=${searchParams.to}` });
+    const params = buildQueryParams({
+        from: searchParams?.from,
+        to: searchParams?.to,
+    });
+    const response: ApiResponse = await fetchData({ endPoint: `/crm/attendance/by-user/${userId}?${params}` });
     const attendanceData = response.data?.data;
+
 
 
     if (!attendanceData) {
