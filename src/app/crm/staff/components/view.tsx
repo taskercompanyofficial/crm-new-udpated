@@ -18,18 +18,21 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsTrigger } from "@/components/ui/tabs";
 import { TabsList } from "@/components/ui/tabs";
 import ViewAttendence from "./view-attendenc";
+import { DateRangePicker } from "@/components/custom/date-range-picker";
 
 export default async function ViewStaff({ data, searchParams }: { data: any, searchParams: { [key: string]: string | string[] | undefined } }) {
   return (
     <Tabs defaultValue={searchParams.tab as string || "profile"}>
-      <TabsList>
-        <TabsTrigger value="profile">Profile</TabsTrigger>
-        <TabsTrigger value="attendance">Attendance</TabsTrigger>
-        <TabsTrigger value="complaints">Complaints</TabsTrigger>
-        <TabsTrigger value="tasks">Tasks</TabsTrigger>
+      <div className="flex items-center justify-between">
 
-
-      </TabsList>
+        <TabsList>
+          <TabsTrigger value="profile">Profile</TabsTrigger>
+          <TabsTrigger value="attendance">Attendance</TabsTrigger>
+          <TabsTrigger value="complaints">Complaints</TabsTrigger>
+          <TabsTrigger value="tasks">Tasks</TabsTrigger>
+        </TabsList>
+        <DateRangePicker />
+      </div>
       <div className="bg-white rounded-lg shadow-sm dark:bg-slate-950">
 
         <TabsContent value="profile">
@@ -229,7 +232,7 @@ export default async function ViewStaff({ data, searchParams }: { data: any, sea
           </div>
         </TabsContent>
         <TabsContent value="attendance">
-          <ViewAttendence userId={data.id} />
+          <ViewAttendence userId={data.id} searchParams={searchParams} />
         </TabsContent>
         <TabsContent value="complaints">
           {/* <ViewComplaints userId={data.id} /> */}

@@ -41,9 +41,10 @@ interface ApiResponse {
     } | null;
 }
 
-export default async function ViewAttendence({ userId }: { userId: string }) {
-    const response: ApiResponse = await fetchData({ endPoint: `/crm/attendance/by-user/${userId}` });
+export default async function ViewAttendence({ userId, searchParams }: { userId: string, searchParams: { [key: string]: string | string[] | undefined } }) {
+    const response: ApiResponse = await fetchData({ endPoint: `/crm/attendance/by-user/${userId}?from=${searchParams.from}&to=${searchParams.to}` });
     const attendanceData = response.data?.data;
+
 
     if (!attendanceData) {
         return (
