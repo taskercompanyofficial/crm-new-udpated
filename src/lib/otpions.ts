@@ -81,89 +81,92 @@ export const StatusOptions = [
 ];
 
 export const ComplaintStatusOptions = [
-  { value: "open", label: "Open", color: "255, 159, 67", icon: CircleDot },
-  { value: "hold-by-us", label: "Hold by Us", color: "255, 159, 67", icon: CircleDot },
-  { value: "hold-by-brand", label: "Hold by Brand", color: "255, 159, 67", icon: CircleDot },
-  { value: "hold-by-customer", label: "Hold by Customer", color: "255, 159, 67", icon: CircleDot },  {
+  { value: "open", label: "Open", color: "255, 159, 67", icon: CircleDot }, // Orange
+  { value: "hold-by-us", label: "Hold by Us", color: "255, 87, 34", icon: CircleDot }, // Deep Orange
+  { value: "hold-by-brand", label: "Hold by Brand", color: "233, 30, 99", icon: CircleDot }, // Pink
+  { value: "hold-by-customer", label: "Hold by Customer", color: "103, 58, 183", icon: CircleDot }, // Purple
+
+  {
     value: "assigned-to-technician",
     label: "Assigned to Technician",
     color: "234, 84, 85",
-    icon: UserCheck,
+    icon: UserCheck, // Red
   },
   {
     value: "part-demand",
     label: "Part Demand",
-    color: "234, 84, 85",
-    icon: Package,
+    color: "244, 67, 54",
+    icon: Package, // Bright Red
   },
   {
     value: "service-lifting",
     label: "Service Lifting",
     color: "46, 204, 113",
-    icon: ArrowUpCircle,
+    icon: ArrowUpCircle, // Green
   },
   {
     value: "party-lifting",
     label: "Party Lifting",
     color: "52, 152, 219",
-    icon: Users,
+    icon: Users, // Blue
   },
   {
     value: "unit-in-service-center",
     label: "Unit in Service Center",
     color: "155, 89, 182",
-    icon: BuildingIcon,
+    icon: BuildingIcon, // Purple
   },
   {
     value: "installation-pending",
     label: "Installation Pending",
     color: "230, 126, 34",
-    icon: Clock,
+    icon: Clock, // Dark Orange
   },
   {
     value: "in-progress",
     label: "In Progress",
     color: "241, 196, 15",
-    icon: ClockIcon,
+    icon: ClockIcon, // Yellow
   },
-  { value: "delivered", label: "Delivered", color: "26, 188, 156", icon: Box },
+  { value: "delivered", label: "Delivered", color: "26, 188, 156", icon: Box }, // Teal
   {
     value: "pending-by-brand",
     label: "Pending by Brand",
     color: "231, 76, 60",
-    icon: AlertCircle,
+    icon: AlertCircle, // Dark Red
   },
   {
     value: "feedback-pending",
-    label: "Feedback Pending",
-    color: "149, 165, 166",
-    icon: Clock,
+    label: "Feedback Pending", 
+    color: "255, 159, 64",
+    icon: Clock, // Orange
   },
   {
     value: "completed",
     label: "Completed",
     color: "39, 174, 96",
-    icon: CheckCircle,
+    icon: CheckCircle, // Green
   },
   {
     value: "amount-pending",
     label: "Amount Pending",
-    color: "234, 84, 85",
-    icon: AlertCircle,
+    color: "255, 99, 132",
+    icon: AlertCircle, // Soft Red
   },
   {
     value: "closed",
     label: "Closed",
     color: "41, 128, 185",
-    icon: CheckCircle,
+    icon: CheckCircle, // Blue
   },
   {
     value: "cancelled",
     label: "Cancelled",
     color: "192, 57, 43",
-    icon: XCircleIcon,
+    icon: XCircleIcon, // Dark Red
   },
 ];
+
 export const CallStatusOptions = [
   { value: "pending", label: "Pending", icon: CircleDot },
   { value: "phone-off", label: "Phone Off", icon: PhoneOff },

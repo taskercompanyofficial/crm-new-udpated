@@ -1,6 +1,7 @@
 "use client";
+
 import React, { Suspense } from "react";
-import { TrendingUp, BarChart2 } from "lucide-react";
+import { TrendingUp, BarChart2, AlertCircle, RefreshCcw } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -25,6 +26,8 @@ import {
   YAxis,
 } from "recharts";
 import { useRouter } from "next/navigation";
+import { ComplaintStatusOptions } from "@/lib/otpions";
+import { Button } from "@/components/ui/button";
 
 function LoadingSkeleton() {
   return (
@@ -45,119 +48,195 @@ function LoadingSkeleton() {
 }
 
 interface BrandData {
-  data: {
+  total_installations: number;
+  active_installations: number;
+  brand_data: {
     brand: string;
     brand_id: number;
     count: number;
+    status_counts: {
+      [key: string]: number;
+    };
   }[];
-  total_complaints: number;
-  pending_complaints: number;
+}
+
+function NoDataDisplay({ onRefresh }: { onRefresh: () => void }) {
+  return (
+    <Card >
+      <CardContent className="flex h-[400px] flex-col items-center justify-center gap-4">
+        <AlertCircle className="h-16 w-16 text-muted-foreground/50" />
+        <div className="text-center">
+          <h3 className="text-lg font-semibold">No Data Available</h3>
+          <p className="text-sm text-muted-foreground">
+            There are currently no installation records to display.
+          </p>
+        </div>
+        <Button
+          variant="outline"
+          onClick={onRefresh}
+          className="gap-2"
+        >
+          <RefreshCcw className="h-4 w-4" />
+          Refresh Data
+        </Button>
+      </CardContent>
+    </Card>
+  );
 }
 
 function ChartContent({ data }: { data: BrandData }) {
-  const router = useRouter(); // Moved useRouter to the top to avoid conditional hook call
+  const router = useRouter();
 
-  if (!data || !data.data || data.data.length === 0) {
-    return <div>No data available</div>;
+  if (!data || !data.brand_data || data.brand_data.length === 0) {
+    return <NoDataDisplay onRefresh={() => router.refresh()} />;
   }
 
-  const chartConfig = {
-    count: {
-      label: "Complaint Volume",
+  // Get unique statuses across all brands
+  const allStatuses = Array.from(new Set(
+    data.brand_data.flatMap(brand => Object.keys(brand.status_counts))
+  ));
+
+  const statusColors = Object.fromEntries(
+    ComplaintStatusOptions.map((option) => [
+      option.value,
+      `rgba(${option.color}, 0.8)`,
+    ]),
+  );
+
+  const chartConfig: ChartConfig = {
+    total: {
+      label: "Total Installations",
       color: "hsl(var(--chart-1))",
     },
-  } satisfies ChartConfig;
+    active: {
+      label: "Active Installations",
+      color: "hsl(var(--chart-2))",
+    },
+    ...allStatuses.reduce((acc, status) => ({
+      ...acc,
+      [status]: {
+        label: ComplaintStatusOptions.find(opt => opt.value === status)?.label || status,
+        color: statusColors[status] || "rgba(180, 180, 180, 0.8)"
+      }
+    }), {})
+  };
 
-  // Generate unique colors for each brand
-  const colors = [
-    "#FF6B6B", // Coral Red
-    "#4ECDC4", // Turquoise
-    "#45B7D1", // Sky Blue
-    "#96CEB4", // Sage Green
-    "#FFEEAD", // Cream Yellow
-    "#D4A5A5", // Dusty Rose
-    "#9B59B6", // Purple
-    "#3498DB", // Blue
-    "#E67E22", // Orange
-    "#1ABC9C", // Emerald
-    "#F39C12", // Sunflower
-    "#8E44AD", // Wisteria
-    "#2980B9", // Belize Hole
-    "#27AE60", // Nephritis
-    "#C0392B", // Alizarin
-    "#D35400", // Pumpkin
+  // Create summary data for overall counts
+  const summaryData = [
+    {
+      brand: "Overall",
+      total_installations: data.total_installations,
+      active_installations: data.active_installations,
+    },
   ];
 
-  const chartData = data.data.map((item, index) => ({
-    ...item,
-    fill: colors[index % colors.length],
+  // Transform data to show brand-wise installations with status counts
+  const brandData = data.brand_data.map((item) => ({
+    brand: item.brand,
+    brand_id: item.brand_id,
+    ...item.status_counts,
   }));
 
+  // Combine summary and brand data
+  const chartData = [...summaryData, ...brandData];
+
+  const handleBarClick = (data: any, dataKey: string) => {
+    console.log(dataKey);
+    const filters = encodeURIComponent(JSON.stringify([{
+      id: "complaint_type",
+      condition: "like",
+      value: "%installation%"
+    }]));
+
+    let url = '';
+    if (dataKey === 'total_installations' || dataKey === 'active_installations') {
+      // For total/active, include brand_id if available
+      url = data.brand_id
+        ? `/crm/complaints?brand_id=${data.brand_id}&filters=${filters}`
+        : `/crm/complaints?filters=${filters}`;
+    } else {
+      if (!data.brand_id || !dataKey) return;
+      url = `/crm/complaints?brand_id=${data.brand_id}&status=${dataKey}&filters=${filters}`;
+    }
+
+    console.log(url);
+    router.push(url);
+  };
+
   return (
-    <Card className="shadow-lg">
+    <Card className="shadow-xl">
       <CardHeader>
         <div className="flex items-center gap-2">
           <BarChart2 className="h-5 w-5" />
-          <CardTitle>
-            Brand Distribution Analysis (Free Installations)
-          </CardTitle>
+          <CardTitle>Brand Distribution Analysis</CardTitle>
         </div>
-        <CardDescription>
-          Overall Volume: {data.total_complaints.toLocaleString()} | In
-          Progress: {data.pending_complaints.toLocaleString()}
+        <CardDescription className="text-lg font-semibold">
+          Total Installations: {data.total_installations.toLocaleString()} | Active Installations: {data.active_installations.toLocaleString()}
         </CardDescription>
       </CardHeader>
       <CardContent className="h-[300px]">
-        <ChartContainer config={chartConfig} className="h-[300px] w-full">
-          <BarChart accessibilityLayer data={chartData} margin={{ left: 2 }}>
-            <CartesianGrid vertical={false} strokeDasharray="3 3" />
+        <ChartContainer config={chartConfig} className="h-[350px] w-full">
+          <BarChart
+            width={600}
+            height={300}
+            data={chartData}
+          >
+            <CartesianGrid vertical={false} />
             <XAxis
               dataKey="brand"
               tickLine={false}
               axisLine={false}
-              interval={0}
-              angle={0} // Changed to 0 for straight text
-              textAnchor="middle" // Centered text
-              height={60}
+              textAnchor="middle"
+              height={100}
             />
-            <YAxis
-              tickLine={false}
-              axisLine={false}
-              tickFormatter={(value) => value.toLocaleString()}
-              fontSize={11}
-              fill="#888"
-            />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent indicator="dashed" />}
-            />
+            <YAxis tickLine={false} axisLine={false} tickFormatter={(value) => value.toLocaleString()} />
+
+            <ChartTooltip content={<ChartTooltipContent />} />
+
             <Bar
-              dataKey="count"
+              dataKey="total_installations"
+              name="Total Installations"
+              fill="hsl(var(--chart-1))"
               radius={[4, 4, 0, 0]}
-              barSize={24}
-              className="mt-4 cursor-pointer hover:opacity-80"
-              onClick={(data: any) => {
-                if (data && data.brand_id) {
-                  router.push(`/crm/complaints?brand_id=${data.brand_id}`);
-                }
-              }}
+              className="cursor-pointer hover:opacity-80"
+              onClick={(data) => handleBarClick(data, "total_installations")}
             >
-              <LabelList
-                position="top"
-                offset={12}
-                className="fill-foreground"
-                fontSize={12}
-              />
+              <LabelList dataKey="total_installations" position="insideTop" fill="white" offset={10} />
             </Bar>
+
+            <Bar
+              dataKey="active_installations"
+              name="Active Installations"
+              fill="hsl(var(--chart-2))"
+              radius={[4, 4, 0, 0]}
+              className="cursor-pointer hover:opacity-80"
+              onClick={(data) => handleBarClick(data, "active_installations")}
+            >
+              <LabelList dataKey="active_installations" position="insideTop" fill="white" offset={10} />
+            </Bar>
+
+            {allStatuses.map((status) => (
+              <Bar
+                key={status}
+                dataKey={status}
+                name={ComplaintStatusOptions.find(opt => opt.value === status)?.label || status}
+                fill={statusColors[status] || "rgba(180, 180, 180, 0.8)"}
+                stackId="brand-stacked"
+                className="cursor-pointer hover:opacity-80"
+                onClick={(data) => handleBarClick(data, status)}
+              />
+            ))}
+
           </BarChart>
         </ChartContainer>
+
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
-          Brand Performance Metrics <TrendingUp className="h-4 w-4" />
+          Installation Distribution Overview <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
-          Select any brand column to view detailed complaint analytics
+          Showing installations by status across all brands. Click on bars to view brand details.
         </div>
       </CardFooter>
     </Card>
@@ -170,4 +249,4 @@ export default function ComplaintsByBrand({ data }: { data: BrandData }) {
       <ChartContent data={data} />
     </Suspense>
   );
-}
+}  

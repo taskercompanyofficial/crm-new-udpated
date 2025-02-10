@@ -81,7 +81,7 @@ function ChartContent({ data }: { data: Record<string, { count: number }> }) {
 
   const router = useRouter();
   return (
-    <Card className="shadow-lg">
+    <Card >
       <CardHeader>
         <div className="flex items-center gap-2">
           <BarChart2 className="h-5 w-5" />

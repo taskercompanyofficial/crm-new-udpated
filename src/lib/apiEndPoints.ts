@@ -19,3 +19,4 @@ export const USERS = "/crm/users";
 export const ATTENDANCE = "/crm/attendance";
 export const ROUTESMETA = API_URL + "/routes_meta";
 export const INVENTORIES = "/crm/inventory";
+export const DAILY_ATTENDANCE_STATS = "/crm/daily-attendance-stats";

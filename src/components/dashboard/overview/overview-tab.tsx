@@ -16,18 +16,19 @@ export default async function OverviewTab() {
   const complaintStatusByBrands = await fetchData({
     endPoint: API_URL + "/crm/dashboard-complaints-by-brand",
   });
+  const dailyAttendanceStats = await fetchData({
+    endPoint: API_URL + "/crm/daily-attendance-stats",
+  });
   return (
     <div className="space-y-8 antialiased">
       <ChartsByStatus complaintStatusData={complaintStatusData.data} />
+
       <OtherStatusComplaints data={complaintStatusForBar.data} />
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-5">
-        <div className="col-span-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <ComplaintsByBrand data={complaintStatusByBrands?.data} />
-        </div>
-        <div className="col-span-2">
-          <AttendanceStatus />
-        </div>
+        <AttendanceStatus data={dailyAttendanceStats.data} />
+
       </div>
-    </div>
+    </div >
   );
 }
