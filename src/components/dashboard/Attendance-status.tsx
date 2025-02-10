@@ -38,15 +38,8 @@ interface AttendanceData {
   absent: UserData[];
 }
 
-function ErrorFallback({ error, resetErrorBoundary }: { error: Error; resetErrorBoundary: () => void }) {
-  return (
-    <div className="flex flex-col items-center justify-center p-4">
-      <h2 className="text-lg font-semibold text-red-600">Something went wrong:</h2>
-      <p className="text-sm text-gray-600 mt-2">{error.message}</p>
-      <Button onClick={resetErrorBoundary} className="mt-4">Try again</Button>
-    </div>
-  );
-}
+
+
 
 function LoadingSkeleton() {
   return (
@@ -83,7 +76,17 @@ export function AttendanceStatus({ data }: { data: AttendanceData }) {
     latitude: 0,
     longitude: 0
   });
+  if (data == null) {
+    return (
+      <div className="flex flex-col items-center justify-center p-4">
+        <h2 className="text-lg font-semibold text-red-600">Something went wrong:</h2>
 
+        <p className="text-sm text-gray-600 mt-2">No data available</p>
+
+      </div>
+
+    );
+  }
   const getGeolocation = async (): Promise<GeolocationPosition> => {
     return new Promise((resolve, reject) => {
       if (!navigator.geolocation) {
