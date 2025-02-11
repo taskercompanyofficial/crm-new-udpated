@@ -1,7 +1,7 @@
 "use client";
 
 import React, { Suspense } from "react";
-import { TrendingUp, BarChart2, AlertCircle, RefreshCcw } from "lucide-react";
+import { TrendingUp, BarChart2 } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -24,8 +24,6 @@ import {
   YAxis,
   LabelList,
 } from "recharts";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
 import ErrorNoData from "@/components/custom/no-data";
 
 type ChartConfigKey =
@@ -34,7 +32,8 @@ type ChartConfigKey =
   | "on_hold"
   | "open_count"
   | "in_progress"
-  | "total";
+  | "total"
+  | string;
 
 // Updated professional colors
 const chartConfig = {
@@ -118,8 +117,6 @@ interface ChartDataItem {
 }
 
 function ChartContent({ data }: { data: BrandData }) {
-  const router = useRouter();
-
   // Calculate optimal bar size based on number of data points
   const totalBars = data.brand_data.length + 4; // Adding 4 for the status bars
   const maxBarWidth = 40; // Maximum width for bars
@@ -165,21 +162,11 @@ function ChartContent({ data }: { data: BrandData }) {
   ];
 
   const handleBarClick = (data: ChartDataItem, dataKey: ChartConfigKey) => {
-    const filters = encodeURIComponent(
-      JSON.stringify([
-        {
-          id: "complaint_type",
-          condition: "like",
-          value: "%installation%",
-        },
-      ]),
-    );
-
     let url = data.brand_id
-      ? `/crm/complaints?brand_id=${data.brand_id}&status=${dataKey}&filters=${filters}`
-      : `/crm/complaints?filters=${filters}`;
+      ? `/crm/complaints?brand_id=${data.brand_id}&${dataKey}`
+      : `/crm/complaints?${dataKey}`;
 
-    router.push(url);
+    window.open(url, "_blank");
   };
 
   return (
@@ -229,8 +216,13 @@ function ChartContent({ data }: { data: BrandData }) {
               fill={chartConfig.total.color}
               radius={[4, 4, 0, 0]}
               barSize={calculatedBarSize}
-              className="mt-4"
-              onClick={(data) => handleBarClick(data as ChartDataItem, "total")}
+              className="cursor-pointer"
+              onClick={(data) =>
+                handleBarClick(
+                  data as ChartDataItem,
+                  'filters=[{"id":"status","condition":"not in","value":"closed.amount-pending.feedback-pending.cancelled.completed.pending-by-brand"}, {"id":"complaint_type","condition":"like","value":"%installation%"}]',
+                )
+              }
             >
               <LabelList
                 dataKey="total_open_installations"
@@ -246,8 +238,12 @@ function ChartContent({ data }: { data: BrandData }) {
               radius={[4, 4, 0, 0]}
               barSize={calculatedBarSize}
               onClick={(data) =>
-                handleBarClick(data as ChartDataItem, "feedback_pending")
+                handleBarClick(
+                  data as ChartDataItem,
+                  'filters=[{"id":"status","condition":"like","value":"feedback-pending"}, {"id":"complaint_type","condition":"like","value":"%installation%"}]',
+                )
               }
+              className="cursor-pointer"
             >
               <LabelList
                 dataKey="feedback_pending"
@@ -263,8 +259,12 @@ function ChartContent({ data }: { data: BrandData }) {
               radius={[4, 4, 0, 0]}
               barSize={calculatedBarSize}
               onClick={(data) =>
-                handleBarClick(data as ChartDataItem, "pending_by_brand")
+                handleBarClick(
+                  data as ChartDataItem,
+                  'filters=[{"id":"status","condition":"like","value":"pending-by-brand"}, {"id":"complaint_type","condition":"like","value":"%installation%"}]',
+                )
               }
+              className="cursor-pointer"
             >
               <LabelList
                 dataKey="pending_by_brand"
@@ -280,8 +280,12 @@ function ChartContent({ data }: { data: BrandData }) {
               radius={[4, 4, 0, 0]}
               barSize={calculatedBarSize}
               onClick={(data) =>
-                handleBarClick(data as ChartDataItem, "on_hold")
+                handleBarClick(
+                  data as ChartDataItem,
+                  'filters=[{"id":"status","condition":"like","value":"hold"}, {"id":"complaint_type","condition":"like","value":"%installation%"}]',
+                )
               }
+              className="cursor-pointer"
             >
               <LabelList
                 dataKey="on_hold"
@@ -297,8 +301,12 @@ function ChartContent({ data }: { data: BrandData }) {
               fill={chartConfig.open_count.color}
               barSize={calculatedBarSize}
               onClick={(data) =>
-                handleBarClick(data as ChartDataItem, "open_count")
+                handleBarClick(
+                  data as ChartDataItem,
+                  'filters=[{"id":"status","condition":"like","value":"open"}, {"id":"complaint_type","condition":"like","value":"%installation%"}]',
+                )
               }
+              className="cursor-pointer"
             >
               <LabelList
                 dataKey="open_count"
@@ -315,8 +323,12 @@ function ChartContent({ data }: { data: BrandData }) {
               radius={[4, 4, 0, 0]}
               barSize={calculatedBarSize}
               onClick={(data) =>
-                handleBarClick(data as ChartDataItem, "in_progress")
+                handleBarClick(
+                  data as ChartDataItem,
+                  'filters=[{"id":"status","condition":"not in","value":"closed.amount-pending.feedback-pending.cancelled.completed.pending-by-brand"}, {"id":"complaint_type","condition":"like","value":"%installation%"}]',
+                )
               }
+              className="cursor-pointer"
             >
               <LabelList
                 dataKey="in_progress"
