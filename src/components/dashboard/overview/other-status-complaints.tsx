@@ -32,6 +32,7 @@ import {
   YAxis,
 } from "recharts";
 import { useRouter } from "next/navigation";
+import ErrorNoData from "@/components/custom/no-data";
 
 function LoadingSkeleton() {
   return (
@@ -52,6 +53,9 @@ function LoadingSkeleton() {
 }
 
 function ChartContent({ data }: { data: Record<string, { count: number }> }) {
+  if (!data || Object.keys(data).length === 0) {
+    return <ErrorNoData />;
+  }
   const statusColors = Object.fromEntries(
     ComplaintStatusOptions.map((option) => [
       option.value,
@@ -63,7 +67,9 @@ function ChartContent({ data }: { data: Record<string, { count: number }> }) {
     ? Object.entries(data)
         .map(([status, details]) => ({
           status,
-          statusLabel: ComplaintStatusOptions.find(opt => opt.value === status)?.label || status,
+          statusLabel:
+            ComplaintStatusOptions.find((opt) => opt.value === status)?.label ||
+            status,
           count: details?.count || 0,
           fill: statusColors[status] || "rgba(180, 180, 180, 0.8)",
         }))
@@ -81,7 +87,7 @@ function ChartContent({ data }: { data: Record<string, { count: number }> }) {
 
   const router = useRouter();
   return (
-    <Card >
+    <Card>
       <CardHeader>
         <div className="flex items-center gap-2">
           <BarChart2 className="h-5 w-5" />
@@ -102,7 +108,10 @@ function ChartContent({ data }: { data: Record<string, { count: number }> }) {
               interval={0}
               className="uppercase"
               tickFormatter={(value) => {
-                return value.split(' ').map((word: string) => word[0]).join('');
+                return value
+                  .split(" ")
+                  .map((word: string) => word[0])
+                  .join("");
               }}
             />
             <YAxis

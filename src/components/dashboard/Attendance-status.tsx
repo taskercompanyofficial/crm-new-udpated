@@ -2,7 +2,7 @@
 
 import React, { Suspense } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { User, UserMinus } from "lucide-react";
+import { RefreshCcw, AlertCircle, User, UserMinus } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -22,6 +22,8 @@ import useForm from "@/hooks/use-form";
 import { useSession } from "next-auth/react";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import ErrorNoData from "../custom/no-data";
 
 type UserData = {
   id: string;
@@ -62,6 +64,11 @@ function LoadingSkeleton() {
 }
 
 export function AttendanceStatus({ data }: { data: AttendanceData }) {
+  const router = useRouter();
+
+  if (!data || !data.present || data.present.length === 0) {
+    return <ErrorNoData />;
+  }
   const session = useSession();
   const token = session.data?.user?.token || "";
   const [presentUsers, setPresentUsers] = React.useState<UserData[]>(

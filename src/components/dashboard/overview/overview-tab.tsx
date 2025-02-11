@@ -24,10 +24,14 @@ export default async function OverviewTab() {
       <ChartsByStatus complaintStatusData={complaintStatusData.data} />
 
       <OtherStatusComplaints data={complaintStatusForBar.data} />
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <ComplaintsByBrand data={complaintStatusByBrands?.data} />
-        <AttendanceStatus data={dailyAttendanceStats.data} />
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-5">
+        <div className="col-span-3">
+          <ComplaintsByBrand data={complaintStatusByBrands?.data} />
+        </div>
+        <div className="col-span-2">
+          <AttendanceStatus data={dailyAttendanceStats.data} />
+        </div>
       </div>
-    </div >
+    </div>
   );
 }

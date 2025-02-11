@@ -5,12 +5,12 @@ import { TrendingUp, BarChart2, AlertCircle, RefreshCcw } from "lucide-react";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import {
+  ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
@@ -23,11 +23,10 @@ import {
   XAxis,
   YAxis,
   LabelList,
-  Tooltip,
-  Legend,
 } from "recharts";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import ErrorNoData from "@/components/custom/no-data";
 
 type ChartConfigKey =
   | "feedback_pending"
@@ -37,23 +36,24 @@ type ChartConfigKey =
   | "in_progress"
   | "total";
 
-const chartConfig: Record<ChartConfigKey, { label: string; color: string }> = {
-  feedback_pending: { label: "Feedback Pending", color: "#ffcd56" },
-  pending_by_brand: { label: "Pending by Brand", color: "#4bc0c0" },
-  on_hold: { label: "On Hold", color: "#9966ff" },
-  open_count: { label: "Open Installations", color: "#ff6384" },
-  in_progress: { label: "In Progress", color: "#36a2eb" },
-  total: { label: "Total", color: "#ff9f40" },
-};
+// Updated professional colors
+const chartConfig = {
+  feedback_pending: { label: "Feedback Pending", color: "hsl(280, 70%, 50%)" }, // Purple
+  pending_by_brand: { label: "Pending by Brand", color: "hsl(200, 70%, 50%)" }, // Blue
+  on_hold: { label: "On Hold", color: "hsl(30, 70%, 50%)" }, // Orange
+  open_count: { label: "Open Installations", color: "hsl(145, 63%, 42%)" }, // Professional Green
+  in_progress: { label: "In Progress", color: "hsl(216, 71%, 50%)" }, // Professional Blue
+  total: { label: "Total", color: "hsl(252, 56%, 57%)" }, // Royal Purple
+} satisfies ChartConfig;
 
 const brandColors = [
-  "#8884d8",
-  "#82ca9d",
-  "#ffc658", 
-  "#ff7c43",
-  "#a4de6c",
-  "#d0ed57",
-];
+  "hsl(280, 70%, 50%)", // Purple
+  "hsl(200, 70%, 50%)", // Blue
+  "hsl(30, 70%, 50%)", // Orange
+  "hsl(145, 63%, 42%)", // Green
+  "hsl(216, 71%, 50%)", // Deep Blue
+  "hsl(252, 56%, 57%)", // Royal Purple
+] as const;
 
 function LoadingSkeleton() {
   return (
@@ -103,39 +103,59 @@ interface BrandData {
   }[];
 }
 
-function NoDataDisplay({ onRefresh }: { onRefresh: () => void }) {
-  return (
-    <Card>
-      <CardContent className="flex h-[400px] flex-col items-center justify-center gap-4">
-        <AlertCircle className="h-16 w-16 text-muted-foreground/50" />
-        <div className="text-center">
-          <h3 className="text-lg font-semibold">No Data Available</h3>
-          <p className="text-sm text-muted-foreground">
-            There are currently no installation records to display.
-          </p>
-        </div>
-        <Button variant="outline" onClick={onRefresh} className="gap-2">
-          <RefreshCcw className="h-4 w-4" />
-          Refresh Data
-        </Button>
-      </CardContent>
-    </Card>
-  );
+interface ChartDataItem {
+  name: string;
+  value?: number;
+  color?: string;
+  brand_id?: number;
+  open_count?: number;
+  in_progress?: number;
+  total?: number;
+  total_open_installations?: number;
+  feedback_pending?: number;
+  pending_by_brand?: number;
+  on_hold?: number;
 }
 
 function ChartContent({ data }: { data: BrandData }) {
   const router = useRouter();
 
   if (!data || !data.brand_data || data.brand_data.length === 0) {
-    return <NoDataDisplay onRefresh={() => router.refresh()} />;
+    return <ErrorNoData />;
   }
 
-  const chartData = [
+  // Calculate optimal bar size based on number of data points
+  const totalBars = data.brand_data.length + 4; // Adding 4 for the status bars
+  const maxBarWidth = 40; // Maximum width for bars
+  const minBarWidth = 24; // Minimum width for bars
+  const calculatedBarSize = Math.max(
+    minBarWidth,
+    Math.min(maxBarWidth, Math.floor(600 / totalBars)),
+  );
+
+  const chartData: ChartDataItem[] = [
     {
-      name: "Overview",
+      name: "Total Open Installations",
+      value: data.total_open_installations.count,
+      color: data.total_open_installations.color,
       total_open_installations: data.total_open_installations.count,
+    },
+    {
+      name: "Feedback Pending",
+      value: data.feedback_pending.count,
+      color: data.feedback_pending.color,
       feedback_pending: data.feedback_pending.count,
+    },
+    {
+      name: "Pending by Brand",
+      value: data.pending_by_brand.count,
+      color: data.pending_by_brand.color,
       pending_by_brand: data.pending_by_brand.count,
+    },
+    {
+      name: "On Hold",
+      value: data.on_hold.count,
+      color: data.on_hold.color,
       on_hold: data.on_hold.count,
     },
     ...data.brand_data.map((item, index) => ({
@@ -148,7 +168,7 @@ function ChartContent({ data }: { data: BrandData }) {
     })),
   ];
 
-  const handleBarClick = (data: any, dataKey: ChartConfigKey) => {
+  const handleBarClick = (data: ChartDataItem, dataKey: ChartConfigKey) => {
     const filters = encodeURIComponent(
       JSON.stringify([
         {
@@ -167,7 +187,7 @@ function ChartContent({ data }: { data: BrandData }) {
   };
 
   return (
-    <Card className="shadow-xl">
+    <Card>
       <CardHeader>
         <div className="flex items-center gap-2">
           <BarChart2 className="h-5 w-5" />
@@ -175,71 +195,114 @@ function ChartContent({ data }: { data: BrandData }) {
         </div>
       </CardHeader>
       <CardContent className="h-[300px]">
-        <ChartContainer className="h-[350px] w-full" config={chartConfig}>
-          <BarChart width={600} height={300} data={chartData}>
-            <CartesianGrid vertical={false} strokeDasharray="3 3" />
+        <ChartContainer config={chartConfig} className="h-[300px] w-full">
+          <BarChart accessibilityLayer data={chartData} margin={{ left: 2 }}>
+            <CartesianGrid vertical={false} />
             <XAxis
               dataKey="name"
               tickLine={false}
               axisLine={false}
-              height={50}
+              interval={0}
+              className="uppercase"
+              textAnchor="end"
+              height={60}
+              fontSize={8}
+              fontWeight={600}
             />
             <YAxis
               tickLine={false}
               axisLine={false}
               tickFormatter={(value) => value.toLocaleString()}
+              fontSize={11}
+              fill="#888"
             />
-            <Tooltip />
-
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent indicator="dashed" />}
+            />
             <Bar
               dataKey="total_open_installations"
               name={data.total_open_installations.label}
-              fill={data.total_open_installations.color}
+              fill={chartConfig.total.color}
               radius={[4, 4, 0, 0]}
-              onClick={(data) => handleBarClick(data, "total")}
+              barSize={calculatedBarSize}
+              className="mt-4"
+              onClick={(data) => handleBarClick(data as ChartDataItem, "total")}
             >
-              <LabelList dataKey="total_open_installations" position="top" fill="black" />
+              <LabelList
+                dataKey="total_open_installations"
+                position="top"
+                fill="black"
+                offset={10}
+              />
             </Bar>
-
             <Bar
               dataKey="feedback_pending"
               name={data.feedback_pending.label}
-              fill={data.feedback_pending.color}
+              fill={chartConfig.feedback_pending.color}
               radius={[4, 4, 0, 0]}
-              onClick={(data) => handleBarClick(data, "feedback_pending")}
+              barSize={calculatedBarSize}
+              onClick={(data) =>
+                handleBarClick(data as ChartDataItem, "feedback_pending")
+              }
             >
-              <LabelList dataKey="feedback_pending" position="top" fill="black" />
+              <LabelList
+                dataKey="feedback_pending"
+                position="top"
+                fill="black"
+                offset={10}
+              />
             </Bar>
-
             <Bar
               dataKey="pending_by_brand"
               name={data.pending_by_brand.label}
-              fill={data.pending_by_brand.color}
+              fill={chartConfig.pending_by_brand.color}
               radius={[4, 4, 0, 0]}
-              onClick={(data) => handleBarClick(data, "pending_by_brand")}
+              barSize={calculatedBarSize}
+              onClick={(data) =>
+                handleBarClick(data as ChartDataItem, "pending_by_brand")
+              }
             >
-              <LabelList dataKey="pending_by_brand" position="top" fill="black" />
+              <LabelList
+                dataKey="pending_by_brand"
+                position="top"
+                fill="black"
+                offset={10}
+              />
             </Bar>
-
             <Bar
               dataKey="on_hold"
               name={data.on_hold.label}
-              fill={data.on_hold.color}
+              fill={chartConfig.on_hold.color}
               radius={[4, 4, 0, 0]}
-              onClick={(data) => handleBarClick(data, "on_hold")}
+              barSize={calculatedBarSize}
+              onClick={(data) =>
+                handleBarClick(data as ChartDataItem, "on_hold")
+              }
             >
-              <LabelList dataKey="on_hold" position="top" fill="black" />
+              <LabelList
+                dataKey="on_hold"
+                position="top"
+                fill="black"
+                offset={10}
+              />
             </Bar>
-
             <Bar
               dataKey="open_count"
               name="Open Installations"
               stackId="brand"
               fill={chartConfig.open_count.color}
-              radius={[4, 4, 0, 0]}
-              onClick={(data) => handleBarClick(data, "open_count")}
+              barSize={calculatedBarSize}
+              onClick={(data) =>
+                handleBarClick(data as ChartDataItem, "open_count")
+              }
             >
-              <LabelList dataKey="open_count" position="inside" fill="white" />
+              <LabelList
+                dataKey="open_count"
+                position="inside"
+                fill="white"
+                offset={10}
+              />
             </Bar>
             <Bar
               dataKey="in_progress"
@@ -247,9 +310,17 @@ function ChartContent({ data }: { data: BrandData }) {
               stackId="brand"
               fill={chartConfig.in_progress.color}
               radius={[4, 4, 0, 0]}
-              onClick={(data) => handleBarClick(data, "in_progress")}
+              barSize={calculatedBarSize}
+              onClick={(data) =>
+                handleBarClick(data as ChartDataItem, "in_progress")
+              }
             >
-              <LabelList dataKey="in_progress" position="inside" fill="white" />
+              <LabelList
+                dataKey="in_progress"
+                position="inside"
+                fill="white"
+                offset={10}
+              />
             </Bar>
           </BarChart>
         </ChartContainer>
@@ -262,7 +333,7 @@ function ChartContent({ data }: { data: BrandData }) {
           Showing installations by status across all brands. Click on bars to
           view details.
         </div>
-      </CardFooter> 
+      </CardFooter>
     </Card>
   );
 }
