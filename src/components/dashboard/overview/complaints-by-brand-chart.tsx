@@ -204,6 +204,13 @@ function ChartContent({ data }: { data: BrandData }) {
               height={60}
               fontSize={8}
               fontWeight={600}
+              tickFormatter={(value) => {
+                const words = value.split(" ");
+                if (words.length > 1) {
+                  return words.map((word: string) => word[0]).join("");
+                }
+                return value;
+              }}
             />
             <YAxis
               tickLine={false}

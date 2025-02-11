@@ -95,8 +95,8 @@ function ChartContent({ data }: { data: Record<string, { count: number }> }) {
           Total complaints: {totalComplaints.toLocaleString()}
         </CardDescription>
       </CardHeader>
-      <CardContent className="h-[300px]">
-        <ChartContainer config={chartConfig} className="h-[300px] w-full">
+      <CardContent className="h-[200px]">
+        <ChartContainer config={chartConfig} className="h-[200px] w-full">
           <BarChart accessibilityLayer data={chartData} margin={{ left: 2 }}>
             <CartesianGrid vertical={false} />
             <XAxis

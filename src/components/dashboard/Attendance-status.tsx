@@ -41,20 +41,20 @@ interface AttendanceData {
 
 function LoadingSkeleton() {
   return (
-    <div className="space-y-4">
-      <div className="mb-4 flex gap-4">
-        <Skeleton className="h-10 w-1/2" />
-        <Skeleton className="h-10 w-1/2" />
+    <div className="space-y-2">
+      <div className="mb-2 flex gap-2">
+        <Skeleton className="h-6 w-1/2" />
+        <Skeleton className="h-6 w-1/2" />
       </div>
-      <div className="space-y-2">
+      <div className="space-y-1">
         {[...Array(5)].map((_, i) => (
-          <div key={i} className="flex items-center gap-4">
-            <Skeleton className="h-12 w-12 rounded-full" />
-            <Skeleton className="h-8 w-48" />
-            <Skeleton className="h-8 w-20" />
-            <Skeleton className="h-8 w-20" />
-            <Skeleton className="h-8 w-20" />
-            <Skeleton className="h-8 w-24" />
+          <div key={i} className="flex items-center gap-2">
+            <Skeleton className="h-8 w-8 rounded-full" />
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-4 w-12" />
+            <Skeleton className="h-4 w-12" />
+            <Skeleton className="h-4 w-12" />
+            <Skeleton className="h-4 w-16" />
           </div>
         ))}
       </div>
@@ -82,11 +82,11 @@ function AttendanceStatusComponent({ data }: { data: AttendanceData }) {
 
   if (data == null) {
     return (
-      <div className="flex flex-col items-center justify-center p-4">
-        <h2 className="text-lg font-semibold text-red-600">
+      <div className="flex flex-col items-center justify-center p-2">
+        <h2 className="text-xs font-semibold text-red-600">
           Something went wrong:
         </h2>
-        <p className="mt-2 text-sm text-gray-600">No data available</p>
+        <p className="mt-1 text-xs text-gray-600">No data available</p>
       </div>
     );
   }
@@ -197,39 +197,47 @@ function AttendanceStatusComponent({ data }: { data: AttendanceData }) {
   };
 
   return (
-    <Card className="shadow-lg">
-      <CardContent className="p-6">
-        <Tabs defaultValue="present" className="space-y-4">
+    <Card className="shadow-sm">
+      <CardContent className="p-2">
+        <Tabs defaultValue="present" className="space-y-2">
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="present" className="flex items-center gap-2">
-              <User className="h-4 w-4" />
+            <TabsTrigger
+              value="present"
+              className="flex items-center gap-1 text-xs"
+            >
+              <User className="h-3 w-3" />
               Present
             </TabsTrigger>
-            <TabsTrigger value="absent" className="flex items-center gap-2">
-              <UserMinus className="h-4 w-4" />
+            <TabsTrigger
+              value="absent"
+              className="flex items-center gap-1 text-xs"
+            >
+              <UserMinus className="h-3 w-3" />
               Absent
             </TabsTrigger>
           </TabsList>
           <TabsContent value="present">
-            <ScrollArea className="h-[350px] w-full rounded-md border">
+            <ScrollArea className="h-[370px] w-full rounded-md border">
               <div className="w-max min-w-full">
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="w-[100px] bg-background">
+                      <TableHead className="w-[60px] bg-background text-xs">
                         User
                       </TableHead>
-                      <TableHead className="bg-background">Name</TableHead>
-                      <TableHead className="bg-background text-right">
+                      <TableHead className="bg-background text-xs">
+                        Name
+                      </TableHead>
+                      <TableHead className="bg-background text-right text-xs">
                         Assigned
                       </TableHead>
-                      <TableHead className="bg-background text-right">
+                      <TableHead className="bg-background text-right text-xs">
                         Accepted
                       </TableHead>
-                      <TableHead className="bg-background text-right">
+                      <TableHead className="bg-background text-right text-xs">
                         Closed
                       </TableHead>
-                      <TableHead className="bg-background text-right">
+                      <TableHead className="bg-background text-right text-xs">
                         Action
                       </TableHead>
                     </TableRow>
@@ -238,12 +246,12 @@ function AttendanceStatusComponent({ data }: { data: AttendanceData }) {
                     {presentUsers.map((user: UserData) => (
                       <TableRow key={user.id}>
                         <TableCell className="font-medium">
-                          <Avatar>
+                          <Avatar className="h-6 w-6">
                             <AvatarImage
                               src={user.profile_image}
                               alt={user.full_name}
                             />
-                            <AvatarFallback>
+                            <AvatarFallback className="text-[10px]">
                               {user?.full_name
                                 ?.split(" ")
                                 .map((word) => word.charAt(0))
@@ -251,7 +259,7 @@ function AttendanceStatusComponent({ data }: { data: AttendanceData }) {
                             </AvatarFallback>
                           </Avatar>
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="text-xs">
                           <Link
                             href={`/crm/staff/${user.id}?tab=attendance`}
                             className="underline"
@@ -259,26 +267,24 @@ function AttendanceStatusComponent({ data }: { data: AttendanceData }) {
                             {user.full_name}
                           </Link>
                         </TableCell>
-                        <TableCell className="text-right">
+                        <TableCell className="text-right text-xs">
                           {user.assigned_jobs_count}
                         </TableCell>
-
-                        <TableCell className="text-right">
+                        <TableCell className="text-right text-xs">
                           {user.accepted_jobs_count}
                         </TableCell>
-                        <TableCell className="text-right">
+                        <TableCell className="text-right text-xs">
                           {user.closed_jobs_count}
                         </TableCell>
                         <TableCell className="text-right">
                           <Button
-                            variant="outline"
+                            variant="destructive"
                             size="sm"
+                            className="h-6 px-2 text-xs"
                             disabled={loadingUserId === user.id}
                             onClick={() => toggleUserStatus(user, "present")}
                           >
-                            {loadingUserId === user.id
-                              ? "Loading..."
-                              : "Mark Absent"}
+                            {loadingUserId === user.id ? "..." : "Mark Absent"}
                           </Button>
                         </TableCell>
                       </TableRow>
@@ -290,17 +296,21 @@ function AttendanceStatusComponent({ data }: { data: AttendanceData }) {
             </ScrollArea>
           </TabsContent>
           <TabsContent value="absent">
-            <ScrollArea className="h-[350px] w-full rounded-md border">
+            <ScrollArea className="h-[250px] w-full rounded-md border">
               <div className="w-max min-w-full">
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="w-[100px] bg-background">
+                      <TableHead className="w-[60px] bg-background text-xs">
                         User
                       </TableHead>
-                      <TableHead className="bg-background">Name</TableHead>
-                      <TableHead className="bg-background">Status</TableHead>
-                      <TableHead className="bg-background text-right">
+                      <TableHead className="bg-background text-xs">
+                        Name
+                      </TableHead>
+                      <TableHead className="bg-background text-xs">
+                        Status
+                      </TableHead>
+                      <TableHead className="bg-background text-right text-xs">
                         Action
                       </TableHead>
                     </TableRow>
@@ -309,12 +319,12 @@ function AttendanceStatusComponent({ data }: { data: AttendanceData }) {
                     {absentUsers.map((user: UserData) => (
                       <TableRow key={user.id}>
                         <TableCell className="font-medium">
-                          <Avatar>
+                          <Avatar className="h-6 w-6">
                             <AvatarImage
                               src={user.profile_image}
                               alt={user.full_name}
                             />
-                            <AvatarFallback>
+                            <AvatarFallback className="text-[10px]">
                               {user?.full_name
                                 ?.split(" ")
                                 .map((word) => word.charAt(0))
@@ -322,20 +332,23 @@ function AttendanceStatusComponent({ data }: { data: AttendanceData }) {
                             </AvatarFallback>
                           </Avatar>
                         </TableCell>
-                        <TableCell>{user.full_name}</TableCell>
+                        <TableCell className="text-xs">
+                          {user.full_name}
+                        </TableCell>
                         <TableCell>
-                          <Badge variant="secondary">Absent</Badge>
+                          <Badge variant="destructive" className="text-[10px]">
+                            Absent
+                          </Badge>
                         </TableCell>
                         <TableCell className="text-right">
                           <Button
-                            variant="outline"
+                            variant="default"
                             size="sm"
+                            className="h-6 px-2 text-xs"
                             disabled={loadingUserId === user.id}
                             onClick={() => toggleUserStatus(user, "absent")}
                           >
-                            {loadingUserId === user.id
-                              ? "Loading..."
-                              : "Mark Present"}
+                            {loadingUserId === user.id ? "..." : "Mark Present"}
                           </Button>
                         </TableCell>
                       </TableRow>
