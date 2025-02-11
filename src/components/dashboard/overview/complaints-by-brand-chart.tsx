@@ -200,7 +200,7 @@ function ChartContent({ data }: { data: BrandData }) {
               axisLine={false}
               interval={0}
               className="uppercase"
-              textAnchor="end"
+              textAnchor="middle"
               height={60}
               fontSize={8}
               fontWeight={600}
