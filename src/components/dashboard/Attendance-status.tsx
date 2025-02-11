@@ -74,7 +74,8 @@ export function AttendanceStatus({ data }: { data: AttendanceData }) {
   const { post, setData } = useForm({
     location: "User location",
     latitude: 0,
-    longitude: 0
+    longitude: 0,
+    date: new Date().toISOString().split('T')[0]
   });
   if (data == null) {
     return (

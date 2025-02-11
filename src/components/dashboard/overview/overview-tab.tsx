@@ -27,7 +27,6 @@ export default async function OverviewTab() {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <ComplaintsByBrand data={complaintStatusByBrands?.data} />
         <AttendanceStatus data={dailyAttendanceStats.data} />
-
       </div>
     </div >
   );

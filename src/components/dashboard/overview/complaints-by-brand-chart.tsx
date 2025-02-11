@@ -11,7 +11,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
@@ -21,13 +20,40 @@ import {
   Bar,
   BarChart,
   CartesianGrid,
-  LabelList,
   XAxis,
   YAxis,
+  LabelList,
+  Tooltip,
+  Legend,
 } from "recharts";
 import { useRouter } from "next/navigation";
-import { ComplaintStatusOptions } from "@/lib/otpions";
 import { Button } from "@/components/ui/button";
+
+type ChartConfigKey =
+  | "feedback_pending"
+  | "pending_by_brand"
+  | "on_hold"
+  | "open_count"
+  | "in_progress"
+  | "total";
+
+const chartConfig: Record<ChartConfigKey, { label: string; color: string }> = {
+  feedback_pending: { label: "Feedback Pending", color: "#ffcd56" },
+  pending_by_brand: { label: "Pending by Brand", color: "#4bc0c0" },
+  on_hold: { label: "On Hold", color: "#9966ff" },
+  open_count: { label: "Open Installations", color: "#ff6384" },
+  in_progress: { label: "In Progress", color: "#36a2eb" },
+  total: { label: "Total", color: "#ff9f40" },
+};
+
+const brandColors = [
+  "#8884d8",
+  "#82ca9d",
+  "#ffc658", 
+  "#ff7c43",
+  "#a4de6c",
+  "#d0ed57",
+];
 
 function LoadingSkeleton() {
   return (
@@ -36,7 +62,7 @@ function LoadingSkeleton() {
         <div className="flex items-center gap-2">
           <BarChart2 className="h-4 w-4" />
           <CardTitle className="text-sm font-medium text-muted-foreground">
-            Brand Distribution Analysis
+            Installation Status by Brand
           </CardTitle>
         </div>
       </CardHeader>
@@ -48,21 +74,38 @@ function LoadingSkeleton() {
 }
 
 interface BrandData {
-  total_installations: number;
-  active_installations: number;
+  total_open_installations: {
+    count: number;
+    label: string;
+    color: string;
+  };
+  feedback_pending: {
+    count: number;
+    label: string;
+    color: string;
+  };
+  pending_by_brand: {
+    count: number;
+    label: string;
+    color: string;
+  };
+  on_hold: {
+    count: number;
+    label: string;
+    color: string;
+  };
   brand_data: {
     brand: string;
     brand_id: number;
-    count: number;
-    status_counts: {
-      [key: string]: number;
-    };
+    total_count: number;
+    open_count: number;
+    in_progress: number;
   }[];
 }
 
 function NoDataDisplay({ onRefresh }: { onRefresh: () => void }) {
   return (
-    <Card >
+    <Card>
       <CardContent className="flex h-[400px] flex-col items-center justify-center gap-4">
         <AlertCircle className="h-16 w-16 text-muted-foreground/50" />
         <div className="text-center">
@@ -71,11 +114,7 @@ function NoDataDisplay({ onRefresh }: { onRefresh: () => void }) {
             There are currently no installation records to display.
           </p>
         </div>
-        <Button
-          variant="outline"
-          onClick={onRefresh}
-          className="gap-2"
-        >
+        <Button variant="outline" onClick={onRefresh} className="gap-2">
           <RefreshCcw className="h-4 w-4" />
           Refresh Data
         </Button>
@@ -91,75 +130,39 @@ function ChartContent({ data }: { data: BrandData }) {
     return <NoDataDisplay onRefresh={() => router.refresh()} />;
   }
 
-  // Get unique statuses across all brands
-  const allStatuses = Array.from(new Set(
-    data.brand_data.flatMap(brand => Object.keys(brand.status_counts))
-  ));
-
-  const statusColors = Object.fromEntries(
-    ComplaintStatusOptions.map((option) => [
-      option.value,
-      `rgba(${option.color}, 0.8)`,
-    ]),
-  );
-
-  const chartConfig: ChartConfig = {
-    total: {
-      label: "Total Installations",
-      color: "hsl(var(--chart-1))",
-    },
-    active: {
-      label: "Active Installations",
-      color: "hsl(var(--chart-2))",
-    },
-    ...allStatuses.reduce((acc, status) => ({
-      ...acc,
-      [status]: {
-        label: ComplaintStatusOptions.find(opt => opt.value === status)?.label || status,
-        color: statusColors[status] || "rgba(180, 180, 180, 0.8)"
-      }
-    }), {})
-  };
-
-  // Create summary data for overall counts
-  const summaryData = [
+  const chartData = [
     {
-      brand: "Overall",
-      total_installations: data.total_installations,
-      active_installations: data.active_installations,
+      name: "Overview",
+      total_open_installations: data.total_open_installations.count,
+      feedback_pending: data.feedback_pending.count,
+      pending_by_brand: data.pending_by_brand.count,
+      on_hold: data.on_hold.count,
     },
+    ...data.brand_data.map((item, index) => ({
+      name: item.brand,
+      brand_id: item.brand_id,
+      open_count: item.open_count,
+      in_progress: item.in_progress,
+      total: item.total_count,
+      color: brandColors[index % brandColors.length],
+    })),
   ];
 
-  // Transform data to show brand-wise installations with status counts
-  const brandData = data.brand_data.map((item) => ({
-    brand: item.brand,
-    brand_id: item.brand_id,
-    ...item.status_counts,
-  }));
+  const handleBarClick = (data: any, dataKey: ChartConfigKey) => {
+    const filters = encodeURIComponent(
+      JSON.stringify([
+        {
+          id: "complaint_type",
+          condition: "like",
+          value: "%installation%",
+        },
+      ]),
+    );
 
-  // Combine summary and brand data
-  const chartData = [...summaryData, ...brandData];
+    let url = data.brand_id
+      ? `/crm/complaints?brand_id=${data.brand_id}&status=${dataKey}&filters=${filters}`
+      : `/crm/complaints?filters=${filters}`;
 
-  const handleBarClick = (data: any, dataKey: string) => {
-    console.log(dataKey);
-    const filters = encodeURIComponent(JSON.stringify([{
-      id: "complaint_type",
-      condition: "like",
-      value: "%installation%"
-    }]));
-
-    let url = '';
-    if (dataKey === 'total_installations' || dataKey === 'active_installations') {
-      // For total/active, include brand_id if available
-      url = data.brand_id
-        ? `/crm/complaints?brand_id=${data.brand_id}&filters=${filters}`
-        : `/crm/complaints?filters=${filters}`;
-    } else {
-      if (!data.brand_id || !dataKey) return;
-      url = `/crm/complaints?brand_id=${data.brand_id}&status=${dataKey}&filters=${filters}`;
-    }
-
-    console.log(url);
     router.push(url);
   };
 
@@ -168,77 +171,98 @@ function ChartContent({ data }: { data: BrandData }) {
       <CardHeader>
         <div className="flex items-center gap-2">
           <BarChart2 className="h-5 w-5" />
-          <CardTitle>Brand Distribution Analysis</CardTitle>
+          <CardTitle>Installation Status</CardTitle>
         </div>
-        <CardDescription className="text-lg font-semibold">
-          Total Installations: {data.total_installations.toLocaleString()} | Active Installations: {data.active_installations.toLocaleString()}
-        </CardDescription>
       </CardHeader>
       <CardContent className="h-[300px]">
-        <ChartContainer config={chartConfig} className="h-[350px] w-full">
-          <BarChart
-            width={600}
-            height={300}
-            data={chartData}
-          >
-            <CartesianGrid vertical={false} />
+        <ChartContainer className="h-[350px] w-full" config={chartConfig}>
+          <BarChart width={600} height={300} data={chartData}>
+            <CartesianGrid vertical={false} strokeDasharray="3 3" />
             <XAxis
-              dataKey="brand"
+              dataKey="name"
               tickLine={false}
               axisLine={false}
-              textAnchor="middle"
-              height={100}
+              height={50}
             />
-            <YAxis tickLine={false} axisLine={false} tickFormatter={(value) => value.toLocaleString()} />
-
-            <ChartTooltip content={<ChartTooltipContent />} />
+            <YAxis
+              tickLine={false}
+              axisLine={false}
+              tickFormatter={(value) => value.toLocaleString()}
+            />
+            <Tooltip />
 
             <Bar
-              dataKey="total_installations"
-              name="Total Installations"
-              fill="hsl(var(--chart-1))"
+              dataKey="total_open_installations"
+              name={data.total_open_installations.label}
+              fill={data.total_open_installations.color}
               radius={[4, 4, 0, 0]}
-              className="cursor-pointer hover:opacity-80"
-              onClick={(data) => handleBarClick(data, "total_installations")}
+              onClick={(data) => handleBarClick(data, "total")}
             >
-              <LabelList dataKey="total_installations" position="insideTop" fill="white" offset={10} />
+              <LabelList dataKey="total_open_installations" position="top" fill="black" />
             </Bar>
 
             <Bar
-              dataKey="active_installations"
-              name="Active Installations"
-              fill="hsl(var(--chart-2))"
+              dataKey="feedback_pending"
+              name={data.feedback_pending.label}
+              fill={data.feedback_pending.color}
               radius={[4, 4, 0, 0]}
-              className="cursor-pointer hover:opacity-80"
-              onClick={(data) => handleBarClick(data, "active_installations")}
+              onClick={(data) => handleBarClick(data, "feedback_pending")}
             >
-              <LabelList dataKey="active_installations" position="insideTop" fill="white" offset={10} />
+              <LabelList dataKey="feedback_pending" position="top" fill="black" />
             </Bar>
 
-            {allStatuses.map((status) => (
-              <Bar
-                key={status}
-                dataKey={status}
-                name={ComplaintStatusOptions.find(opt => opt.value === status)?.label || status}
-                fill={statusColors[status] || "rgba(180, 180, 180, 0.8)"}
-                stackId="brand-stacked"
-                className="cursor-pointer hover:opacity-80"
-                onClick={(data) => handleBarClick(data, status)}
-              />
-            ))}
+            <Bar
+              dataKey="pending_by_brand"
+              name={data.pending_by_brand.label}
+              fill={data.pending_by_brand.color}
+              radius={[4, 4, 0, 0]}
+              onClick={(data) => handleBarClick(data, "pending_by_brand")}
+            >
+              <LabelList dataKey="pending_by_brand" position="top" fill="black" />
+            </Bar>
 
+            <Bar
+              dataKey="on_hold"
+              name={data.on_hold.label}
+              fill={data.on_hold.color}
+              radius={[4, 4, 0, 0]}
+              onClick={(data) => handleBarClick(data, "on_hold")}
+            >
+              <LabelList dataKey="on_hold" position="top" fill="black" />
+            </Bar>
+
+            <Bar
+              dataKey="open_count"
+              name="Open Installations"
+              stackId="brand"
+              fill={chartConfig.open_count.color}
+              radius={[4, 4, 0, 0]}
+              onClick={(data) => handleBarClick(data, "open_count")}
+            >
+              <LabelList dataKey="open_count" position="inside" fill="white" />
+            </Bar>
+            <Bar
+              dataKey="in_progress"
+              name="In Progress"
+              stackId="brand"
+              fill={chartConfig.in_progress.color}
+              radius={[4, 4, 0, 0]}
+              onClick={(data) => handleBarClick(data, "in_progress")}
+            >
+              <LabelList dataKey="in_progress" position="inside" fill="white" />
+            </Bar>
           </BarChart>
         </ChartContainer>
-
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
-          Installation Distribution Overview <TrendingUp className="h-4 w-4" />
+          Installation Status Overview <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
-          Showing installations by status across all brands. Click on bars to view brand details.
+          Showing installations by status across all brands. Click on bars to
+          view details.
         </div>
-      </CardFooter>
+      </CardFooter> 
     </Card>
   );
 }
@@ -249,4 +273,4 @@ export default function ComplaintsByBrand({ data }: { data: BrandData }) {
       <ChartContent data={data} />
     </Suspense>
   );
-}  
+}
