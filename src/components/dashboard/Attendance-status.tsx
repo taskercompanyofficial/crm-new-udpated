@@ -38,13 +38,10 @@ interface AttendanceData {
   absent: UserData[];
 }
 
-
-
-
 function LoadingSkeleton() {
   return (
     <div className="space-y-4">
-      <div className="flex gap-4 mb-4">
+      <div className="mb-4 flex gap-4">
         <Skeleton className="h-10 w-1/2" />
         <Skeleton className="h-10 w-1/2" />
       </div>
@@ -67,7 +64,9 @@ function LoadingSkeleton() {
 export function AttendanceStatus({ data }: { data: AttendanceData }) {
   const session = useSession();
   const token = session.data?.user?.token || "";
-  const [presentUsers, setPresentUsers] = React.useState<UserData[]>(data.present);
+  const [presentUsers, setPresentUsers] = React.useState<UserData[]>(
+    data.present,
+  );
   const [absentUsers, setAbsentUsers] = React.useState<UserData[]>(data.absent);
   const [loadingUserId, setLoadingUserId] = React.useState<string | null>(null);
 
@@ -75,17 +74,17 @@ export function AttendanceStatus({ data }: { data: AttendanceData }) {
     location: "User location",
     latitude: 0,
     longitude: 0,
-    date: new Date().toISOString().split('T')[0]
+    date: new Date().toISOString().split("T")[0],
   });
   if (data == null) {
     return (
       <div className="flex flex-col items-center justify-center p-4">
-        <h2 className="text-lg font-semibold text-red-600">Something went wrong:</h2>
+        <h2 className="text-lg font-semibold text-red-600">
+          Something went wrong:
+        </h2>
 
-        <p className="text-sm text-gray-600 mt-2">No data available</p>
-
+        <p className="mt-2 text-sm text-gray-600">No data available</p>
       </div>
-
     );
   }
   const getGeolocation = async (): Promise<GeolocationPosition> => {
@@ -111,7 +110,7 @@ export function AttendanceStatus({ data }: { data: AttendanceData }) {
             default:
               reject(new Error("An unknown error occurred"));
           }
-        }
+        },
       );
     });
   };
@@ -126,8 +125,11 @@ export function AttendanceStatus({ data }: { data: AttendanceData }) {
       const position = await Promise.race([
         getGeolocation(),
         new Promise<never>((_, reject) =>
-          setTimeout(() => reject(new Error("Location request timed out")), 10000)
-        )
+          setTimeout(
+            () => reject(new Error("Location request timed out")),
+            10000,
+          ),
+        ),
       ]);
 
       if (!position.coords) {
@@ -137,12 +139,14 @@ export function AttendanceStatus({ data }: { data: AttendanceData }) {
       setData({
         location: "Head Office location",
         latitude: position.coords.latitude,
-        longitude: position.coords.longitude
+        longitude: position.coords.longitude,
+        date: new Date().toISOString().split("T")[0],
       });
 
-      const url = currentStatus === "present"
-        ? `${API_URL}/crm/attendance/mark-absent/${user.id}`
-        : `${API_URL}/crm/attendance/mark-present/${user.id}`;
+      const url =
+        currentStatus === "present"
+          ? `${API_URL}/crm/attendance/mark-absent/${user.id}`
+          : `${API_URL}/crm/attendance/mark-present/${user.id}`;
 
       post(
         url,
@@ -150,16 +154,22 @@ export function AttendanceStatus({ data }: { data: AttendanceData }) {
           onSuccess: (response) => {
             if (currentStatus === "present") {
               setPresentUsers(presentUsers.filter((u) => u.id !== user.id));
-              setAbsentUsers([...absentUsers, { ...user, message: "User marked as absent" }]);
+              setAbsentUsers([
+                ...absentUsers,
+                { ...user, message: "User marked as absent" },
+              ]);
             } else {
               setAbsentUsers(absentUsers.filter((u) => u.id !== user.id));
-              setPresentUsers([...presentUsers, { ...user, message: "User marked as present" }]);
+              setPresentUsers([
+                ...presentUsers,
+                { ...user, message: "User marked as present" },
+              ]);
             }
             toast.success(response.message);
           },
           onError: (error) => {
             toast.error(error.message || "Failed to update attendance status");
-          }
+          },
         },
         token,
       );
@@ -226,7 +236,10 @@ export function AttendanceStatus({ data }: { data: AttendanceData }) {
                         <TableRow key={user.id}>
                           <TableCell className="font-medium">
                             <Avatar>
-                              <AvatarImage src={user.profile_image} alt={user.full_name} />
+                              <AvatarImage
+                                src={user.profile_image}
+                                alt={user.full_name}
+                              />
                               <AvatarFallback>
                                 {user?.full_name
                                   ?.split(" ")
@@ -236,7 +249,12 @@ export function AttendanceStatus({ data }: { data: AttendanceData }) {
                             </Avatar>
                           </TableCell>
                           <TableCell>
-                            <Link href={`/crm/staff/${user.id}?tab=attendance`} className="underline">{user.full_name}</Link>
+                            <Link
+                              href={`/crm/staff/${user.id}?tab=attendance`}
+                              className="underline"
+                            >
+                              {user.full_name}
+                            </Link>
                           </TableCell>
                           <TableCell className="text-right">
                             {user.assigned_jobs_count}
@@ -255,7 +273,9 @@ export function AttendanceStatus({ data }: { data: AttendanceData }) {
                               disabled={loadingUserId === user.id}
                               onClick={() => toggleUserStatus(user, "present")}
                             >
-                              {loadingUserId === user.id ? "Loading..." : "Mark Absent"}
+                              {loadingUserId === user.id
+                                ? "Loading..."
+                                : "Mark Absent"}
                             </Button>
                           </TableCell>
                         </TableRow>
@@ -287,7 +307,10 @@ export function AttendanceStatus({ data }: { data: AttendanceData }) {
                         <TableRow key={user.id}>
                           <TableCell className="font-medium">
                             <Avatar>
-                              <AvatarImage src={user.profile_image} alt={user.full_name} />
+                              <AvatarImage
+                                src={user.profile_image}
+                                alt={user.full_name}
+                              />
                               <AvatarFallback>
                                 {user?.full_name
                                   ?.split(" ")
@@ -307,7 +330,9 @@ export function AttendanceStatus({ data }: { data: AttendanceData }) {
                               disabled={loadingUserId === user.id}
                               onClick={() => toggleUserStatus(user, "absent")}
                             >
-                              {loadingUserId === user.id ? "Loading..." : "Mark Present"}
+                              {loadingUserId === user.id
+                                ? "Loading..."
+                                : "Mark Present"}
                             </Button>
                           </TableCell>
                         </TableRow>
