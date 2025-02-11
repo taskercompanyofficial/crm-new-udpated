@@ -2,7 +2,7 @@
 
 import React, { Suspense } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { User, UserMinus } from "lucide-react";
+import { SquareArrowOutUpRight, User, UserMinus } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -195,7 +195,8 @@ function AttendanceStatusComponent({ data }: { data: AttendanceData }) {
       setLoadingUserId(null);
     }
   };
-
+  const today = new Date();
+  const todayStr = today.toISOString().split("T")[0];
   return (
     <Card className="shadow-sm">
       <CardContent className="p-2">
@@ -262,19 +263,35 @@ function AttendanceStatusComponent({ data }: { data: AttendanceData }) {
                         <TableCell className="text-xs">
                           <Link
                             href={`/crm/staff/${user.id}?tab=attendance`}
-                            className="underline"
+                            className="flex items-center gap-1 underline"
+                            target="_blank"
                           >
                             {user.full_name}
+                            <SquareArrowOutUpRight className="h-3 w-3" />
                           </Link>
                         </TableCell>
                         <TableCell className="text-right text-xs">
-                          {user.assigned_jobs_count}
+                          <Link
+                            href={`/crm/complaints?filters=[{"id":"technician","condition":"like","value":"${user.id}"}]`}
+                            className="flex items-center gap-1 underline"
+                            target="_blank"
+                          >
+                            {user.assigned_jobs_count}
+                            <SquareArrowOutUpRight className="h-3 w-3" />
+                          </Link>
                         </TableCell>
                         <TableCell className="text-right text-xs">
                           {user.accepted_jobs_count}
                         </TableCell>
                         <TableCell className="text-right text-xs">
-                          {user.closed_jobs_count}
+                          <Link
+                            href={`/crm/complaints?filters=[{"id":"technician","condition":"like","value":"${user.id}"}{"id":"status","condition":"in","value":"closed.amount-pending.feedback-pending.cancelled.completed.pending-by-brand"},{"id":"updated_at","condition":"like","value":"${todayStr}"}]`}
+                            className="flex items-center gap-1 underline"
+                            target="_blank"
+                          >
+                            {user.closed_jobs_count}
+                            <SquareArrowOutUpRight className="h-3 w-3" />
+                          </Link>
                         </TableCell>
                         <TableCell className="text-right">
                           <Button
