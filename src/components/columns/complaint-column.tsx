@@ -112,7 +112,7 @@ export const ComplaintsColumns = (): ColumnDef<ComplaintsType>[] => [
   },
 
   {
-    accessorKey: "technition",
+    accessorKey: "technician",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="AssignedTechnition" />
     ),

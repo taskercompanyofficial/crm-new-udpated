@@ -127,15 +127,6 @@ export default function Form({
 
     return () => clearInterval(autoSaveInterval);
   }, [hasUnsavedChanges, lastSaveTime, onSubmit, autoSaveEnabled]);
-
-  useEffect(() => {
-    setData({
-      ...data,
-      send_message_to_technician:
-        complaint?.technician === data.technician ? true : false,
-    });
-  }, [data.technician]);
-
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (hasUnsavedChanges) {
@@ -181,7 +172,7 @@ export default function Form({
     <div className="rounded-lg bg-white p-2 shadow-md dark:bg-slate-950 md:p-4">
       <Tabs defaultValue="basic" value={tab} onValueChange={setTab}>
         <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-          <ScrollArea >
+          <ScrollArea>
             <TabsList className="min-w-max">
               {[
                 "basic",

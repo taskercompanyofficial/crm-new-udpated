@@ -64,6 +64,7 @@ const filterConditions = [
 ];
 
 const SEARCH_SELECT_FIELDS = ["brand_id", "branch_id", "technician"];
+const DATE_FIELDS = ["created_at", "updated_at"];
 
 export function DataTableFiltersToolbar({ columns }: FilterToolbarProps) {
   const options = columns
@@ -228,6 +229,22 @@ export function DataTableFiltersToolbar({ columns }: FilterToolbarProps) {
       );
     }
 
+    if (DATE_FIELDS.includes(filter.id)) {
+      return (
+        <Input
+          type="date"
+          value={filter.value}
+          onChange={(e) =>
+            updateFilter(filters.indexOf(filter), {
+              ...filter,
+              value: e.target.value,
+            })
+          }
+          className="h-8 w-32"
+        />
+      );
+    }
+
     if (filter.condition === "between") {
       return (
         <div className="flex w-64 gap-2">
@@ -263,13 +280,14 @@ export function DataTableFiltersToolbar({ columns }: FilterToolbarProps) {
       return (
         <Input
           value={filter.value}
-          onChange={(e) =>
+          onChange={(e) => {
+            const value = e.target.value.replace(/[,\s]+/g, '.'); // Replace commas and spaces with dots
             updateFilter(filters.indexOf(filter), {
               ...filter,
-              value: e.target.value,
-            })
-          }
-          placeholder="Comma separated values"
+              value: value,
+            });
+          }}
+          placeholder="Values separated by dots (.)"
           className="h-8 w-64"
         />
       );

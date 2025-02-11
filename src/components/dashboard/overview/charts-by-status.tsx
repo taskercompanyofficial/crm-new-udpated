@@ -10,6 +10,7 @@ import { CheckCircle, XCircle, AlertCircle, BarChart2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface ChartData {
   date: string;
@@ -74,10 +75,11 @@ function ChartContent({ complaintStatusData }: ChartsByStatusProps) {
         </div>
       ),
       data: {
-        count: (complaintStatusData?.open_and_pending.opened.count || 0) + 
-               (complaintStatusData?.open_and_pending["in-progress"].count || 0),
+        count:
+          (complaintStatusData?.open_and_pending.opened.count || 0) +
+          (complaintStatusData?.open_and_pending["in-progress"].count || 0),
         trend: complaintStatusData?.open_and_pending.opened.trend,
-        data: complaintStatusData?.open_and_pending.opened.data
+        data: complaintStatusData?.open_and_pending.opened.data,
       },
       status: "active",
       color: {
@@ -88,8 +90,9 @@ function ChartContent({ complaintStatusData }: ChartsByStatusProps) {
       tooltip: "Open and in-progress complaints",
       details: {
         open: complaintStatusData?.open_and_pending.opened.count || 0,
-        inProgress: complaintStatusData?.open_and_pending["in-progress"].count || 0
-      }
+        inProgress:
+          complaintStatusData?.open_and_pending["in-progress"].count || 0,
+      },
     },
     {
       title: "Closed Complaints",
@@ -101,10 +104,10 @@ function ChartContent({ complaintStatusData }: ChartsByStatusProps) {
         border: "rgb(34, 197, 94)",
         background: "rgba(34, 197, 94, 0.1)",
       },
-      tooltip: "Successfully resolved complaints"
+      tooltip: "Successfully resolved complaints",
     },
     {
-      title: "Rejected Complaints", 
+      title: "Rejected Complaints",
       icon: <AlertCircle className="h-5 w-5 text-red-600" />,
       data: complaintStatusData?.others.rejected,
       status: "cancelled",
@@ -113,7 +116,7 @@ function ChartContent({ complaintStatusData }: ChartsByStatusProps) {
         border: "rgb(244, 63, 94)",
         background: "rgba(244, 63, 94, 0.1)",
       },
-      tooltip: "Complaints marked as invalid or rejected"
+      tooltip: "Complaints marked as invalid or rejected",
     },
     {
       title: "Total Complaints",
@@ -125,7 +128,7 @@ function ChartContent({ complaintStatusData }: ChartsByStatusProps) {
         border: "rgb(139, 92, 246)",
         background: "rgba(139, 92, 246, 0.1)",
       },
-      tooltip: "Total number of complaints received"
+      tooltip: "Total number of complaints received",
     },
   ];
 
@@ -135,7 +138,23 @@ function ChartContent({ complaintStatusData }: ChartsByStatusProps) {
         <Card
           key={index}
           className="group relative cursor-pointer overflow-hidden rounded-xl shadow-lg transition-all duration-300 hover:scale-105"
-          onClick={() => router.push(`/crm/complaints${item.status === 'all' ? '' : `?status=${item.status}`}`)}
+          onClick={() => {
+            const today = new Date();
+            const todayStr = today.toISOString().split("T")[0];
+            if (item.status === "closed") {
+              router.push(
+                `/crm/complaints?filters=[{"id":"status","condition":"in","value":"open.closed.amount-pending.feedback-pending.cancelled.completed.pending-by-brand"},{"id":"created_at","condition":"like","value":"${todayStr}"}]`,
+              );
+            } else if (item.status === "cancelled") {
+              router.push(
+                `/crm/complaints?filters=[{"id":"status","condition":"in","value":"cancelled"},{"id":"created_at","condition":"like","value":"${todayStr}"}]`,
+              );
+            } else if (item.status === "all") {
+              router.push(
+                `/crm/complaints?filters=[{"id":"created_at","condition":"like","value":"${todayStr}"}]`,
+              );
+            }
+          }}
         >
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-white/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
@@ -160,9 +179,19 @@ function ChartContent({ complaintStatusData }: ChartsByStatusProps) {
               {item.data?.count ?? 0}
               {item.details && (
                 <div className="mt-1 text-xs font-normal text-gray-500">
-                  <span className="text-indigo-600">{item.details.open} open</span>
+                  <Link
+                    href={`/crm/complaints?filters=[{"id":"status","condition":"like","value":"open"}]`}
+                    className="text-indigo-600"
+                  >
+                    {item.details.open} open
+                  </Link>
                   {" • "}
-                  <span className="text-amber-600">{item.details.inProgress} in progress</span>
+                  <Link
+                    href={`/crm/complaints?filters=[{"id":"status","condition":"not in","value":"open.closed.amount-pending.feedback-pending.cancelled.completed.pending-by-brand"}]`}
+                    className="text-amber-600"
+                  >
+                    {item.details.inProgress} in progress
+                  </Link>
                 </div>
               )}
             </div>
