@@ -208,6 +208,14 @@ export default async function ViewAttendence({
               {attendanceData.monthly_stats.total_salary.toFixed(2)}
             </p>
           </div>
+          <div className="rounded-lg bg-gray-50 p-4 dark:bg-slate-900">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Base Salary
+            </p>
+            <p className="text-2xl font-bold text-blue-600">
+              {attendanceData.monthly_stats.base_salary}
+            </p>
+          </div>
         </div>
       </CardContent>
     </Card>
