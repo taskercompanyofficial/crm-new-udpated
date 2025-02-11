@@ -221,7 +221,7 @@ export default function Form({ rowCurrent }: { rowCurrent?: workersType }) {
                   value={formData.branch_id}
                   onChange={(e) => setformData("branch_id", e)}
                   className="mt-2"
-                  error={errors.branch_id}
+                  errorMessage={errors.branch_id}
                   width="full"
                   required
                 />
