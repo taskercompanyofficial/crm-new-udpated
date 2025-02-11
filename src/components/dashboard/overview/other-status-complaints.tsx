@@ -55,9 +55,6 @@ function LoadingSkeleton() {
 function ChartContent({ data }: { data: Record<string, { count: number }> }) {
   const router = useRouter();
 
-  if (!data || Object.keys(data).length === 0) {
-    return <ErrorNoData />;
-  }
   const statusColors = Object.fromEntries(
     ComplaintStatusOptions.map((option) => [
       option.value,
@@ -166,6 +163,9 @@ export default function OtherStatusComplaints({
 }: {
   data: Record<string, { count: number }>;
 }) {
+  if (!data || Object.keys(data).length === 0) {
+    return <ErrorNoData />;
+  }
   return (
     <Suspense fallback={<LoadingSkeleton />}>
       <ChartContent data={data} />

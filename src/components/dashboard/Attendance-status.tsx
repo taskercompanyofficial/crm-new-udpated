@@ -62,14 +62,14 @@ function LoadingSkeleton() {
   );
 }
 
-export function AttendanceStatus({ data }: { data: AttendanceData }) {
+function AttendanceStatusComponent({ data }: { data: AttendanceData }) {
   const session = useSession();
   const token = session.data?.user?.token || "";
   const [presentUsers, setPresentUsers] = React.useState<UserData[]>(
-    data?.present || []
+    data?.present || [],
   );
   const [absentUsers, setAbsentUsers] = React.useState<UserData[]>(
-    data?.absent || []
+    data?.absent || [],
   );
   const [loadingUserId, setLoadingUserId] = React.useState<string | null>(null);
 
@@ -79,10 +79,6 @@ export function AttendanceStatus({ data }: { data: AttendanceData }) {
     longitude: 0,
     date: new Date().toISOString().split("T")[0],
   });
-
-  if (!data || !data.present || data.present.length === 0) {
-    return <ErrorNoData />;
-  }
 
   if (data == null) {
     return (
@@ -201,159 +197,168 @@ export function AttendanceStatus({ data }: { data: AttendanceData }) {
   };
 
   return (
-    <Suspense fallback={<LoadingSkeleton />}>
-      <Card className="shadow-lg">
-        <CardContent className="p-6">
-          <Tabs defaultValue="present" className="space-y-4">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="present" className="flex items-center gap-2">
-                <User className="h-4 w-4" />
-                Present
-              </TabsTrigger>
-              <TabsTrigger value="absent" className="flex items-center gap-2">
-                <UserMinus className="h-4 w-4" />
-                Absent
-              </TabsTrigger>
-            </TabsList>
-            <TabsContent value="present">
-              <ScrollArea className="h-[350px] w-full rounded-md border">
-                <div className="w-max min-w-full">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead className="w-[100px] bg-background">
-                          User
-                        </TableHead>
-                        <TableHead className="bg-background">Name</TableHead>
-                        <TableHead className="bg-background text-right">
-                          Assigned
-                        </TableHead>
-                        <TableHead className="bg-background text-right">
-                          Accepted
-                        </TableHead>
-                        <TableHead className="bg-background text-right">
-                          Closed
-                        </TableHead>
-                        <TableHead className="bg-background text-right">
-                          Action
-                        </TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {presentUsers.map((user: UserData) => (
-                        <TableRow key={user.id}>
-                          <TableCell className="font-medium">
-                            <Avatar>
-                              <AvatarImage
-                                src={user.profile_image}
-                                alt={user.full_name}
-                              />
-                              <AvatarFallback>
-                                {user?.full_name
-                                  ?.split(" ")
-                                  .map((word) => word.charAt(0))
-                                  .join("")}
-                              </AvatarFallback>
-                            </Avatar>
-                          </TableCell>
-                          <TableCell>
-                            <Link
-                              href={`/crm/staff/${user.id}?tab=attendance`}
-                              className="underline"
-                            >
-                              {user.full_name}
-                            </Link>
-                          </TableCell>
-                          <TableCell className="text-right">
-                            {user.assigned_jobs_count}
-                          </TableCell>
+    <Card className="shadow-lg">
+      <CardContent className="p-6">
+        <Tabs defaultValue="present" className="space-y-4">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="present" className="flex items-center gap-2">
+              <User className="h-4 w-4" />
+              Present
+            </TabsTrigger>
+            <TabsTrigger value="absent" className="flex items-center gap-2">
+              <UserMinus className="h-4 w-4" />
+              Absent
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="present">
+            <ScrollArea className="h-[350px] w-full rounded-md border">
+              <div className="w-max min-w-full">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-[100px] bg-background">
+                        User
+                      </TableHead>
+                      <TableHead className="bg-background">Name</TableHead>
+                      <TableHead className="bg-background text-right">
+                        Assigned
+                      </TableHead>
+                      <TableHead className="bg-background text-right">
+                        Accepted
+                      </TableHead>
+                      <TableHead className="bg-background text-right">
+                        Closed
+                      </TableHead>
+                      <TableHead className="bg-background text-right">
+                        Action
+                      </TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {presentUsers.map((user: UserData) => (
+                      <TableRow key={user.id}>
+                        <TableCell className="font-medium">
+                          <Avatar>
+                            <AvatarImage
+                              src={user.profile_image}
+                              alt={user.full_name}
+                            />
+                            <AvatarFallback>
+                              {user?.full_name
+                                ?.split(" ")
+                                .map((word) => word.charAt(0))
+                                .join("")}
+                            </AvatarFallback>
+                          </Avatar>
+                        </TableCell>
+                        <TableCell>
+                          <Link
+                            href={`/crm/staff/${user.id}?tab=attendance`}
+                            className="underline"
+                          >
+                            {user.full_name}
+                          </Link>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {user.assigned_jobs_count}
+                        </TableCell>
 
-                          <TableCell className="text-right">
-                            {user.accepted_jobs_count}
-                          </TableCell>
-                          <TableCell className="text-right">
-                            {user.closed_jobs_count}
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              disabled={loadingUserId === user.id}
-                              onClick={() => toggleUserStatus(user, "present")}
-                            >
-                              {loadingUserId === user.id
-                                ? "Loading..."
-                                : "Mark Absent"}
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-                <ScrollBar orientation="horizontal" />
-              </ScrollArea>
-            </TabsContent>
-            <TabsContent value="absent">
-              <ScrollArea className="h-[350px] w-full rounded-md border">
-                <div className="w-max min-w-full">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead className="w-[100px] bg-background">
-                          User
-                        </TableHead>
-                        <TableHead className="bg-background">Name</TableHead>
-                        <TableHead className="bg-background">Status</TableHead>
-                        <TableHead className="bg-background text-right">
-                          Action
-                        </TableHead>
+                        <TableCell className="text-right">
+                          {user.accepted_jobs_count}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {user.closed_jobs_count}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            disabled={loadingUserId === user.id}
+                            onClick={() => toggleUserStatus(user, "present")}
+                          >
+                            {loadingUserId === user.id
+                              ? "Loading..."
+                              : "Mark Absent"}
+                          </Button>
+                        </TableCell>
                       </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {absentUsers.map((user: UserData) => (
-                        <TableRow key={user.id}>
-                          <TableCell className="font-medium">
-                            <Avatar>
-                              <AvatarImage
-                                src={user.profile_image}
-                                alt={user.full_name}
-                              />
-                              <AvatarFallback>
-                                {user?.full_name
-                                  ?.split(" ")
-                                  .map((word) => word.charAt(0))
-                                  .join("")}
-                              </AvatarFallback>
-                            </Avatar>
-                          </TableCell>
-                          <TableCell>{user.full_name}</TableCell>
-                          <TableCell>
-                            <Badge variant="secondary">Absent</Badge>
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              disabled={loadingUserId === user.id}
-                              onClick={() => toggleUserStatus(user, "absent")}
-                            >
-                              {loadingUserId === user.id
-                                ? "Loading..."
-                                : "Mark Present"}
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-                <ScrollBar orientation="horizontal" />
-              </ScrollArea>
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+              <ScrollBar orientation="horizontal" />
+            </ScrollArea>
+          </TabsContent>
+          <TabsContent value="absent">
+            <ScrollArea className="h-[350px] w-full rounded-md border">
+              <div className="w-max min-w-full">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-[100px] bg-background">
+                        User
+                      </TableHead>
+                      <TableHead className="bg-background">Name</TableHead>
+                      <TableHead className="bg-background">Status</TableHead>
+                      <TableHead className="bg-background text-right">
+                        Action
+                      </TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {absentUsers.map((user: UserData) => (
+                      <TableRow key={user.id}>
+                        <TableCell className="font-medium">
+                          <Avatar>
+                            <AvatarImage
+                              src={user.profile_image}
+                              alt={user.full_name}
+                            />
+                            <AvatarFallback>
+                              {user?.full_name
+                                ?.split(" ")
+                                .map((word) => word.charAt(0))
+                                .join("")}
+                            </AvatarFallback>
+                          </Avatar>
+                        </TableCell>
+                        <TableCell>{user.full_name}</TableCell>
+                        <TableCell>
+                          <Badge variant="secondary">Absent</Badge>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            disabled={loadingUserId === user.id}
+                            onClick={() => toggleUserStatus(user, "absent")}
+                          >
+                            {loadingUserId === user.id
+                              ? "Loading..."
+                              : "Mark Present"}
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+              <ScrollBar orientation="horizontal" />
+            </ScrollArea>
+          </TabsContent>
+        </Tabs>
+      </CardContent>
+    </Card>
+  );
+}
+
+export function AttendanceStatus({ data }: { data: AttendanceData }) {
+  if (!data || !data.present || data.present.length === 0) {
+    return <ErrorNoData />;
+  }
+  return (
+    <Suspense fallback={<LoadingSkeleton />}>
+      <AttendanceStatusComponent data={data} />
     </Suspense>
   );
 }

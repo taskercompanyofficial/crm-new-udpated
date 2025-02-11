@@ -120,10 +120,6 @@ interface ChartDataItem {
 function ChartContent({ data }: { data: BrandData }) {
   const router = useRouter();
 
-  if (!data || !data.brand_data || data.brand_data.length === 0) {
-    return <ErrorNoData />;
-  }
-
   // Calculate optimal bar size based on number of data points
   const totalBars = data.brand_data.length + 4; // Adding 4 for the status bars
   const maxBarWidth = 40; // Maximum width for bars
@@ -339,6 +335,9 @@ function ChartContent({ data }: { data: BrandData }) {
 }
 
 export default function ComplaintsByBrand({ data }: { data: BrandData }) {
+  if (!data || !data.brand_data || data.brand_data.length === 0) {
+    return <ErrorNoData />;
+  }
   return (
     <Suspense fallback={<LoadingSkeleton />}>
       <ChartContent data={data} />
