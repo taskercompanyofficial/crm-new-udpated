@@ -131,7 +131,8 @@ function ChartContent({ complaintStatusData }: ChartsByStatusProps) {
       tooltip: "Total number of complaints received",
     },
   ];
-
+  const today = new Date();
+  const todayStr = today.toISOString().split("T")[0];
   return (
     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
       {items.map((item, index) => (
@@ -139,11 +140,9 @@ function ChartContent({ complaintStatusData }: ChartsByStatusProps) {
           key={index}
           className="group relative cursor-pointer overflow-hidden rounded-xl shadow-lg transition-all duration-300 hover:scale-105"
           onClick={() => {
-            const today = new Date();
-            const todayStr = today.toISOString().split("T")[0];
             if (item.status === "closed") {
               router.push(
-                `/crm/complaints?filters=[{"id":"status","condition":"in","value":"open.closed.amount-pending.feedback-pending.cancelled.completed.pending-by-brand"},{"id":"updated_at","condition":"like","value":"${todayStr}"}]`,
+                `/crm/complaints?filters=[{"id":"status","condition":"in","value":"open.closed.amount-pending.feedback-pending.completed.pending-by-brand"},{"id":"updated_at","condition":"like","value":"${todayStr}"}]`,
               );
             } else if (item.status === "cancelled") {
               router.push(
@@ -180,14 +179,14 @@ function ChartContent({ complaintStatusData }: ChartsByStatusProps) {
               {item.details && (
                 <div className="mt-1 text-xs font-normal text-gray-500">
                   <Link
-                    href={`/crm/complaints?filters=[{"id":"status","condition":"like","value":"open"}]`}
+                    href={`/crm/complaints?filters=[{"id":"status","condition":"like","value":"open"},{"id":"created_at","condition":"like","value":"${todayStr}"}]`}
                     className="text-indigo-600"
                   >
                     {item.details.open} open
                   </Link>
                   {" • "}
                   <Link
-                    href={`/crm/complaints?filters=[{"id":"status","condition":"not in","value":"open.closed.amount-pending.feedback-pending.cancelled.completed.pending-by-brand"}]`}
+                    href={`/crm/complaints?filters=[{"id":"status","condition":"not in","value":"open.closed.amount-pending.feedback-pending.cancelled.completed.pending-by-brand"},{"id":"created_at","condition":"like","value":"${todayStr}"}]`}
                     className="text-amber-600"
                   >
                     {item.details.inProgress} in progress
