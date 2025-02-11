@@ -53,6 +53,8 @@ function LoadingSkeleton() {
 }
 
 function ChartContent({ data }: { data: Record<string, { count: number }> }) {
+  const router = useRouter();
+
   if (!data || Object.keys(data).length === 0) {
     return <ErrorNoData />;
   }
@@ -85,7 +87,6 @@ function ChartContent({ data }: { data: Record<string, { count: number }> }) {
 
   const totalComplaints = chartData.reduce((sum, item) => sum + item.count, 0);
 
-  const router = useRouter();
   return (
     <Card>
       <CardHeader>
