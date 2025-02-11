@@ -143,11 +143,11 @@ function ChartContent({ complaintStatusData }: ChartsByStatusProps) {
             const todayStr = today.toISOString().split("T")[0];
             if (item.status === "closed") {
               router.push(
-                `/crm/complaints?filters=[{"id":"status","condition":"in","value":"open.closed.amount-pending.feedback-pending.cancelled.completed.pending-by-brand"},{"id":"created_at","condition":"like","value":"${todayStr}"}]`,
+                `/crm/complaints?filters=[{"id":"status","condition":"in","value":"open.closed.amount-pending.feedback-pending.cancelled.completed.pending-by-brand"},{"id":"updated_at","condition":"like","value":"${todayStr}"}]`,
               );
             } else if (item.status === "cancelled") {
               router.push(
-                `/crm/complaints?filters=[{"id":"status","condition":"in","value":"cancelled"},{"id":"created_at","condition":"like","value":"${todayStr}"}]`,
+                `/crm/complaints?filters=[{"id":"status","condition":"in","value":"cancelled"},{"id":"updated_at","condition":"like","value":"${todayStr}"}]`,
               );
             } else if (item.status === "all") {
               router.push(
