@@ -18,15 +18,20 @@ interface ChartData {
 
 interface StatusData {
   count: number;
-  trend: string;
-  data: ChartData[];
+  trend?: string;
+  data?: ChartData[];
 }
 
 interface ComplaintStatusData {
-  opened: StatusData;
-  closed: StatusData;
-  rejected: StatusData;
-  total: StatusData;
+  open_and_pending: {
+    opened: StatusData;
+    "in-progress": StatusData;
+  };
+  others: {
+    closed: StatusData;
+    rejected: StatusData;
+    total: StatusData;
+  };
 }
 
 interface ChartsByStatusProps {
@@ -61,52 +66,66 @@ function ChartContent({ complaintStatusData }: ChartsByStatusProps) {
 
   const items = [
     {
-      title: "Opened Complaints",
-      icon: <CheckCircle className="h-5 w-5 text-indigo-600" />,
-      data: complaintStatusData?.opened,
-      status: "open",
+      title: "Active Complaints",
+      icon: (
+        <div className="flex gap-2">
+          <CheckCircle className="h-5 w-5 text-indigo-600" />
+          <AlertCircle className="h-5 w-5 text-amber-600" />
+        </div>
+      ),
+      data: {
+        count: (complaintStatusData?.open_and_pending.opened.count || 0) + 
+               (complaintStatusData?.open_and_pending["in-progress"].count || 0),
+        trend: complaintStatusData?.open_and_pending.opened.trend,
+        data: complaintStatusData?.open_and_pending.opened.data
+      },
+      status: "active",
       color: {
         text: "text-indigo-600",
         border: "rgb(99, 102, 241)",
         background: "rgba(99, 102, 241, 0.1)",
       },
-      tooltip: "Active complaints awaiting resolution",
+      tooltip: "Open and in-progress complaints",
+      details: {
+        open: complaintStatusData?.open_and_pending.opened.count || 0,
+        inProgress: complaintStatusData?.open_and_pending["in-progress"].count || 0
+      }
     },
     {
       title: "Closed Complaints",
       icon: <XCircle className="h-5 w-5 text-emerald-600" />,
-      data: complaintStatusData?.closed,
+      data: complaintStatusData?.others.closed,
       status: "closed",
       color: {
         text: "text-emerald-600",
         border: "rgb(34, 197, 94)",
         background: "rgba(34, 197, 94, 0.1)",
       },
-      tooltip: "Successfully resolved complaints",
+      tooltip: "Successfully resolved complaints"
     },
     {
-      title: "Rejected Complaints",
+      title: "Rejected Complaints", 
       icon: <AlertCircle className="h-5 w-5 text-red-600" />,
-      data: complaintStatusData?.rejected,
+      data: complaintStatusData?.others.rejected,
       status: "cancelled",
       color: {
         text: "text-red-600",
         border: "rgb(244, 63, 94)",
         background: "rgba(244, 63, 94, 0.1)",
       },
-      tooltip: "Complaints marked as invalid or rejected",
+      tooltip: "Complaints marked as invalid or rejected"
     },
     {
       title: "Total Complaints",
       icon: <BarChart2 className="h-5 w-5 text-violet-600" />,
-      data: complaintStatusData?.total,
+      data: complaintStatusData?.others.total,
       status: "all",
       color: {
         text: "text-violet-600",
         border: "rgb(139, 92, 246)",
         background: "rgba(139, 92, 246, 0.1)",
       },
-      tooltip: "Total number of complaints received",
+      tooltip: "Total number of complaints received"
     },
   ];
 
@@ -139,6 +158,13 @@ function ChartContent({ complaintStatusData }: ChartsByStatusProps) {
               className={`text-2xl font-bold ${item.color.text} transition-all duration-300 group-hover:scale-110`}
             >
               {item.data?.count ?? 0}
+              {item.details && (
+                <div className="mt-1 text-xs font-normal text-gray-500">
+                  <span className="text-indigo-600">{item.details.open} open</span>
+                  {" • "}
+                  <span className="text-amber-600">{item.details.inProgress} in progress</span>
+                </div>
+              )}
             </div>
 
             <div className="mt-2 h-[50px] transition-transform duration-300 group-hover:translate-y-1">
@@ -207,7 +233,7 @@ function ChartContent({ complaintStatusData }: ChartsByStatusProps) {
               <div
                 className="h-1 rounded-full transition-all duration-500 ease-out"
                 style={{
-                  width: `${((item.data?.count ?? 0) / (complaintStatusData?.total.count || 1)) * 100}%`,
+                  width: `${((item.data?.count ?? 0) / (complaintStatusData?.others.total.count || 1)) * 100}%`,
                   backgroundColor: item.color.border,
                 }}
               />
