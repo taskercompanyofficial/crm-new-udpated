@@ -48,6 +48,7 @@ export default function ComplaintDetailsForm({
             setData({ ...data, serial_number_ind: e.target.value })
           }
           value={data.serial_number_ind}
+          errorMessage={errors.serial_number_ind}
           className="transition-all duration-200 hover:shadow-md"
         />
         <LabelInputContainer
@@ -57,6 +58,7 @@ export default function ComplaintDetailsForm({
             setData({ ...data, serial_number_oud: e.target.value })
           }
           value={data.serial_number_oud}
+          errorMessage={errors.serial_number_oud}
           className="transition-all duration-200 hover:shadow-md"
         />
         <LabelInputContainer
@@ -64,6 +66,7 @@ export default function ComplaintDetailsForm({
           placeholder="Model Number"
           onChange={(e) => setData({ ...data, model: e.target.value })}
           value={data.model}
+          errorMessage={errors.model}
           className="transition-all duration-200 hover:shadow-md"
         />
         <LabelInputContainer
@@ -71,6 +74,7 @@ export default function ComplaintDetailsForm({
           placeholder="Extra Number"
           onChange={(e) => setData({ ...data, extra_numbers: e.target.value })}
           value={data.extra_numbers}
+          errorMessage={errors.extra_numbers}
           className="transition-all duration-200 hover:shadow-md"
         />
         <LabelInputContainer
@@ -79,6 +83,7 @@ export default function ComplaintDetailsForm({
           placeholder="Date of Purchase"
           onChange={(e) => setData({ ...data, p_date: e.target.value })}
           value={data.p_date}
+          errorMessage={errors.p_date}
           className="transition-all duration-200 hover:shadow-md"
         />
         <LabelInputContainer
@@ -86,6 +91,7 @@ export default function ComplaintDetailsForm({
           placeholder="Product Type"
           onChange={(e) => setData({ ...data, product_type: e.target.value })}
           value={data.product_type}
+          errorMessage={errors.product_type}
           className="transition-all duration-200 hover:shadow-md"
         />
         <LabelInputContainer
@@ -93,6 +99,7 @@ export default function ComplaintDetailsForm({
           placeholder="MQ Number"
           onChange={(e) => setData({ ...data, mq_nmb: e.target.value })}
           value={data.mq_nmb}
+          errorMessage={errors.mq_nmb}
           className="transition-all duration-200"
         />
       </div>
@@ -106,6 +113,7 @@ export default function ComplaintDetailsForm({
             onChange={(e) => setData({ ...data, branch_id: e })}
             width="full"
             className="transition-all duration-200"
+            errorMessage={errors.branch_id}
           />
         ) : (
           <div className="space-y-2">
@@ -123,6 +131,7 @@ export default function ComplaintDetailsForm({
                 onChange={(e) => setData({ ...data, technician: e })}
                 width="full"
                 className="transition-all duration-200"
+                errorMessage={errors.technician}
               />
             </div>
           ) : (
@@ -155,6 +164,7 @@ export default function ComplaintDetailsForm({
           placeholder="Amount"
           onChange={(e) => setData({ ...data, amount: e.target.value })}
           value={data.amount}
+          errorMessage={errors.amount}
           className="transition-all duration-200"
         />
       </div>
@@ -167,6 +177,7 @@ export default function ComplaintDetailsForm({
             setData({ ...data, working_details: e.target.value })
           }
           value={data.working_details}
+          errorMessage={errors.working_details}
           className="min-h-[120px] transition-all duration-200"
         />
         <TextareaInput
@@ -176,6 +187,7 @@ export default function ComplaintDetailsForm({
             setData({ ...data, comments_for_technician: e.target.value })
           }
           value={data.comments_for_technician}
+          errorMessage={errors.comments_for_technician}
           className="min-h-[120px] transition-all duration-200"
         />
       </div>

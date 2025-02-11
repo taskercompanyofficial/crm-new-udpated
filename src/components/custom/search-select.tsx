@@ -33,11 +33,11 @@ interface SearchSelectProps {
   onChange: (value: string) => void;
   label?: string;
   description?: string;
-  error?: string;
   className?: string;
   width?: "auto" | "full";
   required?: boolean;
   customizable?: boolean;
+  errorMessage?: string;
 }
 
 export default function SearchSelect({
@@ -46,11 +46,11 @@ export default function SearchSelect({
   onChange,
   label = "",
   description = "",
-  error = "",
   className = "",
   width = "auto",
   required = false,
   customizable,
+  errorMessage,
 }: SearchSelectProps) {
   const [open, setOpen] = useState(false);
   const [customValue, setCustomValue] = useState({ value: "", label: "" });
@@ -87,7 +87,7 @@ export default function SearchSelect({
       {/* Label */}
       {label && (
         <Label
-          className={cn("flex items-center gap-1", error && "text-red-500")}
+          className={cn("flex items-center gap-1", errorMessage && "text-red-500")}
         >
           {label}
           {required && <span className="text-red-500"> *</span>}
@@ -188,10 +188,10 @@ export default function SearchSelect({
       </Popover>
 
       {/* Error and Description */}
-      {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
       {description && (
         <p className="mt-1 text-sm text-muted-foreground">{description}</p>
       )}
+      {errorMessage && <p className="mt-1 text-sm text-red-500">{errorMessage}</p>}
     </div>
   );
 }

@@ -123,6 +123,7 @@ export default function BasicForm({
               width="full"
               className="mt-1"
               customizable
+              errorMessage={errors.brand_id}
             />
           ) : (
             <div className="mt-1 space-y-2">
@@ -137,6 +138,7 @@ export default function BasicForm({
           options={complaintTypeOptions}
           onChange={(value) => setData({ ...data, complaint_type: value })}
           selected={data.complaint_type}
+          errorMessage={errors.complaint_type}
         />
         <AddressTextarea
           value={data.applicant_adress}
