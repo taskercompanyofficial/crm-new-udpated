@@ -325,7 +325,7 @@ function ChartContent({ data }: { data: BrandData }) {
               onClick={(data) =>
                 handleBarClick(
                   data as ChartDataItem,
-                  'filters=[{"id":"status","condition":"not in","value":"closed.amount-pending.feedback-pending.cancelled.completed.pending-by-brand"}, {"id":"complaint_type","condition":"like","value":"%installation%"}]',
+                  'filters=[{"id":"status","condition":"not in","value":"open.closed.amount-pending.feedback-pending.cancelled.completed.pending-by-brand"}, {"id":"complaint_type","condition":"like","value":"%installation%"}]',
                 )
               }
               className="cursor-pointer"
