@@ -64,14 +64,13 @@ function LoadingSkeleton() {
 
 export function AttendanceStatus({ data }: { data: AttendanceData }) {
   const session = useSession();
-  if (!data || !data.present || data.present.length === 0) {
-    return <ErrorNoData />;
-  }
   const token = session.data?.user?.token || "";
   const [presentUsers, setPresentUsers] = React.useState<UserData[]>(
-    data.present,
+    data?.present || []
   );
-  const [absentUsers, setAbsentUsers] = React.useState<UserData[]>(data.absent);
+  const [absentUsers, setAbsentUsers] = React.useState<UserData[]>(
+    data?.absent || []
+  );
   const [loadingUserId, setLoadingUserId] = React.useState<string | null>(null);
 
   const { post, setData } = useForm({
@@ -80,17 +79,22 @@ export function AttendanceStatus({ data }: { data: AttendanceData }) {
     longitude: 0,
     date: new Date().toISOString().split("T")[0],
   });
+
+  if (!data || !data.present || data.present.length === 0) {
+    return <ErrorNoData />;
+  }
+
   if (data == null) {
     return (
       <div className="flex flex-col items-center justify-center p-4">
         <h2 className="text-lg font-semibold text-red-600">
           Something went wrong:
         </h2>
-
         <p className="mt-2 text-sm text-gray-600">No data available</p>
       </div>
     );
   }
+
   const getGeolocation = async (): Promise<GeolocationPosition> => {
     return new Promise((resolve, reject) => {
       if (!navigator.geolocation) {
