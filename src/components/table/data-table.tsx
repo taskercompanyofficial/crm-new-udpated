@@ -103,15 +103,27 @@ export function DataTable<TData, TValue>({
                   onClick={() => row.toggleSelected()}
                   className={`cursor-pointer ${index % 2 === 0 ? "bg-white dark:bg-gray-950" : "bg-gray-50 dark:bg-gray-900"}`}
                 >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="text-xs">
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
-                  <TableCell onClick={(e) => e.stopPropagation()}>
+                  {row.getVisibleCells().map((cell) => {
+                    if (cell.column.id === 'status' || cell.column.id === 'actions') {
+                      return (
+                        <TableCell key={cell.id} className="text-xs sticky right-0 bg-inherit">
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext(),
+                          )}
+                        </TableCell>
+                      );
+                    }
+                    return (
+                      <TableCell key={cell.id} className="text-xs">
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    );
+                  })}
+                  <TableCell onClick={(e) => e.stopPropagation()} className="sticky right-0 bg-inherit">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="h-8 w-8 p-0">

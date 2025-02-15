@@ -1,7 +1,6 @@
 "use client";
 
 import { Table } from "@tanstack/react-table";
-
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -10,16 +9,21 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command"
+} from "@/components/ui/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/components/ui/popover";
 import { exportTableToCSV } from "@/lib/export";
-import { CheckIcon, ChevronsUpDown, DownloadIcon, Settings2 } from "lucide-react";
+import {
+  CheckIcon,
+  ChevronsUpDown,
+  DownloadIcon,
+  Settings2,
+} from "lucide-react";
 import { cn, toSentenceCase } from "@/lib/utils";
-import React from "react";
+import React, { useEffect } from "react";
 import { TasksTableFloatingBar } from "./filters/tasks-table-floating-bar";
 import { DeleteTasksDialog } from "./filters/delete-tasks-dialog";
 
@@ -30,7 +34,26 @@ interface DataTableViewOptionsProps<TData> {
 export function DataTableViewOptions<TData>({
   table,
 }: DataTableViewOptionsProps<TData>) {
-  const triggerRef = React.useRef<HTMLButtonElement>(null)
+  const triggerRef = React.useRef<HTMLButtonElement>(null);
+
+  // Load column visibility state from localStorage on mount
+  useEffect(() => {
+    const savedColumnVisibility = localStorage.getItem("tableColumnVisibility");
+    if (savedColumnVisibility) {
+      table.setColumnVisibility(JSON.parse(savedColumnVisibility));
+    }
+  }, [table]);
+
+  // Save column visibility state to localStorage when it changes
+  const handleColumnVisibilityChange = (columnId: string, visible: boolean) => {
+    const newState = {
+      ...table.getState().columnVisibility,
+      [columnId]: visible,
+    };
+    table.setColumnVisibility(newState);
+    localStorage.setItem("tableColumnVisibility", JSON.stringify(newState));
+  };
+
   return (
     <div className="flex gap-2">
       {table.getFilteredSelectedRowModel().rows.length > 0 ? (
@@ -46,7 +69,8 @@ export function DataTableViewOptions<TData>({
         aria-label="Toggle columns"
         variant="outline"
         role="combobox"
-        size="sm" onClick={() =>
+        size="sm"
+        onClick={() =>
           exportTableToCSV(table, {
             filename: "Records",
             excludeColumns: ["select", "actions"],
@@ -85,14 +109,17 @@ export function DataTableViewOptions<TData>({
                   .filter(
                     (column) =>
                       typeof column.accessorFn !== "undefined" &&
-                      column.getCanHide()
+                      column.getCanHide(),
                   )
                   .map((column) => {
                     return (
                       <CommandItem
                         key={column.id}
                         onSelect={() =>
-                          column.toggleVisibility(!column.getIsVisible())
+                          handleColumnVisibilityChange(
+                            column.id,
+                            !column.getIsVisible(),
+                          )
                         }
                       >
                         <span className="truncate">
@@ -101,11 +128,11 @@ export function DataTableViewOptions<TData>({
                         <CheckIcon
                           className={cn(
                             "ml-auto size-4 shrink-0",
-                            column.getIsVisible() ? "opacity-100" : "opacity-0"
+                            column.getIsVisible() ? "opacity-100" : "opacity-0",
                           )}
                         />
                       </CommandItem>
-                    )
+                    );
                   })}
               </CommandGroup>
             </CommandList>
