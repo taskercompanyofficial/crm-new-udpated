@@ -18,10 +18,9 @@ import { useSession } from "next-auth/react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TextareaInput } from "@/components/custom/TextareaInput";
 import { toast } from "react-toastify";
-import axios from "axios";
 import useForm from "@/hooks/use-form";
-import { API_URL } from "@/lib/apiEndPoints";
 import SubmitBtn from "@/components/custom/submit-button";
+import useFetch from "@/hooks/usefetch";
 
 interface VisitDetails {
   visitType: string;
@@ -44,18 +43,36 @@ interface Remark {
   visitDetails?: VisitDetails;
 }
 
+interface ReviewType {
+  rating: number;
+  reason: string;
+  comment: string;
+  complaint_id: number;
+}
+
 export default function Remarks({ complaintId }: { complaintId: number }) {
   const [newRemark, setNewRemark] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editContent, setEditContent] = useState("");
   const session = useSession();
   const token = session.data?.user?.token || "";
+
+  const {
+    data: reviewsData,
+    error,
+    isLoading,
+  } = useFetch<ReviewType>(
+    `https://api.taskercompany.com/api/crm/customer-reviews/store/${complaintId}`,
+    token,
+  );
+
   const { data, setData, errors, processing, post, reset } = useForm({
-    rating: 0,
-    reason: "",
-    comment: "",
+    rating: reviewsData?.rating || 0,
+    reason: reviewsData?.reason || "",
+    comment: reviewsData?.comment || "",
     complaint_id: complaintId,
   });
+
   const dummyRemarks: Remark[] = [
     {
       id: "1",
@@ -405,7 +422,7 @@ export default function Remarks({ complaintId }: { complaintId: number }) {
                     {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((rating) => (
                       <button
                         key={rating}
-                        onClick={() => setData({ ...data, rating: rating })}
+                        onClick={() => setData({ ...data, rating })}
                         className={`h-10 w-10 rounded-full border-2 transition-colors ${
                           data.rating === rating
                             ? "border-blue-500 bg-blue-50 text-blue-700"
