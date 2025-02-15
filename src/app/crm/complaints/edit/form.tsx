@@ -283,7 +283,7 @@ export default function Form({
           <Store />
         </TabsContent>
         <TabsContent value="remarks">
-          <Remarks />
+          <Remarks complaintId={complaint?.id || 0} />
         </TabsContent>
         <TabsContent value="history">
           <History id={complaint?.id} token={token} />

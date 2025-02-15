@@ -18,6 +18,10 @@ import { useSession } from "next-auth/react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TextareaInput } from "@/components/custom/TextareaInput";
 import { toast } from "react-toastify";
+import axios from "axios";
+import useForm from "@/hooks/use-form";
+import { API_URL } from "@/lib/apiEndPoints";
+import SubmitBtn from "@/components/custom/submit-button";
 
 interface VisitDetails {
   visitType: string;
@@ -40,16 +44,18 @@ interface Remark {
   visitDetails?: VisitDetails;
 }
 
-export default function Remarks() {
+export default function Remarks({ complaintId }: { complaintId: number }) {
   const [newRemark, setNewRemark] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editContent, setEditContent] = useState("");
-  const [selectedRating, setSelectedRating] = useState<number>(0);
-  const [reviewReason, setReviewReason] = useState("");
-  const [additionalComments, setAdditionalComments] = useState("");
   const session = useSession();
   const token = session.data?.user?.token || "";
-
+  const { data, setData, errors, processing, post, reset } = useForm({
+    rating: 0,
+    reason: "",
+    comment: "",
+    complaint_id: complaintId,
+  });
   const dummyRemarks: Remark[] = [
     {
       id: "1",
@@ -128,36 +134,68 @@ export default function Remarks() {
     }
   };
 
-  const handleSubmitReview = () => {
-    if (!selectedRating) {
-      toast.error("Please select a rating");
-      return;
+  const handleSubmitReview = async () => {
+    try {
+      if (!data.rating) {
+        toast.error("Please select a rating");
+        return;
+      }
+      if (data.rating <= 8 && !data.reason) {
+        toast.error("Please provide a reason for the low rating");
+        return;
+      }
+      post(
+        API_URL + "/crm/customer-reviews/store/",
+        {
+          onSuccess: (response) => {
+            toast.success(response.message);
+            reset();
+          },
+          onError: (error) => {
+            toast.error(error.message);
+          },
+        },
+        token,
+      );
+    } catch (error) {
+      console.error("Error submitting review:", error);
+      toast.error("Failed to submit review");
     }
-    if (selectedRating <= 8 && !reviewReason) {
-      toast.error("Please provide a reason for the low rating");
-      return;
-    }
-    toast.success("Review submitted successfully");
   };
 
   return (
     <div className="flex flex-col gap-4">
-      <Tabs defaultValue="all" className="flex flex-col sm:flex-row gap-4 h-[500px]">
-        <TabsList className="flex md:h-full min-w-[120px] md:min-w-[200px] flex-row sm:flex-col justify-start space-y-2 bg-gray-100">
-          <TabsTrigger value="all" className="justify-start w-full text-sm md:text-base">
+      <Tabs
+        defaultValue="all"
+        className="flex h-[500px] flex-col gap-4 sm:flex-row"
+      >
+        <TabsList className="flex min-w-[120px] flex-row justify-start space-y-2 bg-gray-100 sm:flex-col md:h-full md:min-w-[200px]">
+          <TabsTrigger
+            value="all"
+            className="w-full justify-start text-sm md:text-base"
+          >
             All Remarks
           </TabsTrigger>
-          <TabsTrigger value="technician" className="justify-start w-full text-sm md:text-base">
+          <TabsTrigger
+            value="technician"
+            className="w-full justify-start text-sm md:text-base"
+          >
             Technician Visits
           </TabsTrigger>
-          <TabsTrigger value="cso" className="justify-start w-full text-sm md:text-base">
+          <TabsTrigger
+            value="cso"
+            className="w-full justify-start text-sm md:text-base"
+          >
             CSO Remarks
           </TabsTrigger>
-          <TabsTrigger value="review" className="justify-start w-full text-sm md:text-base">
+          <TabsTrigger
+            value="review"
+            className="w-full justify-start text-sm md:text-base"
+          >
             Customer Review
           </TabsTrigger>
         </TabsList>
-        <ScrollArea className="flex-1 bg-gray-100 p-2 rounded border border-gray-200 h-[500px]">
+        <ScrollArea className="h-[500px] flex-1 rounded border border-gray-200 bg-gray-100 p-2">
           <TabsContent value="all">
             <div className="flex flex-col gap-4">
               <div className="flex items-center justify-between">
@@ -173,7 +211,7 @@ export default function Remarks() {
                 placeholder="Add your remark..."
                 value={newRemark}
                 onChange={(e) => setNewRemark(e.target.value)}
-                className="flex-1 w-full"
+                className="w-full flex-1"
               />
               <Button onClick={handleAddRemark}>Add Remark</Button>
 
@@ -193,7 +231,7 @@ export default function Remarks() {
                       <TableRow key={remark.id}>
                         <TableCell>
                           <div className="flex items-center gap-2">
-                            <Avatar className="w-8 h-8">
+                            <Avatar className="h-8 w-8">
                               <AvatarImage src={remark.user.avatar} />
                               <AvatarFallback>
                                 {remark.user.name.charAt(0)}
@@ -210,7 +248,7 @@ export default function Remarks() {
                           </div>
                         </TableCell>
                         <TableCell>
-                          <span className="px-2 py-1 text-xs capitalize rounded-full bg-slate-100">
+                          <span className="rounded-full bg-slate-100 px-2 py-1 text-xs capitalize">
                             {remark.type}
                           </span>
                         </TableCell>
@@ -287,7 +325,7 @@ export default function Remarks() {
           </TabsContent>
 
           <TabsContent value="technician">
-            <div className="p-4 border rounded-lg">
+            <div className="rounded-lg border p-4">
               <h3 className="mb-4 text-lg font-semibold">
                 Technician Visit History
               </h3>
@@ -296,11 +334,11 @@ export default function Remarks() {
                 .map((remark) => (
                   <div
                     key={remark.id}
-                    className="p-4 mb-4 rounded-lg bg-slate-50 dark:bg-slate-900"
+                    className="mb-4 rounded-lg bg-slate-50 p-4 dark:bg-slate-900"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <Avatar className="w-8 h-8">
+                        <Avatar className="h-8 w-8">
                           <AvatarImage src={remark.user.avatar} />
                           <AvatarFallback>
                             {remark.user.name.charAt(0)}
@@ -314,7 +352,7 @@ export default function Remarks() {
                         </div>
                       </div>
                       {remark.visitDetails && (
-                        <span className="px-3 py-1 text-sm text-blue-800 bg-blue-100 rounded-full">
+                        <span className="rounded-full bg-blue-100 px-3 py-1 text-sm text-blue-800">
                           {remark.visitDetails.visitType}
                         </span>
                       )}
@@ -337,7 +375,7 @@ export default function Remarks() {
           </TabsContent>
 
           <TabsContent value="cso">
-            <div className="p-4 border rounded-lg">
+            <div className="rounded-lg border p-4">
               <h3 className="mb-4 text-lg font-semibold">
                 Customer Service Updates
               </h3>
@@ -346,10 +384,10 @@ export default function Remarks() {
                 .map((remark) => (
                   <div
                     key={remark.id}
-                    className="p-4 mb-4 rounded-lg bg-slate-50 dark:bg-slate-900"
+                    className="mb-4 rounded-lg bg-slate-50 p-4 dark:bg-slate-900"
                   >
                     <div className="flex items-center gap-2">
-                      <Avatar className="w-8 h-8">
+                      <Avatar className="h-8 w-8">
                         <AvatarImage src={remark.user.avatar} />
                         <AvatarFallback>
                           {remark.user.name.charAt(0)}
@@ -369,20 +407,20 @@ export default function Remarks() {
           </TabsContent>
 
           <TabsContent value="review">
-            <div className="p-4 border rounded-lg">
+            <div className="rounded-lg border p-4">
               <h3 className="mb-4 text-lg font-semibold">Customer Review</h3>
               <div className="space-y-4">
                 <div>
-                  <label className="block mb-2 text-sm font-medium">
+                  <label className="mb-2 block text-sm font-medium">
                     Rating
                   </label>
                   <div className="flex flex-wrap gap-4">
                     {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((rating) => (
                       <button
                         key={rating}
-                        onClick={() => setSelectedRating(rating)}
+                        onClick={() => setData({ ...data, rating: rating })}
                         className={`h-10 w-10 rounded-full border-2 transition-colors ${
-                          selectedRating === rating
+                          data.rating === rating
                             ? "border-blue-500 bg-blue-50 text-blue-700"
                             : "border-gray-300 hover:border-blue-500"
                         }`}
@@ -393,9 +431,9 @@ export default function Remarks() {
                   </div>
                 </div>
 
-                {selectedRating <= 8 && selectedRating > 0 && (
+                {data.rating <= 8 && data.rating > 0 && (
                   <div>
-                    <label className="block mb-2 text-sm font-medium">
+                    <label className="mb-2 block text-sm font-medium">
                       Please tell us why:
                     </label>
                     <Table>
@@ -410,9 +448,11 @@ export default function Remarks() {
                           <TableCell>Primary Reason</TableCell>
                           <TableCell>
                             <select
-                              className="w-full p-2 border border-gray-300 rounded-md"
-                              value={reviewReason}
-                              onChange={(e) => setReviewReason(e.target.value)}
+                              className="w-full rounded-md border border-gray-300 p-2"
+                              value={data.reason}
+                              onChange={(e) =>
+                                setData({ ...data, reason: e.target.value })
+                              }
                             >
                               <option value="">Select a reason</option>
                               <option value="service-quality">
@@ -435,21 +475,27 @@ export default function Remarks() {
                 )}
 
                 <div>
-                  <label className="block mb-2 text-sm font-medium">
+                  <label className="mb-2 block text-sm font-medium">
                     Additional Comments
                   </label>
-                  <textarea
-                    className="w-full p-2 border border-gray-300 rounded-md"
+                  <TextareaInput
+                    className="w-full rounded-md border border-gray-300 p-2"
                     rows={3}
                     placeholder="Please provide any additional feedback..."
-                    value={additionalComments}
-                    onChange={(e) => setAdditionalComments(e.target.value)}
+                    value={data.comment}
+                    onChange={(e) =>
+                      setData({ ...data, comment: e.target.value })
+                    }
                   />
                 </div>
 
-                <Button onClick={handleSubmitReview} className="w-full">
+                <SubmitBtn
+                  onClick={handleSubmitReview}
+                  className="w-full"
+                  processing={processing}
+                >
                   Submit Review
-                </Button>
+                </SubmitBtn>
               </div>
             </div>
           </TabsContent>
