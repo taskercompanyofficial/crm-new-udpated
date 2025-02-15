@@ -67,9 +67,9 @@ export default function Remarks({ complaintId }: { complaintId: number }) {
   );
 
   const { data, setData, errors, processing, post, reset } = useForm({
-    rating: reviewsData?.rating || 0,
-    reason: reviewsData?.reason || "",
-    comment: reviewsData?.comment || "",
+    rating: 0,
+    reason: "",
+    comment: "",
     complaint_id: complaintId,
   });
 
@@ -92,7 +92,7 @@ export default function Remarks({ complaintId }: { complaintId: number }) {
       },
     },
     {
-      id: "2",
+      id: "2", 
       type: "technician",
       user: {
         name: "John Smith",
@@ -290,13 +290,10 @@ export default function Remarks({ complaintId }: { complaintId: number }) {
                                   <p>
                                     Duration: {remark.visitDetails.duration}
                                   </p>
-                                  {remark.visitDetails.partsReplaced.length >
-                                    0 && (
+                                  {remark.visitDetails.partsReplaced.length > 0 && (
                                     <p>
                                       Parts Replaced:{" "}
-                                      {remark.visitDetails.partsReplaced.join(
-                                        ", ",
-                                      )}
+                                      {remark.visitDetails.partsReplaced.join(", ")}
                                     </p>
                                   )}
                                 </div>
@@ -500,7 +497,43 @@ export default function Remarks({ complaintId }: { complaintId: number }) {
                 >
                   Submit Review
                 </SubmitBtn>
+              {reviewsData && (
+                <div className="mt-4">
+                  <h3 className="mb-2 text-lg font-semibold">Previous Reviews</h3>
+                  <div className="rounded-md border">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Rating</TableHead>
+                          <TableHead>Reason</TableHead>
+                          <TableHead>Comment</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {Array.isArray(reviewsData) ? (
+                          reviewsData.map((review) => (
+                            <TableRow key={review.complaint_id}>
+                              <TableCell>{review.rating}/10</TableCell>
+                              <TableCell className="capitalize">
+                                {review.reason?.replace('-', ' ') || 'N/A'}
+                              </TableCell>
+                              <TableCell>{review.comment || 'No comment'}</TableCell>
+                            </TableRow>
+                          ))
+                        ) : (
+                          <TableRow>
+                            <TableCell colSpan={3} className="text-center">
+                              No previous reviews found
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      </TableBody>
+                    </Table>
+                  </div>
+                </div>
+              )}
               </div>
+
             </div>
           </TabsContent>
         </ScrollArea>
