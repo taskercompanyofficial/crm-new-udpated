@@ -135,32 +135,19 @@ export default function Remarks({ complaintId }: { complaintId: number }) {
   };
 
   const handleSubmitReview = async () => {
-    try {
-      if (!data.rating) {
-        toast.error("Please select a rating");
-        return;
-      }
-      if (data.rating <= 8 && !data.reason) {
-        toast.error("Please provide a reason for the low rating");
-        return;
-      }
-      post(
-        API_URL + "/crm/customer-reviews/store/",
-        {
-          onSuccess: (response) => {
-            toast.success(response.message);
-            reset();
-          },
-          onError: (error) => {
-            toast.error(error.message);
-          },
+    post(
+      "https://api.taskercompany.com/api/crm/customer-reviews/store",
+      {
+        onSuccess: (response) => {
+          toast.success(response.message);
+          reset();
         },
-        token,
-      );
-    } catch (error) {
-      console.error("Error submitting review:", error);
-      toast.error("Failed to submit review");
-    }
+        onError: (error) => {
+          toast.error(error.message);
+        },
+      },
+      token,
+    );
   };
 
   return (
