@@ -104,9 +104,15 @@ export function DataTable<TData, TValue>({
                   className={`cursor-pointer ${index % 2 === 0 ? "bg-white dark:bg-gray-950" : "bg-gray-50 dark:bg-gray-900"}`}
                 >
                   {row.getVisibleCells().map((cell) => {
-                    if (cell.column.id === 'status' || cell.column.id === 'actions') {
+                    if (
+                      cell.column.id === "status" ||
+                      cell.column.id === "actions"
+                    ) {
                       return (
-                        <TableCell key={cell.id} className="text-xs sticky right-0 bg-inherit">
+                        <TableCell
+                          key={cell.id}
+                          className="sticky right-0 whitespace-nowrap bg-inherit text-xs"
+                        >
                           {flexRender(
                             cell.column.columnDef.cell,
                             cell.getContext(),
@@ -123,7 +129,10 @@ export function DataTable<TData, TValue>({
                       </TableCell>
                     );
                   })}
-                  <TableCell onClick={(e) => e.stopPropagation()} className="sticky right-0 bg-inherit">
+                  <TableCell
+                    onClick={(e) => e.stopPropagation()}
+                    className="sticky right-0 bg-inherit"
+                  >
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="h-8 w-8 p-0">
