@@ -22,6 +22,10 @@ export default {
     signIn: "/login", 
     error: "/error",
   },
+  session: {
+    strategy: "jwt",
+    maxAge: 60 * 60, // 1 hour in seconds
+  },
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
