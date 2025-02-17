@@ -25,37 +25,51 @@ export function NotificationComponent() {
   const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
-    Notification.requestPermission().then((permission) => {
-      if (permission === "granted") {
-        const channel = pusher.subscribe("notification-channel");
+    // Check if we're in a browser environment
+    if (typeof window !== 'undefined') {
+      Notification.requestPermission().then((permission) => {
+        if (permission === "granted") {
+          const channel = pusher.subscribe("notification-channel");
 
-        channel.bind("notification-event", (data: any) => {
-          const type = data.type as keyof typeof toast;
-          setNotifications((prev) => [data, ...prev]);
-          setUnreadCount((prev) => prev + 1);
-          (toast[type] as (message: string) => void)(data.message);
-          revalidate({ path: "/" });
+          channel.bind("notification-event", (data: any) => {
+            const type = data.type as keyof typeof toast;
+            setNotifications((prev) => [data, ...prev]);
+            setUnreadCount((prev) => prev + 1);
+            (toast[type] as (message: string) => void)(data.message);
+            revalidate({ path: "/" });
 
-          // Play notification sound
-          const audio = new Audio("/notification-1.mp3");
-          audio.play();
+            // Play notification sound
+            const audio = new Audio("/notification-1.mp3");
+            audio.play().catch(err => console.log('Audio playback failed:', err));
 
-          // Show desktop notification
-          if ('Notification' in window) {
-            new Notification(data.title, {
-              body: data.message,
-              icon: '/icon.png',
-              badge: '/icon.png',
-              vibrate: [200, 100, 200]
-            } as any);
-          }
-        });
+            // Show desktop notification
+            try {
+              if ('Notification' in window && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                // For mobile devices, create notification with simpler options
+                new Notification(data.title, {
+                  body: data.message,
+                  icon: '/icon.png'
+                });
+              } else if ('Notification' in window) {
+                // For desktop, use all options
+                new Notification(data.title, {
+                  body: data.message,
+                  icon: '/icon.png',
+                  badge: '/icon.png',
+                  vibrationPattern: [200, 100, 200]
+                } as any);
+              }
+            } catch (error) {
+              console.log('Notification failed:', error);
+            }
+          });
 
-        return () => {
-          pusher.unsubscribe("notification-channel");
-        };
-      }
-    });
+          return () => {
+            pusher.unsubscribe("notification-channel");
+          };
+        }
+      }).catch(err => console.log('Permission request failed:', err));
+    }
   }, []);
 
   return (
