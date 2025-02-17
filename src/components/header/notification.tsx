@@ -35,8 +35,20 @@ export function NotificationComponent() {
           setUnreadCount((prev) => prev + 1);
           (toast[type] as (message: string) => void)(data.message);
           revalidate({ path: "/" });
+
+          // Play notification sound
           const audio = new Audio("/notification-1.mp3");
           audio.play();
+
+          // Show desktop notification
+          if ('Notification' in window) {
+            new Notification(data.title, {
+              body: data.message,
+              icon: '/icon.png',
+              badge: '/icon.png',
+              vibrate: [200, 100, 200]
+            } as any);
+          }
         });
 
         return () => {
