@@ -13,7 +13,7 @@ export default async function page({ searchParams }: { searchParams: any }) {
     brand_id: searchParams.brand_id,
   });
   return (
-    <div className="space-y-2">
+    <div className="space-y-2">s
       <DataFetcher
         role={userDetails?.role || "user"}
         endPoint={`${API_URL + WORKERS}?${params}`}
