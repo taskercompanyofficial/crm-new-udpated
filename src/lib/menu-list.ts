@@ -42,7 +42,7 @@ export function getMenuList(
         {
           href: "/crm",
           label: "Overview",
-          active: pathname.includes("/overview"),
+          active: pathname === "/crm",
           icon: Home,
           submenus: [
             {
