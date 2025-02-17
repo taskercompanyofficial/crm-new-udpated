@@ -7,7 +7,6 @@ import { ModeToggle } from "@/components/custom/mode-switcher";
 import { ToastContainer } from "react-toastify";
 import NextTopLoader from "nextjs-toploader";
 import { description, keywords, title } from "@/lib/Meta";
-import ServiceWorker from "@/components/ServiceWorker";
 import { JotaiProvider } from "@/providers/jotai-provider";
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -76,7 +75,6 @@ export default function RootLayout({
                 color="hsl(var(--primary))"
               />
               <JotaiProvider>{children}</JotaiProvider>
-              <ServiceWorker />
             </div>
             <div className="fixed bottom-4 right-4">
               <ModeToggle />

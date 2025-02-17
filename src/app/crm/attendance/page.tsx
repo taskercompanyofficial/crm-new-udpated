@@ -1,5 +1,10 @@
-import React from "react";
+import { PageHeader } from '@/components/custom/page-header'
+import React from 'react'
 
 export default function page() {
-  return <div></div>;
+  return (
+    <div>
+      <PageHeader />
+    </div>
+  )
 }
