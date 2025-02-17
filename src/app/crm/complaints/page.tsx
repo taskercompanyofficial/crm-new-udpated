@@ -22,7 +22,7 @@ export default async function page({ searchParams }: { searchParams: any }) {
   });
   return (
     <div className="space-y-2">
-      <PageHeader />
+      <PageHeader />s
       <DataFetcher
         role={userDetails?.role || "user"}
         endPoint={`${API_URL + COMPLAINTS}?${params}`}
