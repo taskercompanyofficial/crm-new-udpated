@@ -99,13 +99,36 @@ export default function BasicForm({
             }
             errorMessage={errors.extra_numbers}
           />
-          <LabelInputContainer
-            type="text"
-            id="reference-by"
-            placeholder="Reference by"
+          <SearchSelect
             label="Reference by"
+            options={(() => {
+              const defaultOptions: dataTypeIds[] = [
+                { value: "Lahore Center", label: "Lahore Center", id: "1", image: "" },
+                { value: "Multi Electronics", label: "Multi Electronics", id: "2", image: "" },
+                { value: "Afzal Electronics", label: "Afzal Electronics", id: "3", image: "" },
+                { value: "Madinah Electronics", label: "Madinah Electronics", id: "4", image: "" },
+                { value: "Metro Cash & Carry", label: "Metro Cash & Carry", id: "5", image: "" },
+                { value: "Imtiaz Store", label: "Imtiaz Store", id: "6", image: "" },
+                { value: "E Lux", label: "E Lux", id: "7", image: "" },
+                { value: "Dawlance experience store", label: "Dawlance experience store", id: "8", image: "" },
+                { value: "Al mumtaz group", label: "Al mumtaz group", id: "9", image: "" }
+              ];
+
+              if (data.reference_by && !defaultOptions.find((opt) => opt.value === data.reference_by)) {
+                return [...defaultOptions, {
+                  value: data.reference_by,
+                  label: data.reference_by,
+                  id: String(defaultOptions.length + 1),
+                  image: ""
+                }];
+              }
+
+              return defaultOptions;
+            })()}
             value={data.reference_by}
-            onChange={(e) => setData({ ...data, reference_by: e.target.value })}
+            onChange={(value: string) => setData({ ...data, reference_by: value })}
+            width="full"
+            customizable
             errorMessage={errors.reference_by}
           />
           <SearchSelect
@@ -114,7 +137,7 @@ export default function BasicForm({
               const defaultOptions: dataTypeIds[] = [
                 { value: "Refrigerator", label: "Refrigerator", id: "1", image: "" },
                 { value: "Refrigerator Side by Side", label: "Refrigerator Side by Side", id: "2", image: "" },
-                { value: "Refrigerator French Door", label: "Refrigerator French Door", id: "3", image: "" }, 
+                { value: "Refrigerator French Door", label: "Refrigerator French Door", id: "3", image: "" },
                 { value: "Refrigerator Top Freezer", label: "Refrigerator Top Freezer", id: "4", image: "" },
                 { value: "Refrigerator Bottom Freezer", label: "Refrigerator Bottom Freezer", id: "5", image: "" },
                 { value: "Washing Machine", label: "Washing Machine", id: "6", image: "" },
@@ -127,12 +150,14 @@ export default function BasicForm({
                 { value: "Water Heater", label: "Water Heater", id: "13", image: "" },
                 { value: "Dryer", label: "Dryer", id: "14", image: "" },
                 { value: "Stove", label: "Stove", id: "15", image: "" },
-                { value: "Oven", label: "Oven", id: "16", image: "" }
+                { value: "Oven", label: "Oven", id: "16", image: "" },
+                { value: "LCD TV", label: "LCD TV", id: "17", image: "" },
+                { value: "LCD Monitor", label: "LCD Monitor", id: "18", image: "" }
               ];
 
               if (data.product && !defaultOptions.find((opt) => opt.value === data.product)) {
-                return [...defaultOptions, { 
-                  value: data.product, 
+                return [...defaultOptions, {
+                  value: data.product,
                   label: data.product,
                   id: String(defaultOptions.length + 1),
                   image: ""
