@@ -127,6 +127,20 @@ export default function Form({
 
     return () => clearInterval(autoSaveInterval);
   }, [hasUnsavedChanges, lastSaveTime, onSubmit, autoSaveEnabled]);
+
+  // Handle Ctrl+S
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        onSubmit();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onSubmit]);
+
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (hasUnsavedChanges) {

@@ -9,6 +9,12 @@ import { saveAs } from 'file-saver';
 import { toast } from "react-toastify";
 import JSZip from 'jszip';
 import Image from "next/image";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export default function FilesForm({
   data,
@@ -23,6 +29,7 @@ export default function FilesForm({
   const token = session?.data?.user?.token;
   const [selectedFiles, setSelectedFiles] = useState<number[]>([]);
   const [downloading, setDownloading] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<any>(null);
 
   const handleDocumentUpload = (files: any) => {
     if (files && files.length > 0) {
@@ -165,7 +172,6 @@ export default function FilesForm({
                   <th className="p-1.5 text-left font-medium">ID</th>
                   <th className="p-1.5 text-left font-medium">File</th>
                   <th className="p-1.5 text-left font-medium">Document Type</th>
-                  <th className="p-1.5 text-left font-medium">Preview</th>
                   <th className="p-1.5 text-left font-medium">Size</th>
                   <th className="p-1.5 text-right font-medium">Actions</th>
                 </tr>
@@ -183,26 +189,22 @@ export default function FilesForm({
                     </td>
                     <td className="p-1.5">{index + 1}</td>
                     <td className="p-1.5">
-                      <Image
-                        src={getImageUrl(file.document_path)}
-                        alt={file.file_name}
-                        width={100}
-                        height={100}
-                        unoptimized={true}
-                      />
+                      <div
+                        className="cursor-pointer"
+                        onClick={() => setSelectedImage(file)}
+                      >
+                        <Image
+                          src={getImageUrl(file.document_path)}
+                          alt={file.file_name}
+                          width={100}
+                          height={100}
+                          unoptimized={true}
+                          className="hover:opacity-80 transition-opacity"
+                        />
+                      </div>
                     </td>
                     <td className="p-1.5">{file?.document_type || "N/A"}</td>
-                    <td className="p-1.5 text-gray-600">
-                      {file?.document_path && (
-                        <Link
-                          href={getImageUrl(file.document_path)}
-                          target="_blank"
-                          className="flex items-center gap-1 p-1 rounded-lg w-fit bg-muted"
-                        >
-                          Preview <Eye className="w-4 h-4" />
-                        </Link>
-                      )}
-                    </td>
+
                     <td className="p-1.5">
                       {file?.file_size
                         ? `${(file.file_size / 1024).toFixed(1)} KB`
@@ -238,6 +240,49 @@ export default function FilesForm({
           </div>
         </div>
       )}
+
+      <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
+        <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>{selectedImage?.file_name || 'Image Preview'}</DialogTitle>
+          </DialogHeader>
+          <div className="flex flex-col items-center gap-4">
+            {selectedImage && (
+              <div className="relative w-full max-h-[70vh] overflow-auto">
+                <Image
+                  src={getImageUrl(selectedImage.document_path)}
+                  alt={selectedImage.file_name}
+                  width={800}
+                  height={600}
+                  className="object-contain w-full"
+                  unoptimized={true}
+                />
+              </div>
+            )}
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                onClick={() => window.open(getImageUrl(selectedImage?.document_path), '_blank')}
+              >
+                <Eye className="w-4 h-4 mr-2" />
+                Open in New Tab
+              </Button>
+              <Button
+                variant="default"
+                onClick={() => handleDownloadFile(selectedImage)}
+                disabled={downloading}
+              >
+                {downloading ? (
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                ) : (
+                  <Download className="w-4 h-4 mr-2" />
+                )}
+                Download
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <div className="flex gap-2">
         {Array.isArray(files) && files.length > 0 && (
