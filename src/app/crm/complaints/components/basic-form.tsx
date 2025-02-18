@@ -110,26 +110,39 @@ export default function BasicForm({
           />
           <SearchSelect
             label="Product"
-            options={[
-              { value: "Refrigerator", label: "Refrigerator" },
-              { value: "Refrigerator Side by Side", label: "Refrigerator Side by Side" },
-              { value: "Refrigerator French Door", label: "Refrigerator French Door" },
-              { value: "Refrigerator Top Freezer", label: "Refrigerator Top Freezer" },
-              { value: "Refrigerator Bottom Freezer", label: "Refrigerator Bottom Freezer" },
-              { value: "Washing Machine", label: "Washing Machine" },
-              { value: "Washing Machine Top Load", label: "Washing Machine Top Load" },
-              { value: "Washing Machine Front Load", label: "Washing Machine Front Load" },
-              { value: "Washing Machine Semi-Automatic", label: "Washing Machine Semi-Automatic" },
-              { value: "Air Conditioner", label: "Air Conditioner" },
-              { value: "Microwave", label: "Microwave" },
-              { value: "Dishwasher", label: "Dishwasher" },
-              { value: "Water Heater", label: "Water Heater" },
-              { value: "Dryer", label: "Dryer" },
-              { value: "Stove", label: "Stove" },
-              { value: "Oven", label: "Oven" }
-            ]}
+            options={(() => {
+              const defaultOptions: dataTypeIds[] = [
+                { value: "Refrigerator", label: "Refrigerator", id: "1", image: "" },
+                { value: "Refrigerator Side by Side", label: "Refrigerator Side by Side", id: "2", image: "" },
+                { value: "Refrigerator French Door", label: "Refrigerator French Door", id: "3", image: "" }, 
+                { value: "Refrigerator Top Freezer", label: "Refrigerator Top Freezer", id: "4", image: "" },
+                { value: "Refrigerator Bottom Freezer", label: "Refrigerator Bottom Freezer", id: "5", image: "" },
+                { value: "Washing Machine", label: "Washing Machine", id: "6", image: "" },
+                { value: "Washing Machine Top Load", label: "Washing Machine Top Load", id: "7", image: "" },
+                { value: "Washing Machine Front Load", label: "Washing Machine Front Load", id: "8", image: "" },
+                { value: "Washing Machine Semi-Automatic", label: "Washing Machine Semi-Automatic", id: "9", image: "" },
+                { value: "Air Conditioner", label: "Air Conditioner", id: "10", image: "" },
+                { value: "Microwave", label: "Microwave", id: "11", image: "" },
+                { value: "Dishwasher", label: "Dishwasher", id: "12", image: "" },
+                { value: "Water Heater", label: "Water Heater", id: "13", image: "" },
+                { value: "Dryer", label: "Dryer", id: "14", image: "" },
+                { value: "Stove", label: "Stove", id: "15", image: "" },
+                { value: "Oven", label: "Oven", id: "16", image: "" }
+              ];
+
+              if (data.product && !defaultOptions.find((opt) => opt.value === data.product)) {
+                return [...defaultOptions, { 
+                  value: data.product, 
+                  label: data.product,
+                  id: String(defaultOptions.length + 1),
+                  image: ""
+                }];
+              }
+
+              return defaultOptions;
+            })()}
             value={data.product}
-            onChange={(value) => setData({ ...data, product: value })}
+            onChange={(value: string) => setData({ ...data, product: value })}
             width="full"
             customizable
           />

@@ -10,7 +10,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import SubmitBtn from "@/components/custom/submit-button";
 import FilesForm from "../components/files-form";
 import { SelectInput } from "@/components/custom/SelectInput";
-import { ComplaintStatusOptions } from "@/lib/otpions";
+import { CallStatusOptions, ComplaintStatusOptions } from "@/lib/otpions";
 import { Undo2, Redo2, Info, WifiOff } from "lucide-react";
 import { COMPLAINTS } from "@/lib/apiEndPoints";
 import { toast } from "react-toastify";
@@ -91,6 +91,7 @@ export default function Form({
     comments_for_technician: complaint?.comments_for_technician || "",
     files: complaint?.files || [],
     send_message_to_technician: false,
+    call_status: complaint?.call_status || "",
   });
 
   const fetchEndPoint = `https://api.taskercompany.com/api/crm/complaint/customer-reviews/${complaint?.id}`;
@@ -308,7 +309,13 @@ export default function Form({
                 </Button>
               </div>
             </div>
-            <div className="w-full md:w-auto">
+            <div className="w-full md:w-auto space-x-2">
+              <SelectInput
+                options={CallStatusOptions}
+                selected={data.call_status}
+                onChange={(e) => updateData({ ...data, call_status: e })}
+                errorMessage={errors.call_status}
+              />
               <SelectInput
                 options={ComplaintStatusOptions}
                 selected={data.status}

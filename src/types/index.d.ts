@@ -208,6 +208,7 @@ export type ComplaintsType = {
   comments_for_technician: string | null;
   created_at: string;
   updated_at: string;
+  call_status: string;
 };
 export type ComplaintDetailsType = {
   id: number;

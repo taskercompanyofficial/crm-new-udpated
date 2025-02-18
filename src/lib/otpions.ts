@@ -137,7 +137,7 @@ export const ComplaintStatusOptions = [
   },
   {
     value: "feedback-pending",
-    label: "Feedback Pending", 
+    label: "Feedback Pending",
     color: "255, 159, 64",
     icon: Clock, // Orange
   },
@@ -180,7 +180,7 @@ export const CallStatusOptions = [
 ];
 
 export const warrantyTypeOptions = [
-  { value: "warrenty-card", label: "Warrenty Card", icon: FileText },
+  { value: "warranty-card", label: "Warranty Card", icon: FileText },
   { value: "jobsheet", label: "Jobsheet", icon: ClipboardList },
   { value: "invoice", label: "Invoice", icon: Receipt },
   { value: "delivery-challan", label: "Delivery Challan", icon: TruckIcon },

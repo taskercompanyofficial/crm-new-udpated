@@ -80,15 +80,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
     }
 
     return (
-      <>
-        <div className="mb-2">
-          <h2 className="font-serif text-lg font-semibold uppercase">{slug}</h2>
-          <p className="hidden font-serif text-sm text-gray-500 sm:block">
-            {response.data.description}
-          </p>
-        </div>
-        <ViewComplaint complaint={response.data} />
-      </>
+      <ViewComplaint complaint={response.data} />
     );
   } catch (error) {
     console.error("Error fetching complaint:", error);

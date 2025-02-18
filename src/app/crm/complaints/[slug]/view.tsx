@@ -167,10 +167,6 @@ export default function ViewComplaint({ complaint }: { complaint: any }) {
                   <span className="text-xs text-gray-600 font-medium">Amount:</span>
                   <span className="col-span-2 text-xs">{complaint.amount || "N/A"}</span>
                 </div>
-                <div className="grid grid-cols-3">
-                  <span className="text-xs text-gray-600 font-medium">Call Status:</span>
-                  <span className="col-span-2 text-xs capitalize">{complaint.call_status?.replace("-", " ") || "N/A"}</span>
-                </div>
               </div>
             </div>
           </div>
