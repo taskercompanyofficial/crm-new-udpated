@@ -9,6 +9,7 @@ import {
   FileText,
   Package,
   ImageIcon,
+  Printer,
 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import useFetch from "@/hooks/usefetch";
@@ -21,6 +22,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ComplaintStatusOptions } from "@/lib/otpions";
+import { Button } from "@/components/ui/button";
 
 interface ReviewType {
   rating: number;
@@ -46,8 +48,24 @@ export default function ViewComplaint({ complaint }: { complaint: any }) {
     ComplaintStatusOptions.find((option) => option.value === complaint.status) ||
     ComplaintStatusOptions[0];
 
+  const handlePrint = () => {
+    window.print();
+  };
+
   return (
     <div className="mx-auto max-w-5xl p-4 print:p-0">
+      <div className="flex justify-end mb-4 print:hidden">
+        <Button
+          onClick={handlePrint}
+          variant="outline"
+          size="sm"
+          className="flex items-center gap-2"
+        >
+          <Printer className="h-4 w-4" />
+          Print
+        </Button>
+      </div>
+
       <Card className="rounded-lg border bg-white p-6 shadow-sm print:shadow-none print:border-none">
         {/* Header - Job Sheet Title */}
         <div className="mb-6 border-b pb-4">
@@ -181,8 +199,8 @@ export default function ViewComplaint({ complaint }: { complaint: any }) {
             </div>
           </div>
 
-          {/* Previous Reviews */}
-          <div className="border rounded p-3">
+          {/* Previous Reviews - Only visible on screen */}
+          <div className="border rounded p-3 print:hidden">
             <h3 className="mb-3 text-sm font-semibold text-primary border-b pb-1.5">Previous Service Reviews</h3>
             <div className="rounded border">
               <Table>
@@ -212,7 +230,7 @@ export default function ViewComplaint({ complaint }: { complaint: any }) {
             </div>
           </div>
 
-          {/* Attached Files */}
+          {/* Attached Files - Only visible on screen */}
           <div className="border rounded p-3 print:hidden">
             <h3 className="mb-3 flex items-center gap-1.5 text-sm font-semibold text-primary border-b pb-1.5">
               <ImageIcon className="h-4 w-4" />
