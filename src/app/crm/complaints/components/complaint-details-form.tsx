@@ -87,14 +87,6 @@ export default function ComplaintDetailsForm({
           className="transition-all duration-200 hover:shadow-md"
         />
         <LabelInputContainer
-          label="Product Type"
-          placeholder="Product Type"
-          onChange={(e) => setData({ ...data, product_type: e.target.value })}
-          value={data.product_type}
-          errorMessage={errors.product_type}
-          className="transition-all duration-200 hover:shadow-md"
-        />
-        <LabelInputContainer
           label="MQ Number"
           placeholder="MQ Number"
           onChange={(e) => setData({ ...data, mq_nmb: e.target.value })}

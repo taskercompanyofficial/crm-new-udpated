@@ -8,6 +8,7 @@ import { useSession } from "next-auth/react";
 import { saveAs } from 'file-saver';
 import { toast } from "react-toastify";
 import JSZip from 'jszip';
+import Image from "next/image";
 
 export default function FilesForm({
   data,
@@ -60,9 +61,14 @@ export default function FilesForm({
 
       const response = await fetch(getImageUrl(file.document_path), {
         method: 'GET',
+        mode: 'cors',
         credentials: 'include',
         headers: {
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
         }
       });
 
@@ -85,26 +91,31 @@ export default function FilesForm({
     try {
       setDownloading(true);
       const zip = new JSZip();
-      
+
       for (const file of filesToDownload) {
         const response = await fetch(getImageUrl(file.document_path), {
           method: 'GET',
+          mode: 'cors',
           credentials: 'include',
           headers: {
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization'
           }
         });
-        
+
         if (!response.ok) throw new Error('Download failed');
-        
+
         const blob = await response.blob();
         zip.file(file.file_name || `file_${Date.now()}`, blob);
       }
-      
-      const zipBlob = await zip.generateAsync({type: 'blob'});
+
+      const zipBlob = await zip.generateAsync({ type: 'blob' });
       const zipName = data.complain_num ? `${data.complain_num}_files.zip` : 'files.zip';
       saveAs(zipBlob, zipName);
-      
+
     } catch (error: any) {
       console.error('Download error:', error);
       toast.error("Failed to download files. Please try again later.");
@@ -131,8 +142,8 @@ export default function FilesForm({
   };
 
   const toggleFileSelection = (index: number) => {
-    setSelectedFiles(prev => 
-      prev.includes(index) 
+    setSelectedFiles(prev =>
+      prev.includes(index)
         ? prev.filter(i => i !== index)
         : [...prev, index]
     );
@@ -152,8 +163,8 @@ export default function FilesForm({
                 <tr className="border-b bg-muted/50">
                   <th className="p-1.5 text-left font-medium">Select</th>
                   <th className="p-1.5 text-left font-medium">ID</th>
+                  <th className="p-1.5 text-left font-medium">File</th>
                   <th className="p-1.5 text-left font-medium">Document Type</th>
-                  <th className="p-1.5 text-left font-medium">File Name</th>
                   <th className="p-1.5 text-left font-medium">Preview</th>
                   <th className="p-1.5 text-left font-medium">Size</th>
                   <th className="p-1.5 text-right font-medium">Actions</th>
@@ -163,7 +174,7 @@ export default function FilesForm({
                 {files.map((file: any, index: number) => (
                   <tr key={index} className="border-b last:border-0">
                     <td className="p-1.5">
-                      <input 
+                      <input
                         type="checkbox"
                         checked={selectedFiles.includes(index)}
                         onChange={() => toggleFileSelection(index)}
@@ -171,10 +182,16 @@ export default function FilesForm({
                       />
                     </td>
                     <td className="p-1.5">{index + 1}</td>
-                    <td className="p-1.5">{file?.document_type || "N/A"}</td>
-                    <td className="p-1.5 text-gray-600">
-                      {file?.file_name || "N/A"}
+                    <td className="p-1.5">
+                      <Image
+                        src={getImageUrl(file.document_path)}
+                        alt={file.file_name}
+                        width={100}
+                        height={100}
+                        unoptimized={true}
+                      />
                     </td>
+                    <td className="p-1.5">{file?.document_type || "N/A"}</td>
                     <td className="p-1.5 text-gray-600">
                       {file?.document_path && (
                         <Link

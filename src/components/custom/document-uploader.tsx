@@ -143,7 +143,7 @@ export default function DocumentUploader({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center gap-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
         <Select
           value={formData.document_type}
           onValueChange={(value) =>
@@ -153,7 +153,7 @@ export default function DocumentUploader({
             }))
           }
         >
-          <SelectTrigger className="w-[200px]">
+          <SelectTrigger className="w-full sm:w-[200px]">
             <SelectValue placeholder="Document type" />
           </SelectTrigger>
           <SelectContent>
@@ -167,7 +167,7 @@ export default function DocumentUploader({
         </Select>
 
         <div
-          className={`relative flex-1 rounded border-2 border-dashed px-4 py-1 h-8 transition-colors ${
+          className={`relative w-full flex-1 rounded border-2 border-dashed px-4 py-2 sm:py-1 min-h-[40px] sm:h-8 transition-colors ${
             isDragging
               ? "border-primary bg-primary/10"
               : "border-gray-300 hover:border-primary"
@@ -185,7 +185,7 @@ export default function DocumentUploader({
           />
           <div className="flex items-center justify-center gap-2 text-xs text-gray-600">
             <Upload className="w-4 h-4" />
-            <span>
+            <span className="text-center">
               {formData.files.length
                 ? `${formData.files.length} file(s) selected`
                 : "Drop files here or click to select"}
@@ -193,21 +193,27 @@ export default function DocumentUploader({
           </div>
         </div>
 
-        <SubmitButton
-          processing={isUploading}
-          disabled={isUploading || !formData.document_type}
-          onClick={handleFileUpload}
-        >Upload</SubmitButton>
-
-        {formData.files.length > 0 && (
-          <Button
-            variant="outline"
-            onClick={handleCancelUpload}
-            disabled={isUploading}
+        <div className="flex gap-2 w-full sm:w-auto">
+          <SubmitButton
+            processing={isUploading}
+            disabled={isUploading || !formData.document_type}
+            onClick={handleFileUpload}
+            className="flex-1 sm:flex-none"
           >
-            Cancel
-          </Button>
-        )}
+            Upload
+          </SubmitButton>
+
+          {formData.files.length > 0 && (
+            <Button
+              variant="outline"
+              onClick={handleCancelUpload}
+              disabled={isUploading}
+              className="flex-1 sm:flex-none"
+            >
+              Cancel
+            </Button>
+          )}
+        </div>
       </div>
 
       {errorMessage && <p className="text-sm text-red-500">{errorMessage}</p>}
