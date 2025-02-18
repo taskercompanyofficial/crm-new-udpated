@@ -10,6 +10,7 @@ type FetchResult<T> = {
 export default function useFetch<T>(
   url: string,
   token?: string,
+  refetch?: boolean
 ): FetchResult<T> {
   const [data, setData] = React.useState<T | null>(null);
   const [error, setError] = React.useState<Error | null>(null);
@@ -34,6 +35,12 @@ export default function useFetch<T>(
     setIsLoading(true);
     fetchData(url, token);
   }, [url, token]);
+
+  React.useEffect(() => {
+    if (refetch) {
+      fetchData(url, token);
+    }
+  }, [refetch]);
 
   return { data, error, isLoading };
 }

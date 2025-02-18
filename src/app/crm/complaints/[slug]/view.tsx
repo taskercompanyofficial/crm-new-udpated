@@ -427,45 +427,51 @@ export default function ViewComplaint({ complaint }: { complaint: any }) {
             {complaint.description}
           </span>
         </div>
+        <div className="grid grid-cols-[100px_1fr] gap-2 text-sm">
+          <span className="text-gray-500">Working Details:</span>
+          <span className="whitespace-pre-wrap font-medium">
+            {complaint.working_details}
+          </span>
+        </div>
         {reviewsData && (
-                  <div className="mt-4">
-                    <h3 className="mb-2 text-lg font-semibold">
-                      Previous Reviews
-                    </h3>
-                    <div className="rounded-md border">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Rating</TableHead>
-                            <TableHead>Reason</TableHead>
-                            <TableHead>Comment</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {Array.isArray(reviewsData) ? (
-                            reviewsData.map((review) => (
-                              <TableRow key={review.complaint_id}>
-                                <TableCell>{review.rating}/10</TableCell>
-                                <TableCell className="capitalize">
-                                  {review.reason?.replace("-", " ") || "N/A"}
-                                </TableCell>
-                                <TableCell>
-                                  {review.comment || "No comment"}
-                                </TableCell>
-                              </TableRow>
-                            ))
-                          ) : (
-                            <TableRow>
-                              <TableCell colSpan={3} className="text-center">
-                                No previous reviews found
-                              </TableCell>
-                            </TableRow>
-                          )}
-                        </TableBody>
-                      </Table>
-                    </div>
-                  </div>
-                )}
+          <div className="mt-4">
+            <h3 className="mb-2 text-lg font-semibold">
+              Previous Reviews
+            </h3>
+            <div className="rounded-md border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Rating</TableHead>
+                    <TableHead>Reason</TableHead>
+                    <TableHead>Comment</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {Array.isArray(reviewsData) ? (
+                    reviewsData.map((review) => (
+                      <TableRow key={review.complaint_id}>
+                        <TableCell>{review.rating}/10</TableCell>
+                        <TableCell className="capitalize">
+                          {review.reason?.replace("-", " ") || "N/A"}
+                        </TableCell>
+                        <TableCell>
+                          {review.comment || "No comment"}
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={3} className="text-center">
+                        No previous reviews found
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+          </div>
+        )}
         {/* Files Grid */}
         {files.length > 0 && (
           <div className="mt-6">
