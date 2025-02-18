@@ -199,7 +199,7 @@ export default function FilesForm({
                           width={100}
                           height={100}
                           unoptimized={true}
-                          className="hover:opacity-80 transition-opacity"
+                          className="hover:opacity-80 transition-opacity rounded-md"
                         />
                       </div>
                     </td>
