@@ -106,12 +106,12 @@ export default function BasicForm({
                 { value: "Lahore Center", label: "Lahore Center", id: "1", image: "" },
                 { value: "Multi Electronics", label: "Multi Electronics", id: "2", image: "" },
                 { value: "Afzal Electronics", label: "Afzal Electronics", id: "3", image: "" },
-                { value: "Madinah Electronics", label: "Madinah Electronics", id: "4", image: "" },
+                { value: "Madina Electronics", label: "Madina Electronics", id: "4", image: "" },
                 { value: "Metro Cash & Carry", label: "Metro Cash & Carry", id: "5", image: "" },
                 { value: "Imtiaz Store", label: "Imtiaz Store", id: "6", image: "" },
-                { value: "E Lux", label: "E Lux", id: "7", image: "" },
-                { value: "Dawlance experience store", label: "Dawlance experience store", id: "8", image: "" },
-                { value: "Al mumtaz group", label: "Al mumtaz group", id: "9", image: "" }
+                { value: "E-Lux", label: "E-Lux", id: "7", image: "" },
+                { value: "Dawlance Experience Store", label: "Dawlance Experience Store", id: "8", image: "" },
+                { value: "Al-Mumtaz Group", label: "Al-Mumtaz Group", id: "9", image: "" }
               ];
 
               if (data.reference_by && !defaultOptions.find((opt) => opt.value === data.reference_by)) {
