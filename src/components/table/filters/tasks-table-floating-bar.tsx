@@ -38,6 +38,18 @@ export function TasksTableFloatingBar({ table }: TasksTableFloatingBarProps) {
     return () => window.removeEventListener("keydown", clearSelection);
   }, [table]);
 
+  // Copy on Ctrl+C
+  React.useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if ((event.ctrlKey || event.metaKey) && event.key === 'c' && selectedRows.length > 0) {
+        copyToClipboard(selectedRows);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [selectedRows]);
+
   const copyToClipboard = (rows: any[]) => {
     const formattedText = rows
       .map((row) => {
@@ -229,7 +241,7 @@ export function TasksTableFloatingBar({ table }: TasksTableFloatingBarProps) {
                     <ClipboardCopyIcon className="w-4 h-4" />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent>Copy details</TooltipContent>
+                <TooltipContent>Copy details (Ctrl+C)</TooltipContent>
               </Tooltip>
 
               <Tooltip>
