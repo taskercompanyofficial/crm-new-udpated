@@ -23,7 +23,7 @@ export default async function OverviewTab() {
     endPoint: API_URL + "/crm/daily-attendance-stats",
   });
   return (
-    <div className="space-y-8 antialiased">
+    <div className="space-y-4 antialiased">
       <Announcement username={userDetails?.full_name} />
       <ChartsByStatus complaintStatusData={complaintStatusData.data} />
 

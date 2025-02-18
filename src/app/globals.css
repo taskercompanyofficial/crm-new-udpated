@@ -120,3 +120,8 @@ body {
   background: hsl(var(--sidebar-accent));
   border-radius: 3px;
 }
+
+::selection {
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}

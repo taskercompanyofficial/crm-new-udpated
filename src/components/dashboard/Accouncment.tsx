@@ -13,7 +13,7 @@ export default function Announcement({
     "Hello, welcome!",
     "System update scheduled for tomorrow.",
     "Don't miss our new features.",
-    "Stay tuned for upcoming events.", 
+    "Stay tuned for upcoming events.",
     "Thank you for using our service.",
   ];
 
@@ -43,8 +43,8 @@ export default function Announcement({
   return (
     <div className="flex flex-col overflow-hidden rounded-md border bg-white shadow-sm dark:bg-slate-900">
       {/* Header */}
-      <div className="flex items-center justify-between bg-primary p-1.5">
-        <p className="font-mono text-sm font-bold text-primary-foreground">
+      <div className="flex items-center justify-between bg-sidebar p-1.5">
+        <p className="font-mono text-sm font-bold text-sidebar-accent-foreground">
           Important:
         </p>
         <p className="text-xs text-primary-foreground">
