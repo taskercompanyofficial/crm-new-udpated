@@ -19,6 +19,10 @@ const nextConfig = pwaConfig({
         protocol: "http",
         hostname: "localhost",
       },
+      {
+        protocol: "https",
+        hostname: "api.taskercompany.com",
+      },
     ],
   },
 });

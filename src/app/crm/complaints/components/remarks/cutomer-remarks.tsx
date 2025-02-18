@@ -43,17 +43,20 @@ export default function CustomerRemarks({ complaintId }: { complaintId: number }
     const [reviewToDelete, setReviewToDelete] = useState<number | null>(null);
     const session = useSession();
     const token = session.data?.user?.token || "";
+
+    const fetchEndPoint = `https://api.taskercompany.com/api/crm/complaint/customer-reviews/${complaintId}`;
+    const storeEndPoint = `https://api.taskercompany.com/api/crm/customer-reviews`;
     const {
         data: reviewsData,
         error,
         isLoading,
     } = useFetch<ReviewType[]>(
-        `https://api.taskercompany.com/api/crm/customer-reviews/store/${complaintId}`,
+        fetchEndPoint,
         token,
         refetchRemarks
     );
 
-    const { data, setData, errors, processing, post, reset } = useForm({
+    const { data, setData, errors, processing, post, reset, put } = useForm({
         rating: 0,
         reason: "",
         comment: "",
@@ -61,8 +64,10 @@ export default function CustomerRemarks({ complaintId }: { complaintId: number }
     });
 
     const handleSubmitReview = async () => {
-        post(
-            "https://api.taskercompany.com/api/crm/customer-reviews/store",
+        const method = editingReview ? put : post;
+        const endPoint = editingReview ? `${storeEndPoint}/${editingReview.id}` : storeEndPoint;
+        method(
+            endPoint,
             {
                 onSuccess: (response) => {
                     toast.success(response.message);
@@ -93,16 +98,22 @@ export default function CustomerRemarks({ complaintId }: { complaintId: number }
 
     const handleDeleteReview = async (reviewId: number) => {
         try {
-            // Add your delete API call here
-            toast.success("Review deleted successfully");
+            const response = await fetch(`${storeEndPoint}/${reviewId}`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                },
+            });
+            const data = await response.json();
+            toast.success(data.message);
             setRefetchRemarks(true);
             setTimeout(() => {
                 setRefetchRemarks(false);
             }, 1000);
             setShowDeleteDialog(false);
             setReviewToDelete(null);
-        } catch (error) {
-            toast.error("Failed to delete review");
+        } catch (error: any) {
+            toast.error(error?.message);
         }
     };
 
