@@ -189,7 +189,7 @@ function ChartContent({ data }: { data: BrandData }) {
               className="uppercase"
               textAnchor="middle"
               height={60}
-              fontSize={8}
+              fontSize={10}
               fontWeight={600}
               tickFormatter={(value) => {
                 const words = value.split(" ");

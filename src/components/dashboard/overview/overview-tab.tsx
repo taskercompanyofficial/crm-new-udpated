@@ -5,8 +5,11 @@ import OtherStatusComplaints from "./other-status-complaints";
 import { fetchData } from "@/hooks/fetchData";
 import { AttendanceStatus } from "../Attendance-status";
 import ComplaintsByBrand from "./complaints-by-brand-chart";
+import { getUserDetails } from "@/lib/getUserDetails";
+import Announcement from "../Accouncment";
 
 export default async function OverviewTab() {
+  const { userDetails } = await getUserDetails();
   const complaintStatusData = await fetchData({
     endPoint: API_URL + "/crm/dashboard-chart-data",
   });
@@ -21,6 +24,7 @@ export default async function OverviewTab() {
   });
   return (
     <div className="space-y-8 antialiased">
+      <Announcement username={userDetails?.full_name} />
       <ChartsByStatus complaintStatusData={complaintStatusData.data} />
 
       <OtherStatusComplaints data={complaintStatusForBar.data} />

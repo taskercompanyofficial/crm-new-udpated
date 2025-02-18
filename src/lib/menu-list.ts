@@ -46,6 +46,11 @@ export function getMenuList(
           icon: Home,
           submenus: [
             {
+              href: "/crm",
+              label: "Dashboard",
+              active: pathname === "/crm",
+            },
+            {
               href: "/crm/overview/analytics",
               label: "Analytics",
               active: pathname === "/crm/overview/analytics",
