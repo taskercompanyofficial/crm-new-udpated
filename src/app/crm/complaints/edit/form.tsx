@@ -3,7 +3,7 @@ import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import React, { useEffect, useState, useCallback } from "react";
 import BasicForm from "../components/basic-form";
-import { ComplaintsType, dataTypeIds } from "@/types";
+import { ComplaintsType, dataTypeIds, ReviewType } from "@/types";
 import useForm from "@/hooks/use-form";
 import ComplaintDetailsForm from "../components/complaint-details-form";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -11,7 +11,7 @@ import SubmitBtn from "@/components/custom/submit-button";
 import FilesForm from "../components/files-form";
 import { SelectInput } from "@/components/custom/SelectInput";
 import { ComplaintStatusOptions } from "@/lib/otpions";
-import { Undo2, Redo2, Info } from "lucide-react";
+import { Undo2, Redo2, Info, WifiOff } from "lucide-react";
 import { COMPLAINTS } from "@/lib/apiEndPoints";
 import { toast } from "react-toastify";
 import { useSession } from "next-auth/react";
@@ -23,6 +23,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import SendMessageCustomerBtn from "../components/send-message-cutomer-btn";
 import ProductReceipt from "../components/generate-reciving";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import useFetch from "@/hooks/usefetch";
 
 export default function Form({
   complaint,
@@ -35,6 +36,7 @@ export default function Form({
   username?: string;
   role?: string;
 }) {
+  const router = useRouter();
   const [tab, setTab] = useState("advanced");
   const session = useSession();
   const token = session.data?.user?.token || "";
@@ -42,6 +44,14 @@ export default function Form({
   const [currentIndex, setCurrentIndex] = useState(-1);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [lastSaveTime, setLastSaveTime] = useState(Date.now());
+  const [isOnline, setIsOnline] = useState(true);
+  const [pendingChanges, setPendingChanges] = useState<any[]>(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem(`pendingChanges-${complaint?.id}`);
+      return saved ? JSON.parse(saved) : [];
+    }
+    return [];
+  });
   const [autoSaveEnabled, setAutoSaveEnabled] = useState(() => {
     if (typeof window !== "undefined") {
       return localStorage.getItem("autoSaveEnabled") !== "false";
@@ -83,10 +93,75 @@ export default function Form({
     send_message_to_technician: false,
   });
 
-  const router = useRouter();
+  const fetchEndPoint = `https://api.taskercompany.com/api/crm/complaint/customer-reviews/${complaint?.id}`;
+  const {
+    data: reviewsData,
+    error,
+    isLoading,
+  } = useFetch<ReviewType[]>(
+    fetchEndPoint,
+    token,
+  );
+
+  // Check online status
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
+  // Try to submit pending changes when back online
+  useEffect(() => {
+    if (isOnline && pendingChanges.length > 0) {
+      const submitPendingChanges = async () => {
+        for (const change of pendingChanges) {
+          try {
+            await put(
+              `${COMPLAINTS}/${complaint?.id}`,
+              {
+                onSuccess: () => {
+                  setPendingChanges(prev => prev.filter(c => c !== change));
+                },
+                onError: () => {/* Keep change in pending */}
+              },
+              token
+            );
+          } catch (error) {
+            console.error('Failed to submit pending change:', error);
+          }
+        }
+        localStorage.setItem(`pendingChanges-${complaint?.id}`, JSON.stringify(pendingChanges));
+      };
+
+      submitPendingChanges();
+    }
+  }, [isOnline, pendingChanges, complaint?.id, put, token]);
 
   const onSubmit = useCallback(() => {
     if (!hasUnsavedChanges) return;
+
+    // Check if trying to close/cancel without customer remarks
+    if ((data.status === "closed" || data.status === "cancelled") && (!reviewsData || reviewsData.length === 0)) {
+      toast.error("Cannot close or cancel complaint without customer remarks");
+      return;
+    }
+
+    if (!isOnline) {
+      // Store changes locally when offline
+      const newChange = { ...data, timestamp: Date.now() };
+      setPendingChanges(prev => [...prev, newChange]);
+      localStorage.setItem(`pendingChanges-${complaint?.id}`, JSON.stringify([...pendingChanges, newChange]));
+      toast.info("Changes saved locally. Will sync when online.");
+      setHasUnsavedChanges(false);
+      return;
+    }
 
     put(
       `${COMPLAINTS}/${complaint?.id}`,
@@ -104,7 +179,7 @@ export default function Form({
       },
       token,
     );
-  }, [hasUnsavedChanges, put, complaint?.id, token, router]);
+  }, [hasUnsavedChanges, put, complaint?.id, token, router, data, reviewsData, isOnline, pendingChanges]);
 
   // Toggle autosave
   const toggleAutoSave = useCallback(() => {
@@ -275,7 +350,7 @@ export default function Form({
                     ? "Save Changes"
                     : "Create Complaint"}
               </SubmitBtn>
-            </div>  
+            </div>
           </div>
         </div>
         <Separator className="my-2" />
@@ -312,6 +387,17 @@ export default function Form({
             <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
               Last updated: {new Date(lastSaveTime).toLocaleString()}
             </span>
+            {!isOnline && (
+              <div className="flex items-center text-yellow-600">
+                <WifiOff className="h-4 w-4 mr-1" />
+                <span className="text-sm">Offline Mode</span>
+              </div>
+            )}
+            {pendingChanges.length > 0 && (
+              <span className="text-sm text-yellow-600">
+                ({pendingChanges.length} changes pending sync)
+              </span>
+            )}
           </div>
           <div className="flex flex-wrap items-center gap-4">
             <div className="text-sm text-gray-500 dark:text-gray-400">

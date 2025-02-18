@@ -435,3 +435,13 @@ interface InventoryType {
   price: string;
   description: string;
 }
+interface ReviewType {
+  id: number;
+  rating: number;
+  reason: string;
+  comment: string;
+  complaint_id: number;
+  created_at: string;
+  updated_at: string;
+  user: User;
+}

@@ -17,6 +17,7 @@ import {
     DialogClose
 } from "@/components/ui/dialog";
 import { Button } from '@/components/ui/button';
+import { ReviewType } from '@/types';
 
 interface User {
     id: number;
@@ -25,16 +26,7 @@ interface User {
     role: string;
 }
 
-interface ReviewType {
-    id: number;
-    rating: number;
-    reason: string;
-    comment: string;
-    complaint_id: number;
-    created_at: string;
-    updated_at: string;
-    user: User;
-}
+
 
 export default function CustomerRemarks({ complaintId }: { complaintId: number }) {
     const [refetchRemarks, setRefetchRemarks] = useState(false);
