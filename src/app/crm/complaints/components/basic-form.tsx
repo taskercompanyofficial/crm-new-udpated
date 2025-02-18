@@ -22,7 +22,7 @@ export default function BasicForm({
   const { data: brandsData, isLoading: brandsLoading } = useFetch<
     dataTypeIds[]
   >(`${API_URL}/crm/fetch-authorized-brands`);
- 
+
   return (
     <div>
       <div className="w-full space-y-2">
@@ -108,11 +108,30 @@ export default function BasicForm({
             onChange={(e) => setData({ ...data, reference_by: e.target.value })}
             errorMessage={errors.reference_by}
           />
-          <LabelInputContainer
+          <SearchSelect
             label="Product"
-            placeholder="Product"
-            onChange={(e) => setData({ ...data, product: e.target.value })}
+            options={[
+              { value: "Refrigerator", label: "Refrigerator" },
+              { value: "Refrigerator Side by Side", label: "Refrigerator Side by Side" },
+              { value: "Refrigerator French Door", label: "Refrigerator French Door" },
+              { value: "Refrigerator Top Freezer", label: "Refrigerator Top Freezer" },
+              { value: "Refrigerator Bottom Freezer", label: "Refrigerator Bottom Freezer" },
+              { value: "Washing Machine", label: "Washing Machine" },
+              { value: "Washing Machine Top Load", label: "Washing Machine Top Load" },
+              { value: "Washing Machine Front Load", label: "Washing Machine Front Load" },
+              { value: "Washing Machine Semi-Automatic", label: "Washing Machine Semi-Automatic" },
+              { value: "Air Conditioner", label: "Air Conditioner" },
+              { value: "Microwave", label: "Microwave" },
+              { value: "Dishwasher", label: "Dishwasher" },
+              { value: "Water Heater", label: "Water Heater" },
+              { value: "Dryer", label: "Dryer" },
+              { value: "Stove", label: "Stove" },
+              { value: "Oven", label: "Oven" }
+            ]}
             value={data.product}
+            onChange={(value) => setData({ ...data, product: value })}
+            width="full"
+            customizable
           />
           {!brandsLoading && brandsData ? (
             <SearchSelect

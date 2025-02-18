@@ -88,7 +88,7 @@ export default function Form({
     complaint_type: complaint?.complaint_type || "",
     provided_services: complaint?.provided_services || "",
     warranty_type: complaint?.warranty_type || "",
-    comments_for_technician: complaint?.technician || "",
+    comments_for_technician: complaint?.comments_for_technician || "",
     files: complaint?.files || [],
     send_message_to_technician: false,
   });
@@ -129,7 +129,7 @@ export default function Form({
                 onSuccess: () => {
                   setPendingChanges(prev => prev.filter(c => c !== change));
                 },
-                onError: () => {/* Keep change in pending */}
+                onError: () => {/* Keep change in pending */ }
               },
               token
             );

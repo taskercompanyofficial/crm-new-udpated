@@ -205,6 +205,7 @@ export type ComplaintsType = {
   files: any;
   send_message_to_customer: boolean;
   message_type: string;
+  comments_for_technician: string | null;
   created_at: string;
   updated_at: string;
 };
