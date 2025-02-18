@@ -308,14 +308,13 @@ export default function Form({
                   <Redo2 className="h-4 w-4" />
                 </Button>
               </div>
-            </div>
-            <div className="w-full md:w-auto space-x-2">
-              <SelectInput
-                options={CallStatusOptions}
-                selected={data.call_status}
-                onChange={(e) => updateData({ ...data, call_status: e })}
-                errorMessage={errors.call_status}
-              />
+            </div><SelectInput
+              options={CallStatusOptions}
+              selected={data.call_status}
+              onChange={(e) => updateData({ ...data, call_status: e })}
+              errorMessage={errors.call_status}
+            />
+            <div className="w-full md:w-auto">
               <SelectInput
                 options={ComplaintStatusOptions}
                 selected={data.status}
