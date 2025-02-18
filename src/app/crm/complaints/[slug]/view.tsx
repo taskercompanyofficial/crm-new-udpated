@@ -30,7 +30,14 @@ interface ReviewType {
   comment: string;
   complaint_id: number;
 }
-
+interface CsoRemark {
+  id: number;
+  remarks: string;
+  complaint_id: number;
+  user: {
+    name: string;
+  };
+}
 export default function ViewComplaint({ complaint }: { complaint: any }) {
   const files = complaint.files ? JSON.parse(complaint.files) : [];
   const session = useSession();
@@ -44,6 +51,10 @@ export default function ViewComplaint({ complaint }: { complaint: any }) {
     token,
   );
 
+  const { data: csoRemarksData, error: csoRemarksError, isLoading: csoRemarksLoading } = useFetch<CsoRemark>(
+    `https://api.taskercompany.com/api/crm/cso-remarks/${complaint?.id}`,
+    token,
+  );
   const statusOption =
     ComplaintStatusOptions.find((option) => option.value === complaint.status) ||
     ComplaintStatusOptions[0];
@@ -214,6 +225,33 @@ export default function ViewComplaint({ complaint }: { complaint: any }) {
                         <TableCell className="text-xs">{review.rating}/10</TableCell>
                         <TableCell className="capitalize text-xs">{review.reason?.replace("-", " ") || "N/A"}</TableCell>
                         <TableCell className="text-xs">{review.comment || "No comment"}</TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={3} className="text-center text-xs">Not Added</TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+          </div>
+          <div className="border rounded p-3 print:hidden">
+            <h3 className="mb-3 text-sm font-semibold text-primary border-b pb-1.5">CSO Remarks</h3>
+            <div className="rounded border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="text-xs">Staff</TableHead>
+                    <TableHead className="text-xs">Remarks</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {Array.isArray(csoRemarksData) && csoRemarksData.length > 0 ? (
+                    csoRemarksData.map((remark) => (
+                      <TableRow key={remark.complaint_id}>
+                        <TableCell className="text-xs">{remark.user.name}</TableCell>
+                        <TableCell className="capitalize text-xs">{remark.remarks || "N/A"}</TableCell>
                       </TableRow>
                     ))
                   ) : (

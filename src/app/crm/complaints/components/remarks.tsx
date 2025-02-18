@@ -22,6 +22,7 @@ import useForm from "@/hooks/use-form";
 import SubmitBtn from "@/components/custom/submit-button";
 import useFetch from "@/hooks/usefetch";
 import CustomerRemarks from "./remarks/cutomer-remarks";
+import CsoRemarks from "./remarks/cso-remarks";
 
 interface VisitDetails {
   visitType: string;
@@ -130,7 +131,7 @@ export default function Remarks({ complaintId }: { complaintId: number }) {
     }
   };
 
-  
+
 
   return (
     <div className="flex flex-col gap-4">
@@ -344,35 +345,7 @@ export default function Remarks({ complaintId }: { complaintId: number }) {
           </TabsContent>
 
           <TabsContent value="cso">
-            <div className="rounded-lg border p-4">
-              <h3 className="mb-4 text-lg font-semibold">
-                Customer Service Updates
-              </h3>
-              {dummyRemarks
-                .filter((remark) => remark.type === "cso")
-                .map((remark) => (
-                  <div
-                    key={remark.id}
-                    className="mb-4 rounded-lg bg-slate-50 p-4 dark:bg-slate-900"
-                  >
-                    <div className="flex items-center gap-2">
-                      <Avatar className="h-8 w-8">
-                        <AvatarImage src={remark.user.avatar} />
-                        <AvatarFallback>
-                          {remark.user.name.charAt(0)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <p className="font-medium">{remark.user.name}</p>
-                        <p className="text-sm text-muted-foreground">
-                          {remark.timestamp}
-                        </p>
-                      </div>
-                    </div>
-                    <p className="mt-2">{remark.content}</p>
-                  </div>
-                ))}
-            </div>
+            <CsoRemarks complaintId={complaintId} />
           </TabsContent>
 
           <TabsContent value="review">
