@@ -95,7 +95,7 @@ export function DataTable<TData, TValue>({
               </TableRow>
             ))}
           </TableHeader>
-          <ScrollArea className="max-h-[600px]">
+          <ScrollArea className="h-[600px]">
             <TableBody>
               {table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row, index) => (
@@ -168,7 +168,6 @@ export function DataTable<TData, TValue>({
                 </TableRow>
               )}
             </TableBody>
-            <ScrollBar orientation="horizontal" />
           </ScrollArea>
         </Table>
       </div>
