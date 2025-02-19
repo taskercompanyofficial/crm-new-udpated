@@ -1,5 +1,5 @@
 "use client";
-import { LabelInputContainer } from "@/components/ui/LabelInputContainer";
+import { Input } from "@/components/ui/input";
 import { debounce } from "lodash";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
@@ -9,6 +9,7 @@ export default function SearchInput() {
   const { replace } = useRouter();
   const pathname = usePathname();
   const [searchValue, setSearchValue] = useState(searchParams.get("q") || "");
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const debouncedSearchRef = useRef(
     debounce((query: string) => {
@@ -40,6 +41,23 @@ export default function SearchInput() {
     };
   }, [searchParams, replace, pathname]);
 
+  // Handle Ctrl+F keyboard shortcut
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.key === 'f') {
+        e.preventDefault(); // Prevent default browser search
+        if (inputRef.current) {
+          inputRef.current.focus();
+          // Scroll input into view if needed
+          inputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchValue(value);
@@ -48,7 +66,8 @@ export default function SearchInput() {
 
   return (
     <div className="relative w-full md:w-[300px]">
-      <LabelInputContainer
+      <Input
+        ref={inputRef}
         type="search"
         placeholder="Search..."
         onChange={handleSearch}

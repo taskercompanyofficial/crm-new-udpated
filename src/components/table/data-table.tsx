@@ -30,6 +30,7 @@ import {
 import { Button } from "../ui/button";
 import { MoreHorizontal } from "lucide-react";
 import DeleteDialog from "./delete-dialog";
+import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: {
@@ -84,9 +85,9 @@ export function DataTable<TData, TValue>({
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
                     </TableHead>
                   );
                 })}
@@ -94,78 +95,81 @@ export function DataTable<TData, TValue>({
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row, index) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                  onClick={() => row.toggleSelected()}
-                  className={`cursor-pointer ${index % 2 === 0 ? "bg-white dark:bg-gray-950" : "bg-gray-50 dark:bg-gray-900"}`}
-                >
-                  {row.getVisibleCells().map((cell) => {
-                    if (
-                      cell.column.id === "status" ||
-                      cell.column.id === "actions"
-                    ) {
+          <ScrollArea className="max-h-[600px]">
+            <TableBody>
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row, index) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                    onClick={() => row.toggleSelected()}
+                    className={`cursor-pointer ${index % 2 === 0 ? "bg-white dark:bg-gray-950" : "bg-gray-50 dark:bg-gray-900"}`}
+                  >
+                    {row.getVisibleCells().map((cell) => {
+                      if (
+                        cell.column.id === "status" ||
+                        cell.column.id === "actions"
+                      ) {
+                        return (
+                          <TableCell
+                            key={cell.id}
+                            className="sticky right-0 whitespace-nowrap bg-inherit text-xs"
+                          >
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext(),
+                            )}
+                          </TableCell>
+                        );
+                      }
                       return (
-                        <TableCell
-                          key={cell.id}
-                          className="sticky right-0 whitespace-nowrap bg-inherit text-xs"
-                        >
+                        <TableCell key={cell.id} className="text-xs">
                           {flexRender(
                             cell.column.columnDef.cell,
                             cell.getContext(),
                           )}
                         </TableCell>
                       );
-                    }
-                    return (
-                      <TableCell key={cell.id} className="text-xs">
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
-                      </TableCell>
-                    );
-                  })}
+                    })}
+                    <TableCell
+                      onClick={(e) => e.stopPropagation()}
+                      className="sticky right-0 bg-inherit"
+                    >
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" className="h-8 w-8 p-0">
+                            <span className="sr-only">Open menu</span>
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                          {View && <View row={row.original} />}
+                          {Update && <Update row={row.original} />}
+                          {deletePermission && (
+                            <>
+                              <DropdownMenuSeparator />
+                              <DeleteDialog row={row.original} />
+                            </>
+                          )}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
                   <TableCell
-                    onClick={(e) => e.stopPropagation()}
-                    className="sticky right-0 bg-inherit"
+                    colSpan={columns.length}
+                    className="h-24 text-center"
                   >
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                          <span className="sr-only">Open menu</span>
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        {View && <View row={row.original} />}
-                        {Update && <Update row={row.original} />}
-                        {deletePermission && (
-                          <>
-                            <DropdownMenuSeparator />
-                            <DeleteDialog row={row.original} />
-                          </>
-                        )}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                    No results.
                   </TableCell>
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
+              )}
+            </TableBody>
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
         </Table>
       </div>
       <DataTablePagination table={table} pagination={data.pagination} />
