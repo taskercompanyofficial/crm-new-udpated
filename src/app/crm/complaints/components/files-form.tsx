@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Trash2, Eye, Download, Loader2 } from "lucide-react";
+import { Trash2, Eye, Download, Loader2, Play } from "lucide-react";
 import React, { useState } from "react";
 import DocumentUploader from "@/components/custom/document-uploader";
 import Link from "next/link";
@@ -29,7 +29,7 @@ export default function FilesForm({
   const token = session?.data?.user?.token;
   const [selectedFiles, setSelectedFiles] = useState<number[]>([]);
   const [downloading, setDownloading] = useState(false);
-  const [selectedImage, setSelectedImage] = useState<any>(null);
+  const [selectedMedia, setSelectedMedia] = useState<any>(null);
 
   const handleDocumentUpload = (files: any) => {
     if (files && files.length > 0) {
@@ -156,6 +156,14 @@ export default function FilesForm({
     );
   };
 
+  const isVideo = (file: any) => {
+    const videoExtensions = ['.mp4', '.avi', '.mov', '.wmv', '.flv', '.mkv'];
+    return videoExtensions.some(ext => 
+      file.file_name?.toLowerCase().endsWith(ext) || 
+      file.document_path?.toLowerCase().endsWith(ext)
+    );
+  };
+
   return (
     <div className="space-y-4">
       <DocumentUploader
@@ -190,21 +198,35 @@ export default function FilesForm({
                     <td className="p-1.5">{index + 1}</td>
                     <td className="p-1.5">
                       <div
-                        className="cursor-pointer"
-                        onClick={() => setSelectedImage(file)}
+                        className="cursor-pointer relative group"
+                        onClick={() => setSelectedMedia(file)}
                       >
-                        <Image
-                          src={getImageUrl(file.document_path)}
-                          alt={file.file_name}
-                          width={100}
-                          height={100}
-                          unoptimized={true}
-                          className="hover:opacity-80 transition-opacity rounded-md"
-                        />
+                        {isVideo(file) ? (
+                          <div className="relative">
+                            <video 
+                              width={100}
+                              height={100}
+                              className="rounded-md"
+                            >
+                              <source src={getImageUrl(file.document_path)} />
+                            </video>
+                            <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/50 transition-colors">
+                              <Play className="w-8 h-8 text-white" />
+                            </div>
+                          </div>
+                        ) : (
+                          <Image
+                            src={getImageUrl(file.document_path)}
+                            alt={file.file_name}
+                            width={100}
+                            height={100}
+                            unoptimized={true}
+                            className="hover:opacity-80 transition-opacity rounded-md"
+                          />
+                        )}
                       </div>
                     </td>
                     <td className="p-1.5">{file?.document_type || "N/A"}</td>
-
                     <td className="p-1.5">
                       {file?.file_size
                         ? `${(file.file_size / 1024).toFixed(1)} KB`
@@ -241,35 +263,45 @@ export default function FilesForm({
         </div>
       )}
 
-      <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
+      <Dialog open={!!selectedMedia} onOpenChange={() => setSelectedMedia(null)}>
         <DialogContent className="max-w-4xl">
           <DialogHeader>
-            <DialogTitle>{selectedImage?.file_name || 'Image Preview'}</DialogTitle>
+            <DialogTitle>{selectedMedia?.file_name || 'Media Preview'}</DialogTitle>
           </DialogHeader>
           <div className="flex flex-col items-center gap-4">
-            {selectedImage && (
+            {selectedMedia && (
               <div className="relative w-full max-h-[70vh] overflow-auto">
-                <Image
-                  src={getImageUrl(selectedImage.document_path)}
-                  alt={selectedImage.file_name}
-                  width={800}
-                  height={600}
-                  className="object-contain w-full"
-                  unoptimized={true}
-                />
+                {isVideo(selectedMedia) ? (
+                  <video 
+                    controls
+                    className="w-full"
+                  >
+                    <source src={getImageUrl(selectedMedia.document_path)} />
+                    Your browser does not support the video tag.
+                  </video>
+                ) : (
+                  <Image
+                    src={getImageUrl(selectedMedia.document_path)}
+                    alt={selectedMedia.file_name}
+                    width={800}
+                    height={600}
+                    className="object-contain w-full"
+                    unoptimized={true}
+                  />
+                )}
               </div>
             )}
             <div className="flex gap-2">
               <Button
                 variant="outline"
-                onClick={() => window.open(getImageUrl(selectedImage?.document_path), '_blank')}
+                onClick={() => window.open(getImageUrl(selectedMedia?.document_path), '_blank')}
               >
                 <Eye className="w-4 h-4 mr-2" />
                 Open in New Tab
               </Button>
               <Button
                 variant="default"
-                onClick={() => handleDownloadFile(selectedImage)}
+                onClick={() => handleDownloadFile(selectedMedia)}
                 disabled={downloading}
               >
                 {downloading ? (
