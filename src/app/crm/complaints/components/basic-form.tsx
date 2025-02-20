@@ -9,6 +9,7 @@ import { API_URL } from "@/lib/apiEndPoints";
 import useFetch from "@/hooks/usefetch";
 import SearchSelect from "@/components/custom/search-select";
 import AddressTextarea from "./address-textarea";
+import { useState } from "react";
 
 export default function BasicForm({
   data,
@@ -22,6 +23,8 @@ export default function BasicForm({
   const { data: brandsData, isLoading: brandsLoading } = useFetch<
     dataTypeIds[]
   >(`${API_URL}/crm/fetch-authorized-brands`);
+
+  const [title, setTitle] = useState<string>("");
 
   return (
     <div>
@@ -38,19 +41,42 @@ export default function BasicForm({
             }
             errorMessage={errors.brand_complaint_no}
           />
-          <LabelInputContainer
-            type="text"
-            autoFocus
-            id="applicant-name"
-            placeholder="Applicant name"
-            label="Name"
-            value={data.applicant_name}
-            onChange={(e) =>
-              setData({ ...data, applicant_name: e.target.value })
-            }
-            errorMessage={errors.applicant_name}
-            required
-          />
+          <div className="flex gap-2">
+            <SelectInput
+              label="Title"
+              selected={title}
+              onChange={(value) => {
+                const titlePrefix = value === "mr" ? "Mr. " : value === "ms" ? "Ms. " : value === "mrs" ? "Mrs. " : "";
+                setTitle(value);
+                setData({
+                  ...data,
+                  title: value,
+                  applicant_name: titlePrefix + (data.applicant_name?.replace(/^(Mr\.|Ms\.|Mrs\.) /, "") || "")
+                });
+              }}
+              options={[
+                { label: "Mr.", value: "mr" },
+                { label: "Ms.", value: "ms" },
+                { label: "Mrs.", value: "mrs" }
+              ]}
+              errorMessage={errors.title}
+            />
+            <LabelInputContainer
+              type="text"
+              autoFocus
+              id="applicant-name"
+              placeholder="Applicant name"
+              label="Name"
+              value={data.applicant_name}
+              onChange={(e) => {
+                const name = e.target.value.toUpperCase().replace(/^(MR\.|MS\.|MRS\.) /, "");
+                const titlePrefix = data.title === "mr" ? "MR. " : data.title === "ms" ? "MS. " : data.title === "mrs" ? "MRS. " : "";
+                setData({ ...data, applicant_name: titlePrefix + name });
+              }}
+              errorMessage={errors.applicant_name}
+              required
+            />
+          </div>
           <LabelInputContainer
             type="text"
             id="applicant-email"
@@ -207,7 +233,7 @@ export default function BasicForm({
           placeholder="Describe the fault..."
           maxLength={250}
           value={data.description}
-          onChange={(e) => setData({ ...data, description: e.target.value })}
+          onChange={(e) => setData({ ...data, description: e.target.value.toUpperCase() })}
           errorMessage={errors.description}
           className="bg-gray-50"
         />
