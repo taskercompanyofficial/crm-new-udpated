@@ -42,25 +42,27 @@ export default function BasicForm({
             errorMessage={errors.brand_complaint_no}
           />
           <div className="flex gap-2">
-            <SelectInput
-              label="Title"
-              selected={title}
-              onChange={(value) => {
-                const titlePrefix = value === "mr" ? "Mr. " : value === "ms" ? "Ms. " : value === "mrs" ? "Mrs. " : "";
-                setTitle(value);
-                setData({
-                  ...data,
-                  title: value,
-                  applicant_name: titlePrefix + (data.applicant_name?.replace(/^(Mr\.|Ms\.|Mrs\.) /, "") || "")
-                });
-              }}
-              options={[
-                { label: "Mr.", value: "mr" },
-                { label: "Ms.", value: "ms" },
-                { label: "Mrs.", value: "mrs" }
-              ]}
-              errorMessage={errors.title}
-            />
+            <div className="w-[50px]">
+              <SelectInput
+                label="Title"
+                selected={title}
+                onChange={(value) => {
+                  const titlePrefix = value === "mr" ? "Mr. " : value === "ms" ? "Ms. " : value === "mrs" ? "Mrs. " : "";
+                  setTitle(value);
+                  setData({
+                    ...data,
+                    title: value,
+                    applicant_name: titlePrefix + (data.applicant_name?.replace(/^(Mr\.|Ms\.|Mrs\.) /, "") || "")
+                  });
+                }}
+                options={[
+                  { label: "Mr.", value: "mr" },
+                  { label: "Ms.", value: "ms" },
+                  { label: "Mrs.", value: "mrs" }
+                ]}
+                errorMessage={errors.title}
+              />
+            </div>
             <LabelInputContainer
               type="text"
               autoFocus
@@ -75,6 +77,7 @@ export default function BasicForm({
               }}
               errorMessage={errors.applicant_name}
               required
+              className="w-full"
             />
           </div>
           <LabelInputContainer

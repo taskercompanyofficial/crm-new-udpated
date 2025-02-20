@@ -36,7 +36,7 @@ export default function ComplaintDetailsForm({
           label="Brand Complaint No"
           value={data.brand_complaint_no}
           onChange={(e) =>
-            setData({ ...data, brand_complaint_no: e.target.value })
+            setData({ ...data, brand_complaint_no: e.target.value.toUpperCase() })
           }
           errorMessage={errors.brand_complaint_no}
           className="transition-all duration-200 hover:shadow-md"
@@ -45,7 +45,7 @@ export default function ComplaintDetailsForm({
           label="Serial Number In"
           placeholder="Serial Number In"
           onChange={(e) =>
-            setData({ ...data, serial_number_ind: e.target.value })
+            setData({ ...data, serial_number_ind: e.target.value.toUpperCase() })
           }
           value={data.serial_number_ind}
           errorMessage={errors.serial_number_ind}
@@ -55,7 +55,7 @@ export default function ComplaintDetailsForm({
           label="Serial Number Out"
           placeholder="Serial Number Out"
           onChange={(e) =>
-            setData({ ...data, serial_number_oud: e.target.value })
+            setData({ ...data, serial_number_oud: e.target.value.toUpperCase() })
           }
           value={data.serial_number_oud}
           errorMessage={errors.serial_number_oud}
@@ -64,7 +64,7 @@ export default function ComplaintDetailsForm({
         <LabelInputContainer
           label="Model Number"
           placeholder="Model Number"
-          onChange={(e) => setData({ ...data, model: e.target.value })}
+          onChange={(e) => setData({ ...data, model: e.target.value.toUpperCase() })}
           value={data.model}
           errorMessage={errors.model}
           className="transition-all duration-200 hover:shadow-md"
