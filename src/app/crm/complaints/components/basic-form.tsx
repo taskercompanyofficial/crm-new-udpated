@@ -37,7 +37,7 @@ export default function BasicForm({
             label="Brand Complaint No"
             value={data.brand_complaint_no}
             onChange={(e) =>
-              setData({ ...data, brand_complaint_no: e.target.value })
+              setData({ ...data, brand_complaint_no: e.target.value.toUpperCase() })
             }
             errorMessage={errors.brand_complaint_no}
           />
