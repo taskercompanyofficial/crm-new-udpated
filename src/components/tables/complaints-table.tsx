@@ -19,6 +19,7 @@ import {
   CredenzaTitle,
   CredenzaTrigger,
 } from "@/components/custom/credenza";
+
 export default function ComplaintsTable({
   data,
   role,
@@ -26,93 +27,104 @@ export default function ComplaintsTable({
   data: any;
   role: string;
 }) {
-  const deletable = role === "administrator" ? true : false;
+  const deletable = role === "administrator";
+
   return (
-    <DataTable
-      columns={ComplaintsColumns()}
-      data={data.data}
-      FacedFilter={
-        <TableFacedFilter>
-          <SearchInput />
-          <SelectInput
-            param="status"
-            label="Select Status"
-            options={ComplaintStatusOptions}
-          />
-        </TableFacedFilter>
-      }
-      Create={
-        <CreateBtn Label="Add New Complaint" href="/crm/complaints/create" />
-      }
-      View={View}
-      Update={Update}
-      deletePermission={deletable}
-    />
+    <div className="w-full overflow-hidden">
+      <DataTable
+        columns={ComplaintsColumns()}
+        data={data.data}
+        FacedFilter={
+          <TableFacedFilter>
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+              <SearchInput />
+              <SelectInput
+                param="status"
+                label="Select Status"
+                options={ComplaintStatusOptions}
+              />
+            </div>
+          </TableFacedFilter>
+        }
+        Create={
+          <CreateBtn Label="Add New Complaint" href="/crm/complaints/create" />
+        }
+        View={View}
+        Update={Update}
+        deletePermission={deletable}
+      />
+    </div>
   );
 }
 
 const Update = ({ row }: { row: any }) => {
-  const { data, status } = useSession();
+  const { data } = useSession();
   const role = data?.user.role;
+
   return (
     <Button
       variant="ghost"
       size="sm"
-      className="flex w-full items-center justify-between"
+      className="flex w-full items-center justify-between px-3 py-2 transition-colors hover:bg-gray-100"
       onClick={() => window.open(`/crm/complaints/edit/${row.id}`, "_blank")}
       disabled={row.status === "closed" && role !== "administrator"}
     >
-      Update
-      <Edit />
+      <span className="mr-2">Update</span>
+      <Edit className="h-4 w-4" />
     </Button>
   );
 };
 
 const View = ({ row }: { row: any }) => {
   return (
-    <>
+    <div className="flex w-full flex-col gap-1">
       <Button
         variant="ghost"
         size="sm"
-        className="flex w-full items-center justify-between"
+        className="flex w-full items-center justify-between px-3 py-2 transition-colors hover:bg-gray-100"
         onClick={() =>
           window.open(`/crm/complaints/duplicate/${row.id}`, "_blank")
         }
       >
-        Duplicate
-        <Redo2 />
+        <span className="mr-2">Duplicate</span>
+        <Redo2 className="h-4 w-4" />
       </Button>
+
       <Button
         variant="ghost"
         size="sm"
-        className="flex w-full items-center justify-between"
+        className="flex w-full items-center justify-between px-3 py-2 transition-colors hover:bg-gray-100"
         onClick={() => window.open(`/crm/complaints/${row.id}`, "_blank")}
       >
-        View
-        <Eye />
+        <span className="mr-2">View</span>
+        <Eye className="h-4 w-4" />
       </Button>
+
       <Credenza>
         <CredenzaTrigger asChild>
           <Button
             variant="ghost"
             size="sm"
-            className="flex w-full items-center justify-between"
+            className="flex w-full items-center justify-between px-3 py-2 transition-colors hover:bg-gray-100"
           >
-            Remarks
-            <MessageSquare />
+            <span className="mr-2">Remarks</span>
+            <MessageSquare className="h-4 w-4" />
           </Button>
         </CredenzaTrigger>
-        <CredenzaContent className="sm:max-w-[425px]">
+        <CredenzaContent className="w-[95vw] max-w-4xl p-4 sm:w-[80vw]">
           <CredenzaHeader>
-            <CredenzaTitle>Update {row.complain_num} Remarks</CredenzaTitle>
-            <CredenzaDescription>
+            <CredenzaTitle className="text-lg font-semibold">
+              Update {row.complain_num} Remarks
+            </CredenzaTitle>
+            <CredenzaDescription className="text-sm text-gray-600">
               Update Your existing Complaint Remarks {row.complain_num}
             </CredenzaDescription>
           </CredenzaHeader>
-          <Remarks complaintId={row.id} />
+          <div className="mt-4">
+            <Remarks complaintId={row.id} />
+          </div>
         </CredenzaContent>
       </Credenza>
-    </>
+    </div>
   );
 };
-
