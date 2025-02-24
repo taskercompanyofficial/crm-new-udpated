@@ -10,7 +10,15 @@ import CreateBtn from "../table/create-btn";
 import { Edit, Eye, Redo2 } from "lucide-react";
 import { Button } from "../ui/button";
 import { useSession } from "next-auth/react";
-
+import Remarks from "@/app/crm/complaints/components/remarks";
+import {
+  Credenza,
+  CredenzaContent,
+  CredenzaDescription,
+  CredenzaHeader,
+  CredenzaTitle,
+  CredenzaTrigger,
+} from "@/components/custom/credenza";
 export default function ComplaintsTable({
   data,
   role,
@@ -63,7 +71,7 @@ const Update = ({ row }: { row: any }) => {
 const View = ({ row }: { row: any }) => {
   return (
     <>
-     <Button
+      <Button
         variant="ghost"
         size="sm"
         className="flex w-full items-center justify-between"
@@ -83,7 +91,28 @@ const View = ({ row }: { row: any }) => {
         View
         <Eye />
       </Button>
-     
+      <Credenza>
+        <CredenzaTrigger asChild>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="flex w-full items-center justify-between"
+          >
+            Update
+            <Edit />
+          </Button>
+        </CredenzaTrigger>
+        <CredenzaContent className="sm:max-w-[425px]">
+          <CredenzaHeader>
+            <CredenzaTitle>Update {row.complain_num} Remarks</CredenzaTitle>
+            <CredenzaDescription>
+              Update Your existing Complaint Remarks {row.complain_num}
+            </CredenzaDescription>
+          </CredenzaHeader>
+          <Remarks complaintId={row.id} />
+        </CredenzaContent>
+      </Credenza>
     </>
   );
 };
+
