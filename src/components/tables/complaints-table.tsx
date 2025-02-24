@@ -7,7 +7,7 @@ import TableFacedFilter from "../table/table-faced-filter";
 import { ComplaintStatusOptions } from "@/lib/otpions";
 import SearchInput from "../table/filters/search-input";
 import CreateBtn from "../table/create-btn";
-import { Edit, Eye, Redo2 } from "lucide-react";
+import { Edit, Eye, MessageSquare, Redo2 } from "lucide-react";
 import { Button } from "../ui/button";
 import { useSession } from "next-auth/react";
 import Remarks from "@/app/crm/complaints/components/remarks";
@@ -98,8 +98,8 @@ const View = ({ row }: { row: any }) => {
             size="sm"
             className="flex w-full items-center justify-between"
           >
-            Update
-            <Edit />
+            Remarks
+            <MessageSquare />
           </Button>
         </CredenzaTrigger>
         <CredenzaContent className="sm:max-w-[425px]">
