@@ -23,6 +23,7 @@ import { useSession } from "next-auth/react";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 import ErrorNoData from "../custom/no-data";
+import { getImageUrl } from "@/lib/utils";
 
 type UserData = {
   id: string;
@@ -249,7 +250,7 @@ function AttendanceStatusComponent({ data }: { data: AttendanceData }) {
                         <TableCell className="font-medium">
                           <Avatar className="h-6 w-6">
                             <AvatarImage
-                              src={user.profile_image}
+                              src={getImageUrl(user.profile_image)}
                               alt={user.full_name}
                             />
                             <AvatarFallback className="text-[10px]">
