@@ -19,6 +19,7 @@ import {
   CredenzaTitle,
   CredenzaTrigger,
 } from "@/components/custom/credenza";
+import { Kbd } from "../ui/kbd";
 
 export default function ComplaintsTable({
   data,
@@ -61,21 +62,48 @@ const Update = ({ row }: { row: any }) => {
   const { data } = useSession();
   const role = data?.user.role;
 
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.ctrlKey && e.key === 'u') {
+      window.open(`/crm/complaints/edit/${row.id}`, "_blank");
+    }
+  };
+
   return (
     <Button
       variant="ghost"
       size="sm"
       className="flex w-full items-center justify-between px-3 py-2 transition-colors hover:bg-gray-100"
       onClick={() => window.open(`/crm/complaints/edit/${row.id}`, "_blank")}
+      onKeyDown={handleKeyPress}
       disabled={row.status === "closed" && role !== "administrator"}
     >
-      <span className="mr-2">Update</span>
+      <span className="mr-2">Update (<Kbd>Ctrl</Kbd>+<Kbd>U</Kbd>)</span>
       <Edit className="h-4 w-4" />
     </Button>
   );
 };
 
 const View = ({ row }: { row: any }) => {
+  const handleDuplicateKeyPress = (e: React.KeyboardEvent) => {
+    if (e.ctrlKey && e.key === 'd') {
+      window.open(`/crm/complaints/duplicate/${row.id}`, "_blank");
+    }
+  };
+
+  const handleViewKeyPress = (e: React.KeyboardEvent) => {
+    if (e.ctrlKey && e.key === 'v') {
+      window.open(`/crm/complaints/${row.id}`, "_blank");
+    }
+  };
+
+  const handleRemarksKeyPress = (e: React.KeyboardEvent) => {
+    if (e.ctrlKey && e.key === 'f') {
+      // Trigger remarks modal
+      const button = e.currentTarget as HTMLButtonElement;
+      button.click();
+    }
+  };
+
   return (
     <div className="flex w-full flex-col gap-1">
       <Button
@@ -85,8 +113,9 @@ const View = ({ row }: { row: any }) => {
         onClick={() =>
           window.open(`/crm/complaints/duplicate/${row.id}`, "_blank")
         }
+        onKeyDown={handleDuplicateKeyPress}
       >
-        <span className="mr-2">Duplicate</span>
+        <span className="mr-2">Duplicate <Kbd>Ctrl + D</Kbd></span>
         <Redo2 className="h-4 w-4" />
       </Button>
 
@@ -95,8 +124,9 @@ const View = ({ row }: { row: any }) => {
         size="sm"
         className="flex w-full items-center justify-between px-3 py-2 transition-colors hover:bg-gray-100"
         onClick={() => window.open(`/crm/complaints/${row.id}`, "_blank")}
+        onKeyDown={handleViewKeyPress}
       >
-        <span className="mr-2">View</span>
+        <span className="mr-2">View <Kbd>Ctrl + V</Kbd></span>
         <Eye className="h-4 w-4" />
       </Button>
 
@@ -106,8 +136,9 @@ const View = ({ row }: { row: any }) => {
             variant="ghost"
             size="sm"
             className="flex w-full items-center justify-between px-3 py-2 transition-colors hover:bg-gray-100"
+            onKeyDown={handleRemarksKeyPress}
           >
-            <span className="mr-2">Remarks</span>
+            <span className="mr-2">Remarks <Kbd>Ctrl + F</Kbd></span>
             <MessageSquare className="h-4 w-4" />
           </Button>
         </CredenzaTrigger>
