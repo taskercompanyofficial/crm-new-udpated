@@ -15,6 +15,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Pusher from "pusher-js";
 import { revalidate } from "@/actions/revalidate";
+import Link from "next/link";
 
 const pusher = new Pusher("ce68911272e6c689efde", {
   cluster: "ap2",
@@ -72,6 +73,14 @@ export function NotificationComponent() {
     }
   }, []);
 
+  const handleNotificationClick = (notification: any) => {
+    console.log(notification);
+    if (notification.link) {
+      window.open(notification.link, '_blank');
+    }
+    setUnreadCount((prev) => Math.max(0, prev - 1));
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -90,7 +99,11 @@ export function NotificationComponent() {
         <DropdownMenuGroup>
           {notifications.length > 0 ? (
             notifications.map((notification, index) => (
-              <DropdownMenuItem key={index}>
+              <DropdownMenuItem 
+                key={index}
+                onClick={() => handleNotificationClick(notification)}
+                className="cursor-pointer"
+              >
                 <div className="flex flex-col gap-1">
                   <div className="text-sm font-medium">
                     {notification.title}
@@ -114,7 +127,9 @@ export function NotificationComponent() {
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem className="text-center font-medium">
-          View all notifications
+          <Link href="/notifications" className="w-full">
+            View all notifications
+          </Link>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
