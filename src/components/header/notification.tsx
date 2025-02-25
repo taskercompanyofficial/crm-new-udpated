@@ -74,7 +74,6 @@ export function NotificationComponent() {
   }, []);
 
   const handleNotificationClick = (notification: any) => {
-    console.log(notification);
     if (notification.link) {
       window.open(notification.link, '_blank');
     }
