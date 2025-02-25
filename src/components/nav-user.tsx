@@ -40,6 +40,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useState } from "react";
 import { User } from "@/types";
+import { getImageUrl } from "@/lib/utils";
 
 export function NavUser({
   user,
@@ -50,7 +51,7 @@ export function NavUser({
 }) {
 
   const { isMobile } = useSidebar();
- 
+
   const [signingOut, setSigningOut] = useState(false);
   const handleSignOut = async () => {
     setSigningOut(true);
@@ -87,7 +88,7 @@ export function NavUser({
                 className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
               >
                 <Avatar className="w-8 h-8 rounded-lg bg-sidebar-primary">
-                  <AvatarImage src={user?.profile_image} alt={user?.full_name} />
+                  <AvatarImage src={getImageUrl(user?.profile_image || "")} alt={user?.full_name} />
                   <AvatarFallback className="rounded-lg">
                     {user?.full_name
                       ?.split(" ")
@@ -111,7 +112,7 @@ export function NavUser({
               <DropdownMenuLabel className="p-0 font-normal">
                 <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                   <Avatar className="w-8 h-8 rounded-lg">
-                    <AvatarImage src={user?.profile_image} alt={user?.full_name} />
+                    <AvatarImage src={getImageUrl(user?.profile_image || "")} alt={user?.full_name} />
                     <AvatarFallback className="rounded-lg">
                       {user?.full_name
                         ?.split(" ")

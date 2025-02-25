@@ -23,6 +23,7 @@ import {
 import { useState } from "react";
 import { signOut } from "next-auth/react";
 import { Loader, LogOut, Settings, User } from "lucide-react";
+import { getImageUrl } from "@/lib/utils";
 export function NavUser({ userDetails }: { userDetails: any }) {
   const [signingOut, setSigningOut] = useState(false);
   const handleSignOut = async () => {
@@ -35,8 +36,8 @@ export function NavUser({ userDetails }: { userDetails: any }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Avatar className="h-10 w-10 p-1 rounded-full bg-primary-foreground flex justify-center items-center">
-          <AvatarImage src={userDetails?.profile_image} alt={userDetails?.full_name} />
+        <Avatar className="h-10 w-10 p-1 rounded-full bg-primary-foreground flex justify-center items-center cursor-pointer">
+          <AvatarImage src={getImageUrl(userDetails?.profile_image)} alt={userDetails?.full_name} className="rounded-full" />
           <AvatarFallback className="rounded-full">
             {userDetails?.full_name
               ?.split(" ")

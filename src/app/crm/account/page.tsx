@@ -1,4 +1,3 @@
-"use client";
 import React from "react";
 import {
   Card,
@@ -7,41 +6,17 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useSession } from "next-auth/react";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Bell, Lock, Settings as SettingsIcon, User } from "lucide-react";
+import { Bell, Lock, Settings as SettingsIcon, User } from "lucide-react"; import { getUserDetails } from "@/lib/getUserDetails";
+import Profile from "./tabs/profile";
+import { User as UserType } from "@/types";
 
-export default function AccountPage() {
-  const { data: session, status } = useSession();
-  const user = session?.user;
-
-  if (status === "loading") {
-    return (
-      <div className="container mx-auto h-screen py-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Account Details</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-4">
-              <Skeleton className="h-20 w-20 rounded-full" />
-              <div className="space-y-2">
-                <Skeleton className="h-4 w-48" />
-                <Skeleton className="h-4 w-32" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
+export default async function AccountPage() {
+  const { userDetails } = await getUserDetails();
   return (
     <div className="container mx-auto py-6">
       <Tabs defaultValue="profile" className="space-y-4">
@@ -68,46 +43,9 @@ export default function AccountPage() {
         </TabsList>
 
         <TabsContent value="profile">
-          <Card>
-            <CardHeader>
-              <CardTitle>Profile</CardTitle>
-              <CardDescription>
-                Manage your public profile information
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="flex items-center gap-4">
-                <Avatar className="h-20 w-20">
-                  <AvatarImage src={user?.name} alt={user?.name} />
-                  <AvatarFallback>
-                    {user?.name
-                      ?.split(" ")
-                      .map((word: string) => word.charAt(0))
-                      .join("")}
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <h3 className="text-2xl font-semibold">{user?.name}</h3>
-                  <p className="text-muted-foreground">{user?.email}</p>
-                  <p className="capitalize text-muted-foreground">
-                    {user?.role}
-                  </p>
-                </div>
-              </div>
-
-              <div className="grid gap-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="name">Full Name</Label>
-                  <Input id="name" defaultValue={user?.name} />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input id="email" type="email" defaultValue={user?.email} />
-                </div>
-                <Button>Save Changes</Button>
-              </div>
-            </CardContent>
-          </Card>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <Profile userInfo={userDetails as UserType} />
+          </div>
         </TabsContent>
 
         <TabsContent value="settings">
