@@ -61,11 +61,16 @@ const Update = ({ row }: { row: any }) => {
   const { data } = useSession();
   const role = data?.user.role;
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.altKey && e.key === 'e') {
-      window.open(`/crm/complaints/edit/${row.id}`, "_blank");
-    }
-  };
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.shiftKey) && e.altKey && e.key.toLowerCase() === 'e') {
+        window.open(`/crm/complaints/edit/${row.id}`, "_blank");
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [row.id]);
 
   return (
     <Button
@@ -73,34 +78,31 @@ const Update = ({ row }: { row: any }) => {
       size="sm"
       className="flex w-full items-center justify-between px-3 py-2 transition-colors hover:bg-gray-100"
       onClick={() => window.open(`/crm/complaints/edit/${row.id}`, "_blank")}
-      onKeyDown={handleKeyPress}
       disabled={row.status === "closed" && role !== "administrator"}
     >
-      <span className="mr-2">Update (<Kbd>Alt</Kbd>+<Kbd>E</Kbd>)</span>
-      <span>Edit</span>
+      <span className="mr-2">Update </span>
+      <span>(<Kbd>Ctrl</Kbd>+<Kbd>Alt</Kbd>+<Kbd>E</Kbd>)</span>
     </Button>
   );
 };
 
 const View = ({ row }: { row: any }) => {
-  const handleDuplicateKeyPress = (e: React.KeyboardEvent) => {
-    if (e.altKey && e.key === 'n') {
-      window.open(`/crm/complaints/duplicate/${row.id}`, "_blank");
-    }
-  };
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.shiftKey) && e.altKey) {
+        if (e.key.toLowerCase() === 'n') {
+          window.open(`/crm/complaints/duplicate/${row.id}`, "_blank");
+        } else if (e.key.toLowerCase() === 'o') {
+          window.open(`/crm/complaints/${row.id}`, "_blank");
+        } else if (e.key.toLowerCase() === 'f') {
+          document.querySelector<HTMLButtonElement>('[data-remarks-trigger]')?.click();
+        }
+      }
+    };
 
-  const handleViewKeyPress = (e: React.KeyboardEvent) => {
-    if (e.altKey && e.key === 'o') {
-      window.open(`/crm/complaints/${row.id}`, "_blank");
-    }
-  };
-
-  const handleRemarksKeyPress = (e: React.KeyboardEvent) => {
-    if (e.altKey && e.key === 'f') {
-      const button = e.currentTarget as HTMLButtonElement;
-      button.click();
-    }
-  };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [row.id]);
 
   return (
     <div className="flex w-full flex-col gap-1">
@@ -111,10 +113,9 @@ const View = ({ row }: { row: any }) => {
         onClick={() =>
           window.open(`/crm/complaints/duplicate/${row.id}`, "_blank")
         }
-        onKeyDown={handleDuplicateKeyPress}
       >
-        <span className="mr-2">Duplicate <Kbd>Alt</Kbd>+<Kbd>N</Kbd></span>
-        <span>New</span>
+        <span className="mr-2">Duplicate </span>
+        <span>(<Kbd>Ctrl</Kbd>+<Kbd>Alt</Kbd>+<Kbd>N</Kbd>)</span>
       </Button>
 
       <Button
@@ -122,10 +123,9 @@ const View = ({ row }: { row: any }) => {
         size="sm"
         className="flex w-full items-center justify-between px-3 py-2 transition-colors hover:bg-gray-100"
         onClick={() => window.open(`/crm/complaints/${row.id}`, "_blank")}
-        onKeyDown={handleViewKeyPress}
       >
-        <span className="mr-2">View <Kbd>Alt</Kbd>+<Kbd>O</Kbd></span>
-        <span>Open</span>
+        <span className="mr-2">View </span>
+        <span>(<Kbd>Ctrl</Kbd>+<Kbd>Alt</Kbd>+<Kbd>O</Kbd>)</span>
       </Button>
 
       <Credenza>
@@ -134,10 +134,10 @@ const View = ({ row }: { row: any }) => {
             variant="ghost"
             size="sm"
             className="flex w-full items-center justify-between px-3 py-2 transition-colors hover:bg-gray-100"
-            onKeyDown={handleRemarksKeyPress}
+            data-remarks-trigger
           >
-            <span className="mr-2">Remarks <Kbd>Alt</Kbd>+<Kbd>F</Kbd></span>
-            <span>Remarks</span>
+            <span className="mr-2">Remarks </span>
+            <span>(<Kbd>Ctrl</Kbd>+<Kbd>Alt</Kbd>+<Kbd>F</Kbd>)</span>
           </Button>
         </CredenzaTrigger>
         <CredenzaContent className="w-[95vw] max-w-4xl p-4 sm:w-[80vw]">
