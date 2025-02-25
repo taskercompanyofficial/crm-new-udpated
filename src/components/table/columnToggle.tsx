@@ -54,6 +54,15 @@ export function DataTableViewOptions<TData>({
     localStorage.setItem("tableColumnVisibility", JSON.stringify(newState));
   };
 
+  // Get hidden columns for export exclusion
+  const getHiddenColumns = () => {
+    const hiddenColumns = table
+      .getAllColumns()
+      .filter(column => !column.getIsVisible())
+      .map(column => column.id);
+    return [...hiddenColumns, "select", "actions"];
+  };
+
   return (
     <div className="flex gap-2">
       {table.getFilteredSelectedRowModel().rows.length > 0 ? (
@@ -71,9 +80,9 @@ export function DataTableViewOptions<TData>({
         role="combobox"
         size="sm"
         onClick={() =>
-          exportTableToCSV(table, {
+          exportTableToCSV<TData>(table, {
             filename: "Records",
-            excludeColumns: ["select", "actions"],
+            excludeColumns: getHiddenColumns() as Array<keyof TData | "select" | "actions">,
           })
         }
         className="ml-auto hidden h-8 gap-2 focus:outline-none focus:ring-1 focus:ring-ring focus-visible:ring-0 lg:flex"

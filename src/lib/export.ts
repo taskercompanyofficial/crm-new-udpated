@@ -18,7 +18,7 @@ export function exportTableToCSV<TData>(
          * @default []
          * @example ["select", "actions"]
          */
-        excludeColumns?: (keyof TData | "select" | "actions")[];
+        excludeColumns?: Array<keyof TData | "select" | "actions">;
 
         /**
          * Whether to export only the selected rows.
@@ -37,12 +37,7 @@ export function exportTableToCSV<TData>(
     const headers = table
         .getAllLeafColumns()
         .map((column) => column.id)
-        .filter(
-            (id) =>
-                !excludeColumns.includes(
-                    id as keyof TData | "select" | "actions",
-                ),
-        );
+        .filter((id) => !excludeColumns.includes(id as keyof TData | "select" | "actions"));
 
     // Build CSV content
     const csvContent = [
