@@ -10,17 +10,19 @@ interface EnhancedInputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   description?: string;
   errorMessage?: string;
+  labelClassName?: string;
   icon?: React.ReactNode;
   disabled?: boolean;
 }
 
 export const LabelInputContainer: React.FC<EnhancedInputProps> = ({
   label,
+  labelClassName,
   description,
   errorMessage,
   icon,
   type = "text",
-  disabled ,
+  disabled,
   ...props
 }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -34,7 +36,7 @@ export const LabelInputContainer: React.FC<EnhancedInputProps> = ({
   return (
     <div className="space-y-1">
       {label && (
-        <Label htmlFor={props.id}>
+        <Label htmlFor={props.id} className={labelClassName}>
           {label} {props.required && <span className="text-red-600">*</span>}
         </Label>
       )}
@@ -45,7 +47,7 @@ export const LabelInputContainer: React.FC<EnhancedInputProps> = ({
             {disabled && <Lock className="mt-1 h-4 w-4" />}
           </div>
         )}
-        <Input 
+        <Input
           type={inputType}
           className={`${icon ? "pl-10" : ""} ${errorMessage ? "border-red-500" : ""} placeholder:text-xs placeholder:font-mono`}
           placeholder={type === "password" ? "********" : props.placeholder}
