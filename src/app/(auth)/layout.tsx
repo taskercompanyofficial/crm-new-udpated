@@ -1,4 +1,5 @@
 import { Laptop2 } from "lucide-react"
+import Image from "next/image"
 import Link from "next/link"
 
 export default function LoginLayout({ children }: { children: React.ReactNode }) {
@@ -23,10 +24,13 @@ export default function LoginLayout({ children }: { children: React.ReactNode })
       </div>
       <div className="w-full flex justify-center px-4 items-center">
         <div className="relative h-64 md:h-80 lg:h-96 w-full flex justify-center items-center">
-          <img
+          <Image
             src="/assets/login-products.png"
             alt="Orient Product Collection"
+            fill
             className="object-contain"
+            priority
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </div>
       </div>
