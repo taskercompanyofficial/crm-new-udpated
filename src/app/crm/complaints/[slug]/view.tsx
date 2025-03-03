@@ -92,7 +92,7 @@ export default function ViewComplaint({ complaint }: { complaint: any }) {
               </div>
             </div>
             <div className="text-right">
-              <p className="text-xs text-gray-500">Brand Complaint No: {complaint.brand_complaint_num}</p>
+              <p className="text-xs text-gray-500">Brand Complaint No: {complaint.brand_complaint_no}</p>
               <p className="text-xs text-gray-500">Created By:</p>
               <p className="text-xs font-medium">{complaint.user?.username || "N/A"}</p>
               <p className="text-xs text-gray-500 mt-1">Date Created:</p>
