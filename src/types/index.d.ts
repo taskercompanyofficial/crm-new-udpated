@@ -101,18 +101,13 @@ export type CategoriesType = {
 export type ServicesType = {
   id: string;
   unique_id: string;
-  category_id: string;
-  category_name: string;
   name: string;
   slug: string;
   description: string;
   keywords: string;
-  image: string;
-  hero_image: string;
-  open: number;
-  closed: number;
-  others: number;
+  icon: string;
   status: string;
+  color: string;
   created_at: string;
   updated_at: string;
 };
