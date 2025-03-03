@@ -3,6 +3,7 @@ import axios, { AxiosError } from "axios";
 import { auth } from "auth";
 import { signOut } from "next-auth/react";
 import { User } from "@/types";
+import { unstable_cache } from 'next/cache';
 
 interface UserDetailsWithToken {
   userDetails: User | null;
@@ -18,6 +19,23 @@ interface AuthSession {
     token?: string;
   } | null;
 }
+
+const getCachedUserDetails = unstable_cache(
+  async (token: string): Promise<User | null> => {
+    try {
+      const response = await axios.get<User>(`${API_URL}/user`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      return null;
+    }
+  },
+  ['user-details'],
+  { revalidate: 60 } // Cache for 60 seconds
+);
 
 export async function getUserDetails(): Promise<UserDetailsWithToken> {
   try {
@@ -36,13 +54,8 @@ export async function getUserDetails(): Promise<UserDetailsWithToken> {
     }
 
     try {
-      const response = await axios.get<User >(`${API_URL}/user`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const userDetails = await getCachedUserDetails(token);
 
-      const userDetails = response.data;
       if (!userDetails) {
         return {
           userDetails: null,
