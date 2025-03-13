@@ -129,7 +129,7 @@ export default function BasicForm({
             errorMessage={errors.extra_numbers}
           />
           <SearchSelect
-            label="Reference by"
+            label="Dealers"
             options={(() => {
               const defaultOptions: dataTypeIds[] = [
                 { value: "Lahore Center", label: "Lahore Center", id: "1", image: "" },
@@ -146,7 +146,6 @@ export default function BasicForm({
                 { value: "Friends ELc ISB/RWP", label: "Friends ELc ISB/RWP", id: "12", image: "" },
                 { value: "Modern Center Collage Road LHR", label: "Modern Center Collage Road LHR", id: "13", image: "" },
                 { value: "Alfatah Electronics", label: "Alfatah Electronics", id: "14", image: "" }
-                
               ];
 
               if (data.reference_by && !defaultOptions.find((opt) => opt.value === data.reference_by)) {
