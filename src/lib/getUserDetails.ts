@@ -1,9 +1,7 @@
 import { API_URL } from "@/lib/apiEndPoints";
-import axios, { AxiosError } from "axios";
 import { auth } from "auth";
 import { signOut } from "next-auth/react";
 import { User } from "@/types";
-import { unstable_cache } from 'next/cache';
 
 interface UserDetailsWithToken {
   userDetails: User | null;
@@ -19,23 +17,6 @@ interface AuthSession {
     token?: string;
   } | null;
 }
-
-const getCachedUserDetails = unstable_cache(
-  async (token: string): Promise<User | null> => {
-    try {
-      const response = await axios.get<User>(`${API_URL}/user`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      return response.data;
-    } catch (error) {
-      return null;
-    }
-  },
-  ['user-details'],
-  { revalidate: 60 } // Cache for 60 seconds
-);
 
 export async function getUserDetails(): Promise<UserDetailsWithToken> {
   try {
@@ -54,8 +35,42 @@ export async function getUserDetails(): Promise<UserDetailsWithToken> {
     }
 
     try {
-      const userDetails = await getCachedUserDetails(token);
+      const response = await fetch(`${API_URL}/user`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        cache: 'no-store'
+      });
 
+      if (!response.ok) {
+        const statusCode = response.status;
+        
+        if (statusCode === 401) {
+          await signOut();
+          return {
+            userDetails: null,
+            token: "",
+            error: {
+              code: "UNAUTHORIZED",
+              message: "Session expired or invalid token"
+            }
+          };
+        }
+
+        const errorData = await response.json().catch(() => ({}));
+        return {
+          userDetails: null,
+          token: "",
+          error: {
+            code: `HTTP_ERROR_${statusCode}`,
+            message: errorData.message || response.statusText
+          }
+        };
+      }
+
+      const userDetails = await response.json();
       if (!userDetails) {
         return {
           userDetails: null,
@@ -70,31 +85,6 @@ export async function getUserDetails(): Promise<UserDetailsWithToken> {
       return { userDetails, token };
 
     } catch (error) {
-      if (error instanceof AxiosError) {
-        const statusCode = error.response?.status;
-        
-        if (statusCode === 401) {
-          await signOut();
-          return {
-            userDetails: null,
-            token: "",
-            error: {
-              code: "UNAUTHORIZED",
-              message: "Session expired or invalid token"
-            }
-          };
-        }
-
-        return {
-          userDetails: null,
-          token: "",
-          error: {
-            code: `HTTP_ERROR_${statusCode}`,
-            message: error.response?.data?.message || error.message
-          }
-        };
-      }
-
       return {
         userDetails: null,
         token: "",

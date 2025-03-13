@@ -81,157 +81,151 @@ export const StatusOptions = [
 ];
 
 export const ComplaintStatusOptions = [
-  { value: "open", label: "Open", color: "255, 159, 67", icon: CircleDot }, // Orange
-  { value: "hold-by-us", label: "Hold by Us", color: "255, 87, 34", icon: CircleDot }, // Deep Orange
-  { value: "hold-by-brand", label: "Hold by Brand", color: "233, 30, 99", icon: CircleDot }, // Pink
-  { value: "hold-by-customer", label: "Hold by Customer", color: "103, 58, 183", icon: CircleDot }, // Purple
+  { value: "open", label: "Open", color: "255, 159, 67" }, // Orange
+  { value: "hold-by-us", label: "Hold by Us", color: "255, 87, 34" }, // Deep Orange
+  { value: "hold-by-brand", label: "Hold by Brand", color: "233, 30, 99" }, // Pink
+  { value: "hold-by-customer", label: "Hold by Customer", color: "103, 58, 183" }, // Purple
 
   {
     value: "assigned-to-technician",
     label: "Assigned to Technician",
-    color: "234, 84, 85",
-    icon: UserCheck, // Red
+    color: "234, 84, 85", // Red
   },
   {
     value: "part-demand",
     label: "Part Demand",
-    color: "244, 67, 54",
-    icon: Package, // Bright Red
+    color: "244, 67, 54", // Bright Red
   },
   {
     value: "service-lifting",
     label: "Service Lifting",
-    color: "46, 204, 113",
-    icon: ArrowUpCircle, // Green
+    color: "46, 204, 113", // Green
   },
   {
     value: "party-lifting",
     label: "Party Lifting",
-    color: "52, 152, 219",
-    icon: Users, // Blue
+    color: "52, 152, 219", // Blue
   },
   {
     value: "unit-in-service-center",
     label: "Unit in Service Center",
-    color: "155, 89, 182",
-    icon: BuildingIcon, // Purple
+    color: "155, 89, 182", // Purple
   },
   {
     value: "installation-pending",
     label: "Installation Pending",
-    color: "230, 126, 34",
-    icon: Clock, // Dark Orange
+    color: "230, 126, 34", // Dark Orange
   },
   {
     value: "in-progress",
     label: "In Progress",
-    color: "241, 196, 15",
-    icon: ClockIcon, // Yellow
+    color: "241, 196, 15", // Yellow
   },
-  { value: "delivered", label: "Delivered", color: "26, 188, 156", icon: Box }, // Teal
+  { value: "delivered", label: "Delivered", color: "26, 188, 156" }, // Teal
   {
     value: "pending-by-brand",
     label: "Pending by Brand",
-    color: "231, 76, 60",
-    icon: AlertCircle, // Dark Red
+    color: "231, 76, 60", // Dark Red
   },
   {
     value: "feedback-pending",
     label: "Feedback Pending",
-    color: "255, 159, 64",
-    icon: Clock, // Orange
+    color: "255, 159, 64", // Orange
   },
   {
     value: "completed",
     label: "Completed",
-    color: "39, 174, 96",
-    icon: CheckCircle, // Green
+    color: "39, 174, 96", // Green
   },
   {
     value: "amount-pending",
     label: "Amount Pending",
-    color: "255, 99, 132",
-    icon: AlertCircle, // Soft Red
+    color: "255, 99, 132", // Soft Red
   },
   {
     value: "closed",
     label: "Closed",
-    color: "41, 128, 185",
-    icon: CheckCircle, // Blue
+    color: "41, 128, 185", // Blue
   },
   {
     value: "cancelled",
     label: "Cancelled",
-    color: "192, 57, 43",
-    icon: XCircleIcon, // Dark Red
+    color: "192, 57, 43", // Dark Red
   },
 ];
 
 export const CallStatusOptions = [
-  { value: "pending", label: "Pending", icon: CircleDot },
-  { value: "phone-off", label: "Phone Off", icon: PhoneOff },
-  { value: "not-responding", label: "Not Responding", icon: PhoneOutgoing },
-  { value: "wrong-number", label: "Wrong Number", icon: XCircle },
-  { value: "busy", label: "Busy", icon: PhoneMissed },
-  { value: "rescheduled", label: "Rescheduled", icon: CalendarClock },
-  { value: "not-interested", label: "Not Interested", icon: ThumbsDown },
-  { value: "callback-requested", label: "Callback Requested", icon: PhoneCall },
-  { value: "done", label: "Done", icon: CheckCircle },
+  { value: "pending", label: "Pending", color: "241, 196, 15" }, // Yellow
+  { value: "phone-off", label: "Phone Off", color: "231, 76, 60" }, // Dark Red
+  { value: "not-responding", label: "Not Responding", color: "192, 57, 43" }, // Dark Red
+  { value: "wrong-number", label: "Wrong Number", color: "255, 99, 132" }, // Soft Red
+  { value: "busy", label: "Busy", color: "155, 89, 182" }, // Purple
+  { value: "rescheduled", label: "Rescheduled", color: "52, 152, 219" }, // Blue
+  { value: "not-interested", label: "Not Interested", color: "230, 126, 34" }, // Dark Orange
+  { value: "callback-requested", label: "Callback Requested", color: "41, 128, 185" }, // Blue
+  { value: "done", label: "Done", color: "39, 174, 96" }, // Green
 ];
 
 export const warrantyTypeOptions = [
-  { value: "warranty-card", label: "Warranty Card", icon: FileText },
-  { value: "jobsheet", label: "Jobsheet", icon: ClipboardList },
-  { value: "invoice", label: "Invoice", icon: Receipt },
-  { value: "delivery-challan", label: "Delivery Challan", icon: TruckIcon },
-  { value: "service-challan", label: "Service Challan", icon: FileSpreadsheet },
-  { value: "defective-part", label: "Defective Part", icon: Component },
-  { value: "defective-picture", label: "Defective Picture", icon: Image },
-  { value: "indoor", label: "Indoor", icon: Home },
-  { value: "outdoor", label: "Outdoor", icon: Warehouse },
-  { value: "ind-sr", label: "Ind-SR", icon: CircleDollarSign },
-  { value: "out-sr", label: "Out-SR", icon: CircleOff },
+  { value: "warranty-card", label: "Warranty Card", color: "52, 152, 219" }, // Blue
+  { value: "jobsheet", label: "Jobsheet", color: "241, 196, 15" }, // Yellow
+  { value: "invoice", label: "Invoice", color: "39, 174, 96" }, // Green
+  { value: "delivery-challan", label: "Delivery Challan", color: "230, 126, 34" }, // Dark Orange
+  { value: "service-challan", label: "Service Challan", color: "155, 89, 182" }, // Purple
+  { value: "defective-part", label: "Defective Part", color: "231, 76, 60" }, // Dark Red
+  { value: "defective-picture", label: "Defective Picture", color: "255, 99, 132" }, // Soft Red
+  { value: "indoor", label: "Indoor", color: "26, 188, 156" }, // Teal
+  { value: "outdoor", label: "Outdoor", color: "41, 128, 185" }, // Blue
+  { value: "ind-sr", label: "Ind-SR", color: "192, 57, 43" }, // Dark Red
+  { value: "out-sr", label: "Out-SR", color: "255, 159, 64" }, // Orange
 ];
 
 export const complaintTypeOptions = [
   {
     value: "new-ac-free-installation",
     label: "New AC Free Installation",
-    icon: Snowflake,
+    color: "52, 152, 219" // Blue
   },
   {
-    value: "old-ac-free-installation",
+    value: "old-ac-free-installation", 
     label: "Old AC Free Installation",
-    icon: LucideWrench,
+    color: "230, 126, 34" // Dark Orange
   },
   {
     value: "old-c/o-free-installation",
-    label: "Old C/O Free Installation",
-    icon: CircleCheck,
+    label: "Old C/O Free Installation", 
+    color: "39, 174, 96" // Green
   },
   {
     value: "old-c/o-installation",
     label: "Old C/O Installation",
-    icon: Settings,
+    color: "155, 89, 182" // Purple
   },
-  { value: "free-installation", label: "Free Installation", icon: CircleCheck },
-  { value: "paid-installation", label: "Paid Installation", icon: DollarSign },
-  { value: "warranty", label: "Warranty", icon: ShieldCheck },
-  { value: "revenue", label: "Revenue", icon: CircleDollarSign },
-  { value: "service", label: "Service", icon: WrenchIcon },
-  { value: "warrenty-revenue", label: "Warrenty+Revenue", icon: DollarSign },
-  { value: "other", label: "Other", icon: CircleDot },
+  { value: "free-installation", label: "Free Installation", color: "26, 188, 156" }, // Teal
+  { value: "paid-installation", label: "Paid Installation", color: "241, 196, 15" }, // Yellow
+  { value: "warranty", label: "Warranty", color: "41, 128, 185" }, // Blue
+  { value: "revenue", label: "Revenue", color: "231, 76, 60" }, // Dark Red
+  { value: "service", label: "Service", color: "255, 159, 64" }, // Orange
+  { value: "warrenty-revenue", label: "Warrenty+Revenue", color: "192, 57, 43" }, // Dark Red
+  { value: "other", label: "Other", color: "255, 99, 132" } // Soft Red
 ];
 
 export const MessageTypeOptions = [
   {
     value: "auto_pay_reminder_2",
     label: "Update Complaint",
-    icon: MessageCircle,
+    color: "52, 152, 219" // Blue
   },
   {
     value: "complaint_create_template",
     label: "Complaint Create Template",
-    icon: MessagesSquare,
-  },
+    color: "39, 174, 96" // Green
+  }
 ];
+export const Dealers =[
+  {value: "metro", label: "Metro"},
+  {value: "metro", label: ""},
+  {value: "metro", label: "Metro"},
+  {value: "metro", label: "Metro"},
+  {value: "metro", label: "Metro"},
+]

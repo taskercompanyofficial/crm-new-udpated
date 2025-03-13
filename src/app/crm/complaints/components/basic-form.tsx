@@ -136,11 +136,17 @@ export default function BasicForm({
                 { value: "Multi Electronics", label: "Multi Electronics", id: "2", image: "" },
                 { value: "Afzal Electronics", label: "Afzal Electronics", id: "3", image: "" },
                 { value: "Madina Electronics", label: "Madina Electronics", id: "4", image: "" },
-                { value: "Metro Cash & Carry", label: "Metro Cash & Carry", id: "5", image: "" },
-                { value: "Imtiaz Store", label: "Imtiaz Store", id: "6", image: "" },
-                { value: "E-Lux", label: "E-Lux", id: "7", image: "" },
-                { value: "Dawlance Experience Store", label: "Dawlance Experience Store", id: "8", image: "" },
-                { value: "Al-Mumtaz Group", label: "Al-Mumtaz Group", id: "9", image: "" }
+                { value: "Metro Cash & Carry LHR", label: "Metro Cash & Carry LHR", id: "5", image: "" },
+                { value: "Metro Cash & Carry ISB", label: "Metro Cash & Carry ISB", id: "6", image: "" },
+                { value: "Imtiaz Store", label: "Imtiaz Store", id: "7", image: "" },
+                { value: "E-Lux", label: "E-Lux", id: "8", image: "" },
+                { value: "Dawlance Experience Store", label: "Dawlance Experience Store", id: "9", image: "" },
+                { value: "Al-Mumtaz Group", label: "Al-Mumtaz Group", id: "10", image: "" },
+                { value: "Japan ELC ISB/RWP", label: "Japan ELC ISB/RWP", id: "11", image: "" },
+                { value: "Friends ELc ISB/RWP", label: "Friends ELc ISB/RWP", id: "12", image: "" },
+                { value: "Modern Center Collage Road LHR", label: "Modern Center Collage Road LHR", id: "13", image: "" },
+                { value: "Alfatah Electronics", label: "Alfatah Electronics", id: "14", image: "" }
+                
               ];
 
               if (data.reference_by && !defaultOptions.find((opt) => opt.value === data.reference_by)) {
