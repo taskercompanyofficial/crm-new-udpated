@@ -64,7 +64,7 @@ export default function ViewComplaint({ complaint }: { complaint: any }) {
   };
 
   return (
-    <div className="mx-auto max-w-5xl p-4 print:p-0">
+    <div className="mx-auto max-w-7xl p-4 print:p-0">
       <div className="flex justify-end mb-4 print:hidden">
         <Button
           onClick={handlePrint}
@@ -77,9 +77,9 @@ export default function ViewComplaint({ complaint }: { complaint: any }) {
         </Button>
       </div>
 
-      <Card className="rounded-lg border bg-white p-6 shadow-sm print:shadow-none print:border-none">
-        {/* Header - Job Sheet Title */}
-        <div className="mb-6 border-b pb-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* Header Card - Spans full width */}
+        <Card className="col-span-full p-6 bg-white">
           <div className="flex items-center justify-between">
             <div className="flex flex-col">
               <h1 className="text-2xl font-bold text-primary print:text-black">Job Sheet</h1>
@@ -93,224 +93,187 @@ export default function ViewComplaint({ complaint }: { complaint: any }) {
             </div>
             <div className="text-right">
               <p className="text-xs text-gray-500">Brand Complaint No: {complaint.brand_complaint_no}</p>
-              <p className="text-xs text-gray-500">Created By:</p>
-              <p className="text-xs font-medium">{complaint.user?.username || "N/A"}</p>
-              <p className="text-xs text-gray-500 mt-1">Date Created:</p>
-              <p className="text-xs font-medium">{formatDate(complaint.created_at)}</p>
+              <p className="text-xs text-gray-500">Created By: {complaint.user?.username || "N/A"}</p>
+              <p className="text-xs text-gray-500">Date: {formatDate(complaint.created_at)}</p>
             </div>
           </div>
-        </div>
+        </Card>
 
-        <div className="grid gap-6">
-          {/* Customer and Product Section */}
-          <div className="grid gap-4 md:grid-cols-2">
-            {/* Customer Info */}
-            <div className="border rounded p-3">
-              <h3 className="mb-3 flex items-center gap-1.5 text-sm font-semibold text-primary border-b pb-1.5">
-                <User className="h-4 w-4" />
-                Customer Details
-              </h3>
-              <div className="space-y-2">
-                <div className="grid grid-cols-3">
-                  <span className="text-xs text-gray-600 font-medium">Name:</span>
-                  <span className="col-span-2 text-xs">{complaint.applicant_name}</span>
-                </div>
-                {complaint.applicant_email && (
-                  <div className="grid grid-cols-3">
-                    <span className="text-xs text-gray-600 font-medium">Email:</span>
-                    <span className="col-span-2 text-xs">{complaint.applicant_email}</span>
-                  </div>
-                )}
-                <div className="grid grid-cols-3">
-                  <span className="text-xs text-gray-600 font-medium">Phone:</span>
-                  <span className="col-span-2 text-xs">{complaint.applicant_phone}</span>
-                </div>
-                <div className="grid grid-cols-3">
-                  <span className="text-xs text-gray-600 font-medium">WhatsApp:</span>
-                  <span className="col-span-2 text-xs">{complaint.applicant_whatsapp}</span>
-                </div>
-                <div className="grid grid-cols-3">
-                  <span className="text-xs text-gray-600 font-medium">Address:</span>
-                  <span className="col-span-2 text-xs">{complaint.applicant_adress}</span>
-                </div>
-                <div className="grid grid-cols-3">
-                  <span className="text-xs text-gray-600 font-medium">Branch:</span>
-                  <span className="col-span-2 text-xs">{complaint.branch?.name || "N/A"}</span>
-                </div>
-                <div className="grid grid-cols-3">
-                  <span className="text-xs text-gray-600 font-medium">Brand:</span>
-                  <span className="col-span-2 text-xs">{complaint.brand?.name || "N/A"}</span>
-                </div>
-                <div className="grid grid-cols-3">
-                  <span className="text-xs text-gray-600 font-medium">Complaint Type:</span>
-                  <span className="col-span-2 text-xs capitalize">{complaint.complaint_type?.replace("-", " ") || "N/A"}</span>
-                </div>
-              </div>
+        {/* Customer Details Card */}
+        <Card className="p-6 bg-white">
+          <h3 className="flex items-center gap-1.5 text-sm font-semibold text-primary mb-4">
+            <User className="h-4 w-4" />
+            Customer Details
+          </h3>
+          <div className="space-y-2">
+            <div className="grid grid-cols-2 gap-1">
+              <span className="text-xs text-gray-600">Name:</span>
+              <span className="text-xs font-medium">{complaint.applicant_name}</span>
             </div>
-
-            {/* Product Info */}
-            <div className="border rounded p-3">
-              <h3 className="mb-3 flex items-center gap-1.5 text-sm font-semibold text-primary border-b pb-1.5">
-                <Package className="h-4 w-4" />
-                Product Details
-              </h3>
-              <div className="space-y-2">
-                <div className="grid grid-cols-3">
-                  <span className="text-xs text-gray-600 font-medium">Product:</span>
-                  <span className="col-span-2 text-xs">{complaint.product} {complaint.model}</span>
-                </div>
-                {complaint.serial_number_ind && (
-                  <div className="grid grid-cols-3">
-                    <span className="text-xs text-gray-600 font-medium">SN (IND):</span>
-                    <span className="col-span-2 text-xs">{complaint.serial_number_ind}</span>
-                  </div>
-                )}
-                {complaint.serial_number_oud && (
-                  <div className="grid grid-cols-3">
-                    <span className="text-xs text-gray-600 font-medium">SN (OUD):</span>
-                    <span className="col-span-2 text-xs">{complaint.serial_number_oud}</span>
-                  </div>
-                )}
-                <div className="grid grid-cols-3">
-                  <span className="text-xs text-gray-600 font-medium">Technician:</span>
-                  <span className="col-span-2 text-xs">{complaint.technician || "N/A"}</span>
-                </div>
-                <div className="grid grid-cols-3">
-                  <span className="text-xs text-gray-600 font-medium">Amount:</span>
-                  <span className="col-span-2 text-xs">{complaint.amount || "N/A"}</span>
-                </div>
-              </div>
+            <div className="grid grid-cols-2 gap-1">
+              <span className="text-xs text-gray-600">Phone:</span>
+              <span className="text-xs font-medium">{complaint.applicant_phone}</span>
+            </div>
+            <div className="grid grid-cols-2 gap-1">
+              <span className="text-xs text-gray-600">WhatsApp:</span>
+              <span className="text-xs font-medium">{complaint.applicant_whatsapp}</span>
+            </div>
+            <div className="col-span-2 mt-2">
+              <span className="text-xs text-gray-600 block">Address:</span>
+              <span className="text-xs mt-1">{complaint.applicant_adress}</span>
             </div>
           </div>
+        </Card>
 
-          {/* Service Details */}
-          <div className="border rounded p-3">
-            <h3 className="mb-3 flex items-center gap-1.5 text-sm font-semibold text-primary border-b pb-1.5">
-              <FileText className="h-4 w-4" />
-              Service Details
-            </h3>
-            <div className="space-y-3">
-              <div>
-                <h4 className="text-xs font-medium mb-1">Description of Issue:</h4>
-                <p className="bg-gray-50 p-2 rounded text-xs">{complaint.description || "Not Added"}</p>
-              </div>
-              <div>
-                <h4 className="text-xs font-medium mb-1">Working Details:</h4>
-                <p className="bg-gray-50 p-2 rounded text-xs">{complaint.working_details || "Not Added"}</p>
-              </div>
-              {complaint.p_date && (
-                <div className="grid grid-cols-3">
-                  <span className="text-xs text-gray-600 font-medium">Purchase Date:</span>
-                  <span className="col-span-2 text-xs">{formatDate(complaint.p_date)}</span>
-                </div>
-              )}
+        {/* Product Details Card */}
+        <Card className="p-6 bg-white">
+          <h3 className="flex items-center gap-1.5 text-sm font-semibold text-primary mb-4">
+            <Package className="h-4 w-4" />
+            Product Details
+          </h3>
+          <div className="space-y-2">
+            <div className="grid grid-cols-2 gap-1">
+              <span className="text-xs text-gray-600">Product:</span>
+              <span className="text-xs font-medium">{complaint.product} {complaint.model}</span>
+            </div>
+            <div className="grid grid-cols-2 gap-1">
+              <span className="text-xs text-gray-600">Brand:</span>
+              <span className="text-xs font-medium">{complaint.brand?.name || "N/A"}</span>
+            </div>
+            <div className="grid grid-cols-2 gap-1">
+              <span className="text-xs text-gray-600">Type:</span>
+              <span className="text-xs font-medium capitalize">{complaint.complaint_type?.replace("-", " ") || "N/A"}</span>
+            </div>
+            <div className="grid grid-cols-2 gap-1">
+              <span className="text-xs text-gray-600">Technician:</span>
+              <span className="text-xs font-medium">{complaint.technician || "N/A"}</span>
             </div>
           </div>
+        </Card>
 
-          {/* Previous Reviews - Only visible on screen */}
-          <div className="border rounded p-3 print:hidden">
-            <h3 className="mb-3 text-sm font-semibold text-primary border-b pb-1.5">Previous Service Reviews</h3>
-            <div className="rounded border">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="text-xs">Rating</TableHead>
-                    <TableHead className="text-xs">Reason</TableHead>
-                    <TableHead className="text-xs">Comment</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {Array.isArray(reviewsData) && reviewsData.length > 0 ? (
-                    reviewsData.map((review) => (
-                      <TableRow key={review.complaint_id}>
-                        <TableCell className="text-xs">{review.rating}/10</TableCell>
-                        <TableCell className="capitalize text-xs">{review.reason?.replace("-", " ") || "N/A"}</TableCell>
-                        <TableCell className="text-xs">{review.comment || "No comment"}</TableCell>
-                      </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell colSpan={3} className="text-center text-xs">Not Added</TableCell>
+        {/* Service Details Card */}
+        <Card className="p-6 bg-white">
+          <h3 className="flex items-center gap-1.5 text-sm font-semibold text-primary mb-4">
+            <FileText className="h-4 w-4" />
+            Service Details
+          </h3>
+          <div className="space-y-3">
+            <div>
+              <h4 className="text-xs font-medium mb-1">Issue Description:</h4>
+              <p className="bg-gray-50 p-2 rounded text-xs">{complaint.description || "Not Added"}</p>
+            </div>
+            <div>
+              <h4 className="text-xs font-medium mb-1">Working Details:</h4>
+              <p className="bg-gray-50 p-2 rounded text-xs">{complaint.working_details || "Not Added"}</p>
+            </div>
+          </div>
+        </Card>
+
+        {/* Reviews Card */}
+        <Card className="p-6 bg-white print:hidden">
+          <h3 className="text-sm font-semibold text-primary mb-4">Service Reviews</h3>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="text-xs">Rating</TableHead>
+                  <TableHead className="text-xs">Reason</TableHead>
+                  <TableHead className="text-xs">Comment</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {Array.isArray(reviewsData) && reviewsData.length > 0 ? (
+                  reviewsData.map((review) => (
+                    <TableRow key={review.complaint_id}>
+                      <TableCell className="text-xs">{review.rating}/10</TableCell>
+                      <TableCell className="capitalize text-xs">{review.reason?.replace("-", " ") || "N/A"}</TableCell>
+                      <TableCell className="text-xs">{review.comment || "No comment"}</TableCell>
                     </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </div>
-          </div>
-          <div className="border rounded p-3 print:hidden">
-            <h3 className="mb-3 text-sm font-semibold text-primary border-b pb-1.5">CSO Remarks</h3>
-            <div className="rounded border">
-              <Table>
-                <TableHeader>
+                  ))
+                ) : (
                   <TableRow>
-                    <TableHead className="text-xs">Staff</TableHead>
-                    <TableHead className="text-xs">Remarks</TableHead>
+                    <TableCell colSpan={3} className="text-center text-xs">Not Added</TableCell>
                   </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {Array.isArray(csoRemarksData) && csoRemarksData.length > 0 ? (
-                    csoRemarksData.map((remark) => (
-                      <TableRow key={remark.complaint_id}>
-                        <TableCell className="text-xs">{remark.user.name}</TableCell>
-                        <TableCell className="capitalize text-xs">{remark.remarks || "N/A"}</TableCell>
-                      </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell colSpan={3} className="text-center text-xs">Not Added</TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </div>
+                )}
+              </TableBody>
+            </Table>
           </div>
+        </Card>
 
-          {/* Attached Files - Only visible on screen */}
-          <div className="border rounded p-3 print:hidden">
-            <h3 className="mb-3 flex items-center gap-1.5 text-sm font-semibold text-primary border-b pb-1.5">
-              <ImageIcon className="h-4 w-4" />
-              Documentation & Images
-            </h3>
-            {files.length > 0 ? (
-              <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-4">
-                {files.map((file: any, index: number) => {
-                  const isImage = file.document_path.match(/\.(jpg|jpeg|png|gif|webp|svg|pdf)$/i);
-                  return (
-                    <Card key={index} className="overflow-hidden border bg-white">
-                      {isImage ? (
-                        <a href={getImageUrl(file.document_path)} target="_blank" rel="noopener noreferrer" className="block">
-                          <div className="relative aspect-video">
-                            <Image
-                              src={getImageUrl(file.document_path)}
-                              alt={file.document_type}
-                              fill
-                              className="object-cover transition-transform hover:scale-105"
-                            />
-                          </div>
-                          <div className="p-1.5">
-                            <p className="truncate text-xs font-medium">{file.file_name}</p>
-                            <p className="text-xs text-gray-500">{(file.file_size / 1024).toFixed(2)} KB</p>
-                          </div>
-                        </a>
-                      ) : (
-                        <div className="flex items-center gap-1.5 p-1.5">
-                          <FileText className="h-3 w-3 text-gray-400" />
-                          <div>
-                            <p className="truncate text-xs font-medium">{file.file_name}</p>
-                            <p className="text-xs text-gray-500">{(file.file_size / 1024).toFixed(2)} KB</p>
-                          </div>
+        {/* CSO Remarks Card */}
+        <Card className="p-6 bg-white print:hidden">
+          <h3 className="text-sm font-semibold text-primary mb-4">CSO Remarks</h3>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="text-xs">Staff</TableHead>
+                  <TableHead className="text-xs">Remarks</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {Array.isArray(csoRemarksData) && csoRemarksData.length > 0 ? (
+                  csoRemarksData.map((remark) => (
+                    <TableRow key={remark.complaint_id}>
+                      <TableCell className="text-xs">{remark.user.name}</TableCell>
+                      <TableCell className="capitalize text-xs">{remark.remarks || "N/A"}</TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={2} className="text-center text-xs">Not Added</TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        </Card>
+
+        {/* Documentation Card */}
+        <Card className="col-span-full p-6 bg-white print:hidden">
+          <h3 className="flex items-center gap-1.5 text-sm font-semibold text-primary mb-4">
+            <ImageIcon className="h-4 w-4" />
+            Documentation & Images
+          </h3>
+          {files.length > 0 ? (
+            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4">
+              {files.map((file: any, index: number) => {
+                const isImage = file.document_path.match(/\.(jpg|jpeg|png|gif|webp|svg|pdf)$/i);
+                return (
+                  <Card key={index} className="overflow-hidden border bg-white hover:shadow-md transition-shadow">
+                    {isImage ? (
+                      <a href={getImageUrl(file.document_path)} target="_blank" rel="noopener noreferrer" className="block">
+                        <div className="relative aspect-square">
+                          <Image
+                            src={getImageUrl(file.document_path)}
+                            alt={file.document_type}
+                            fill
+                            className="object-cover transition-transform hover:scale-105"
+                          />
                         </div>
-                      )}
-                    </Card>
-                  );
-                })}
-              </div>
-            ) : (
-              <p className="text-xs text-center text-gray-500">Not Added</p>
-            )}
-          </div>
-        </div>
-      </Card>
+                        <div className="p-2">
+                          <p className="truncate text-xs font-medium">{file.file_name}</p>
+                          <p className="text-xs text-gray-500">{(file.file_size / 1024).toFixed(2)} KB</p>
+                        </div>
+                      </a>
+                    ) : (
+                      <div className="flex items-center gap-2 p-2">
+                        <FileText className="h-4 w-4 text-gray-400" />
+                        <div>
+                          <p className="truncate text-xs font-medium">{file.file_name}</p>
+                          <p className="text-xs text-gray-500">{(file.file_size / 1024).toFixed(2)} KB</p>
+                        </div>
+                      </div>
+                    )}
+                  </Card>
+                );
+              })}
+            </div>
+          ) : (
+            <p className="text-xs text-center text-gray-500">No files attached</p>
+          )}
+        </Card>
+      </div>
     </div>
   );
 }

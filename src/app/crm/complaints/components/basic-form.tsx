@@ -236,14 +236,23 @@ export default function BasicForm({
           errorMessage={errors.applicant_adress}
           onChange={(value: string) => setData({ ...data, applicant_adress: value })}
         />
-        <TextareaInput
+        <SearchSelect
           label="Fault"
-          placeholder="Describe the fault..."
-          maxLength={250}
-          value={data.description}
-          onChange={(e) => setData({ ...data, description: e.target.value.toUpperCase() })}
-          errorMessage={errors.description}
-          className="bg-gray-50"
+          options={[
+            { value: "NO_COOLING", label: "No Cooling" },
+            { value: "WATER_LEAKAGE", label: "Water Leakage" },
+            { value: "NOISE_ISSUE", label: "Noise Issue" },
+            { value: "NOT_STARTING", label: "Not Starting" },
+            { value: "DISPLAY_NOT_WORKING", label: "Display Not Working" },
+            { value: "REMOTE_NOT_WORKING", label: "Remote Not Working" },
+            { value: "LOW_COOLING", label: "Low Cooling" },
+            { value: "GAS_LEAKAGE", label: "Gas Leakage" },
+            { value: "INSTALLATION_REQUIRED", label: "Installation Required" }
+          ]}
+          onChange={(value) => setData({ ...data, fault: value })}
+          value={data.fault}
+          errorMessage={errors.fault}
+          customizable
         />
       </div>
     </div>
