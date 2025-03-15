@@ -1,6 +1,5 @@
 "use client";
 import { LabelInputContainer } from "@/components/ui/LabelInputContainer";
-import { TextareaInput } from "@/components/custom/TextareaInput";
 import { complaintTypeOptions } from "@/lib/otpions";
 import { SelectInput } from "@/components/custom/SelectInput";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -10,6 +9,7 @@ import useFetch from "@/hooks/usefetch";
 import SearchSelect from "@/components/custom/search-select";
 import AddressTextarea from "./address-textarea";
 import { useState } from "react";
+import { TextareaInput } from "@/components/custom/TextareaInput";
 
 export default function BasicForm({
   data,
@@ -236,23 +236,40 @@ export default function BasicForm({
           errorMessage={errors.applicant_adress}
           onChange={(value: string) => setData({ ...data, applicant_adress: value })}
         />
-        <SearchSelect
-          label="Fault"
-          options={[
-            { value: "NO_COOLING", label: "No Cooling" },
-            { value: "WATER_LEAKAGE", label: "Water Leakage" },
-            { value: "NOISE_ISSUE", label: "Noise Issue" },
-            { value: "NOT_STARTING", label: "Not Starting" },
-            { value: "DISPLAY_NOT_WORKING", label: "Display Not Working" },
-            { value: "REMOTE_NOT_WORKING", label: "Remote Not Working" },
-            { value: "LOW_COOLING", label: "Low Cooling" },
-            { value: "GAS_LEAKAGE", label: "Gas Leakage" },
-            { value: "INSTALLATION_REQUIRED", label: "Installation Required" }
+        <TextareaInput
+          label="Fault Description"
+          name="fault_description"
+          value={data.fault_description}
+          onChange={(e) => setData({ ...data, fault_description: e.target.value })}
+          predefinedOptions={[
+            'Not cooling',
+            'Water leaking',
+            'Making loud noise',
+            'Not turning on',
+            'Fan not working',
+            'Compressor not starting',
+            'Ice formation on coils',
+            'Remote control not working',
+            'Strange smell from AC',
+            'Weak airflow',
+            'Temperature fluctuation',
+            'Unit short cycling',
+            'Thermostat issues',
+            'Drainage problems',
+            'Error Code',
+            'NO_COOLING',
+            'WATER_LEAKAGE',
+            'NOISE_ISSUE',
+            'NOT_STARTING',
+            'DISPLAY_NOT_WORKING',
+            'REMOTE_NOT_WORKING',
+            'LOW_COOLING',
+            'GAS_LEAKAGE',
+            'INSTALLATION_REQUIRED'
           ]}
-          onChange={(value) => setData({ ...data, fault: value })}
-          value={data.fault}
-          errorMessage={errors.fault}
           customizable
+          required
+          placeholder="Describe the AC fault in detail"
         />
       </div>
     </div>

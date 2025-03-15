@@ -7,7 +7,7 @@ import SubmitBtn from "@/components/custom/submit-button";
 import ProductReceipt from "../components/generate-reciving";
 import SendMessageCustomerBtn from "../components/send-message-cutomer-btn";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ComplaintsType } from "@/types";
+import SearchSelect from '@/components/custom/search-select';
 
 interface ComplaintActionsProps {
   data: any;
@@ -78,9 +78,9 @@ export default function ComplaintActions({
         errorMessage={errors.call_status}
       />
       <div className="w-full md:w-auto">
-        <SelectInput
+        <SearchSelect
           options={ComplaintStatusOptions}
-          selected={data.status}
+          value={data.status}
           onChange={(e) => setData({ ...data, status: e })}
         />
       </div>
