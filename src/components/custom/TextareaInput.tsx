@@ -124,18 +124,9 @@ export function TextareaInput({
             onChange={handleChange}
             className={cn(props.className, errorMessage && "border-red-500", "pr-20")}
             rows={1}
+            disabled={!customizable}
           />
           <div className="absolute right-2 top-2 flex gap-1">
-            {customizable && (
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-6 w-6"
-                onClick={handleAddCustom}
-              >
-                <Plus className="h-4 w-4" />
-              </Button>
-            )}
             <Button
               variant="ghost"
               size="icon"
