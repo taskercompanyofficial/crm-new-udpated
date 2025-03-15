@@ -171,6 +171,7 @@ export default function ComplaintDetailsForm({
           value={data.working_details}
           errorMessage={errors.working_details}
           className="min-h-[120px] transition-all duration-200"
+          customizable={true}
         />
         <TextareaInput
           label="Additional Comment For Technition"
@@ -181,6 +182,7 @@ export default function ComplaintDetailsForm({
           value={data.comments_for_technician}
           errorMessage={errors.comments_for_technician}
           className="min-h-[120px] transition-all duration-200"
+          customizable={true}
         />
       </div>
       <Vendors />

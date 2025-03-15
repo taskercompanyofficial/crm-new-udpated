@@ -267,9 +267,9 @@ export default function BasicForm({
             'GAS_LEAKAGE',
             'INSTALLATION_REQUIRED'
           ]}
-          customizable
           required
           placeholder="Describe the AC fault in detail"
+
         />
       </div>
     </div>

@@ -15,42 +15,6 @@ import {
   CheckCircle2,
   XCircle,
   PauseCircle,
-  CircleDot,
-  Package,
-  Wrench as WrenchIcon,
-  ArrowUpCircle,
-  Users,
-  Building as BuildingIcon,
-  Clock,
-  Clock1 as ClockIcon,
-  Box,
-  CheckCircle,
-  AlertCircle,
-  XCircle as XCircleIcon,
-  FileText,
-  ClipboardList,
-  Receipt,
-  Truck as TruckIcon,
-  FileSpreadsheet,
-  Component,
-  Image,
-  Home,
-  Warehouse,
-  CircleDollarSign,
-  CircleOff,
-  Snowflake,
-  LucideWrench,
-  CircleCheck,
-  DollarSign,
-  Settings,
-  MessageCircle,
-  MessagesSquare,
-  PhoneOff,
-  PhoneOutgoing,
-  PhoneMissed,
-  CalendarClock,
-  ThumbsDown,
-  PhoneCall,
 } from "lucide-react";
 
 export const getRoleOptions = [
@@ -110,6 +74,21 @@ export const ComplaintStatusOptions = [
     value: "unit-in-service-center",
     label: "Unit in Service Center",
     color: "155, 89, 182", // Purple
+  },
+  {
+    value: "kit-in-service-center",
+    label: "Kit in Service Center",
+    color: "230, 126, 34", // Dark Orange
+  },
+  {
+    value: "delivery-pending",
+    label: "Delivery Pending", 
+    color: "255, 193, 7", // Amber
+  },
+  {
+    value: "quotation-applied",
+    label: "Quotation Applied",
+    color: "156, 39, 176", // Purple
   },
   {
     value: "installation-pending",
