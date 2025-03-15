@@ -125,8 +125,7 @@ export function TextareaInput({
             className={cn(props.className, errorMessage && "border-red-500", "pr-20")}
             rows={1}
           />
-          <div className="absolute right-2 top-2 flex gap-1">
-            
+          <div className="absolute right-2 top-2 flex gap-1">         
             <Button
               variant="ghost"
               size="icon"
