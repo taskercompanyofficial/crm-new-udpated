@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { Command, CommandEmpty, CommandGroup, CommandItem, CommandList } from "@/components/ui/command";
-import { Plus } from "lucide-react";
+import { Plus, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "../ui/button";
 
 interface TextareaInputProps
@@ -103,6 +103,10 @@ export function TextareaInput({
     }
   };
 
+  const toggleDropdown = () => {
+    setOpen(!open);
+  };
+
   return (
     <div className={cn("space-y-2", containerClassName)}>
       <div className="flex justify-between items-center">
@@ -111,15 +115,41 @@ export function TextareaInput({
       </div>
 
       <div className="relative" ref={dropdownRef}>
-        <Textarea
-          ref={textareaRef}
-          id={id}
-          {...props}
-          value={value}
-          onChange={handleChange}
-          className={cn(props.className, errorMessage && "border-red-500")}
-          rows={1}
-        />
+        <div className="relative">
+          <Textarea
+            ref={textareaRef}
+            id={id}
+            {...props}
+            value={value}
+            onChange={handleChange}
+            className={cn(props.className, errorMessage && "border-red-500", "pr-20")}
+            rows={1}
+          />
+          <div className="absolute right-2 top-2 flex gap-1">
+            {customizable && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6"
+                onClick={handleAddCustom}
+              >
+                <Plus className="h-4 w-4" />
+              </Button>
+            )}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-6 w-6"
+              onClick={toggleDropdown}
+            >
+              {open ? (
+                <ChevronUp className="h-4 w-4" />
+              ) : (
+                <ChevronDown className="h-4 w-4" />
+              )}
+            </Button>
+          </div>
+        </div>
 
         {open && (
           <div className="absolute z-50 w-full mt-1 bg-white border rounded-md shadow-lg">

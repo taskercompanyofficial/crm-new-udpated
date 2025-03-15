@@ -78,10 +78,11 @@ export default function ComplaintActions({
         errorMessage={errors.call_status}
       />
       <div className="w-full md:w-auto">
-        <SearchSelect
+        <SelectInput
           options={ComplaintStatusOptions}
-          value={data.status}
+          selected={data.status}
           onChange={(e) => setData({ ...data, status: e })}
+          errorMessage={errors.status}
         />
       </div>
       <div className="flex items-center gap-2">
