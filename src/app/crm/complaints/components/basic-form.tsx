@@ -239,8 +239,8 @@ export default function BasicForm({
         <TextareaInput
           label="Fault Description"
           name="fault_description"
-          value={data.fault_description}
-          onChange={(e) => setData({ ...data, fault_description: e.target.value })}
+          value={data.description}
+          onChange={(e) => setData({ ...data, description: e.target.value })}
           predefinedOptions={[
             'Not cooling',
             'Water leaking',
