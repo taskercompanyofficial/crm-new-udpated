@@ -166,7 +166,7 @@ function ChartContent({ data }: { data: Record<string, { count: number }> }) {
               <LabelList
                 position="top"
                 offset={12}
-                className="fill-foreground cursor-pointer"
+                className="fill-foreground"
                 fontSize={12}
                 formatter={(value: number) => value.toLocaleString()}
               />
