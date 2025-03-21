@@ -104,12 +104,17 @@ function ChartContent({ data }: { data: Record<string, { count: number }> }) {
               tickLine={false}
               axisLine={false}
               interval={0}
-              className="uppercase"
+              className="uppercase cursor-pointer"
               tickFormatter={(value) => {
                 return value
                   .split(" ")
                   .map((word: string) => word[0])
                   .join("");
+              }}
+              onClick={(data: any) => {
+                if (data && data.status) {
+                  router.push(`/crm/complaints?status=${data.status}`);
+                }
               }}
             />
             <YAxis
@@ -128,19 +133,24 @@ function ChartContent({ data }: { data: Record<string, { count: number }> }) {
               fill="var(--color-count)"
               radius={[4, 4, 0, 0]}
               barSize={24}
-              className="mt-4"
               onClick={(data: any) => {
                 if (data && data.status) {
                   router.push(`/crm/complaints?status=${data.status}`);
                 }
               }}
+              className="cursor-pointer hover:opacity-80 transition-opacity duration-300"
             >
               <LabelList
                 position="top"
                 offset={12}
-                className="fill-foreground"
+                className="fill-foreground cursor-pointer"
                 fontSize={12}
                 formatter={(value: number) => value.toLocaleString()}
+                onClick={(data: any) => {
+                  if (data && data.status) {
+                    router.push(`/crm/complaints?status=${data.status}`);
+                  }
+                }}
               />
             </Bar>
           </BarChart>
