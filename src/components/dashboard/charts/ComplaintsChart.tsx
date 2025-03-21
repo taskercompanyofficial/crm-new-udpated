@@ -122,6 +122,7 @@ export function ActiveComplaintsChart({
               tickFormatter={(value) =>
                 chartConfig[value as keyof typeof chartConfig]?.label || value
               }
+              onClick={(data) => handleBarClick(data)}
             />
             <YAxis
               dataKey="count"
@@ -144,6 +145,7 @@ export function ActiveComplaintsChart({
                 offset={12}
                 className="fill-foreground"
                 fontSize={12}
+                onClick={(data) => handleBarClick(data)}
               />
               {chartData.map((entry, index) => (
                 <Cell
