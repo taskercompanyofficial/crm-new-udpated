@@ -106,9 +106,9 @@ export const ComplaintStatusOptions = [
     color: "244, 67, 54", 
   },
   {
-    value: "feedback-done",
-    label: "Feedback Done",
-    color: "103, 58, 183", 
+    value: "feedback-pending",
+    label: "Feedback Pending",
+    color: "156, 39, 176", 
   },
   {
     value: "completed",
