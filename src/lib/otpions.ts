@@ -93,7 +93,7 @@ export const ComplaintStatusOptions = [
   {
     value: "installation-pending",
     label: "Installation Pending",
-    color: "230, 126, 34", // Dark Orange
+    color: "121, 85, 72", // Brown
   },
   {
     value: "in-progress",
@@ -109,7 +109,7 @@ export const ComplaintStatusOptions = [
   {
     value: "feedback-pending",
     label: "Feedback Pending",
-    color: "255, 159, 64", // Orange
+    color: "255, 152, 0", // Dark Amber
   },
   {
     value: "completed",
