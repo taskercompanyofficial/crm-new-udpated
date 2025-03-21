@@ -3,9 +3,6 @@ import React, { Suspense } from "react";
 import {
   TrendingUp,
   BarChart2,
-  AlertCircle,
-  CheckCircle,
-  XCircle,
 } from "lucide-react";
 import {
   Card,
@@ -84,6 +81,29 @@ function ChartContent({ data }: { data: Record<string, { count: number }> }) {
 
   const totalComplaints = chartData.reduce((sum, item) => sum + item.count, 0);
 
+  // Handle navigation for any chart element click
+  const handleStatusClick = (status: string) => {
+    if (status) {
+      router.push(`/crm/complaints?status=${status}`);
+    }
+  };
+
+  // Custom click handler for XAxis ticks
+  const handleXAxisClick = (event: any) => {
+    // The event payload from recharts doesn't directly contain the status
+    // We need to find which tick was clicked and map it to our data
+    if (event && event.value) {
+      const clickedItem = chartData.find(item => 
+        item.statusLabel === event.value || 
+        item.statusLabel.split(" ").map((word: string) => word[0]).join("") === event.value
+      );
+      
+      if (clickedItem) {
+        handleStatusClick(clickedItem.status);
+      }
+    }
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -97,7 +117,11 @@ function ChartContent({ data }: { data: Record<string, { count: number }> }) {
       </CardHeader>
       <CardContent className="h-[200px]">
         <ChartContainer config={chartConfig} className="h-[200px] w-full">
-          <BarChart accessibilityLayer data={chartData} margin={{ left: 2 }}>
+          <BarChart 
+            accessibilityLayer 
+            data={chartData} 
+            margin={{ left: 2 }}
+          >
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="statusLabel"
@@ -111,10 +135,9 @@ function ChartContent({ data }: { data: Record<string, { count: number }> }) {
                   .map((word: string) => word[0])
                   .join("");
               }}
-              onClick={(data: any) => {
-                if (data && data.status) {
-                  router.push(`/crm/complaints?status=${data.status}`);
-                }
+              onClick={(data) => {
+                // Using the custom handler for XAxis clicks
+                handleXAxisClick(data);
               }}
             />
             <YAxis
@@ -133,9 +156,9 @@ function ChartContent({ data }: { data: Record<string, { count: number }> }) {
               fill="var(--color-count)"
               radius={[4, 4, 0, 0]}
               barSize={24}
-              onClick={(data: any) => {
+              onClick={(data) => {
                 if (data && data.status) {
-                  router.push(`/crm/complaints?status=${data.status}`);
+                  handleStatusClick(data.status);
                 }
               }}
               className="cursor-pointer hover:opacity-80 transition-opacity duration-300"
@@ -146,11 +169,6 @@ function ChartContent({ data }: { data: Record<string, { count: number }> }) {
                 className="fill-foreground cursor-pointer"
                 fontSize={12}
                 formatter={(value: number) => value.toLocaleString()}
-                onClick={(data: any) => {
-                  if (data && data.status) {
-                    router.push(`/crm/complaints?status=${data.status}`);
-                  }
-                }}
               />
             </Bar>
           </BarChart>
