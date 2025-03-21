@@ -45,96 +45,95 @@ export const StatusOptions = [
 ];
 
 export const ComplaintStatusOptions = [
-  { value: "open", label: "Open", color: "255, 159, 67" }, // Orange - Attention needed
-  { value: "hold-by-us", label: "Hold by Us", color: "121, 85, 72" }, // Brown - Internal delay
-  { value: "hold-by-brand", label: "Hold by Brand", color: "233, 30, 99" }, // Pink - External delay (brand)
-  { value: "hold-by-customer", label: "Hold by Customer", color: "103, 58, 183" }, // Purple - Customer delay
-
+  { value: "open", label: "Open", color: "255, 159, 67" },
+  { value: "hold-by-us", label: "Hold by Us", color: "121, 85, 72" }, 
+  { value: "hold-by-brand", label: "Hold by Brand", color: "233, 30, 99" }, 
+  { value: "hold-by-customer", label: "Hold by Customer", color: "103, 58, 183" },
   {
     value: "assigned-to-technician",
     label: "Assigned to Technician",
-    color: "63, 81, 181", // Indigo - In technician's queue
+    color: "63, 81, 181", 
   },
   {
     value: "part-demand",
     label: "Part Demand",
-    color: "33, 150, 243", // Blue - Waiting for parts
+    color: "33, 150, 243",
   },
   {
     value: "service-lifting",
     label: "Service Lifting",
-    color: "0, 188, 212", // Cyan - Service in progress
+    color: "0, 188, 212", 
   },
   {
     value: "party-lifting",
     label: "Party Lifting",
-    color: "0, 150, 136", // Teal - Third party handling
+    color: "0, 150, 136", 
   },
   {
     value: "unit-in-service-center",
     label: "Unit in Service Center",
-    color: "76, 175, 80", // Green - Being serviced
+    color: "76, 175, 80", 
   },
   {
     value: "kit-in-service-center",
     label: "Kit in Service Center",
-    color: "139, 195, 74", // Light Green - Parts being serviced
+    color: "139, 195, 74", 
   },
   {
     value: "delivery-pending",
     label: "Delivery Pending", 
-    color: "205, 220, 57", // Lime - Ready for delivery
+    color: "205, 220, 57", 
   },
   {
     value: "quotation-applied",
     label: "Quotation Applied",
-    color: "255, 235, 59", // Yellow - Waiting for approval
+    color: "255, 235, 59", 
   },
   {
     value: "installation-pending",
     label: "Installation Pending",
-    color: "255, 193, 7", // Amber - Ready for installation
+    color: "255, 193, 7", 
   },
   {
     value: "in-progress",
     label: "In Progress",
-    color: "255, 152, 0", // Orange - Active work happening
+    color: "255, 152, 0", 
   },
-  { value: "delivered", label: "Delivered", color: "255, 87, 34" }, // Deep Orange - Delivered but not complete
+  { value: "delivered", label: "Delivered", color: "255, 87, 34" }, 
   {
     value: "pending-by-brand",
     label: "Pending by Brand",
-    color: "244, 67, 54", // Red - Blocked by brand
+    color: "244, 67, 54", 
   },
   {
     value: "feedback-pending",
     label: "Feedback Pending",
-    color: "156, 39, 176", // Purple - Waiting for customer feedback
+    color: "156, 39, 176", 
   },
   {
     value: "feedback-done",
     label: "Feedback Done",
-    color: "103, 58, 183", // Deep Purple - Feedback received and processed
+    color: "103, 58, 183", 
   },
   {
     value: "completed",
     label: "Completed",
-    color: "76, 175, 80", // Green - Successfully resolved
+    color: "76, 175, 80", 
   },
   {
     value: "amount-pending",
     label: "Amount Pending",
-    color: "96, 125, 139", // Blue Grey - Payment pending
+    color: "96, 125, 139", 
   },
   {
     value: "closed",
     label: "Closed",
-    color: "158, 158, 158", // Grey - No further action needed
+    color: "158, 158, 158", 
   },
   {
     value: "cancelled",
     label: "Cancelled",
-    color: "117, 117, 117", // Dark Grey - Terminated
+    color: "117, 117, 117", 
   },
 ];
 
