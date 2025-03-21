@@ -112,6 +112,11 @@ export const ComplaintStatusOptions = [
     color: "156, 39, 176", // Purple - Waiting for customer feedback
   },
   {
+    value: "feedback-done",
+    label: "Feedback Done",
+    color: "103, 58, 183", // Deep Purple - Feedback received and processed
+  },
+  {
     value: "completed",
     label: "Completed",
     color: "76, 175, 80", // Green - Successfully resolved
