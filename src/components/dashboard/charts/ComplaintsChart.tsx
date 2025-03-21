@@ -123,6 +123,7 @@ export function ActiveComplaintsChart({
                 chartConfig[value as keyof typeof chartConfig]?.label || value
               }
               onClick={(data) => handleBarClick(data)}
+              className="cursor-pointer"
             />
             <YAxis
               dataKey="count"
@@ -139,11 +140,12 @@ export function ActiveComplaintsChart({
               barSize={40}
               radius={4}
               onClick={(data) => handleBarClick(data)} // Attach click handler
+              className="cursor-pointer"
             >
               <LabelList
                 position="top"
                 offset={12}
-                className="fill-foreground"
+                className="fill-foreground cursor-pointer"
                 fontSize={12}
                 onClick={(data) => handleBarClick(data)}
               />
