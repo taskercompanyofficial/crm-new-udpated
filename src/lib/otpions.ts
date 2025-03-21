@@ -46,90 +46,90 @@ export const StatusOptions = [
 
 export const ComplaintStatusOptions = [
   { value: "open", label: "Open", color: "255, 159, 67" }, // Orange
-  { value: "hold-by-us", label: "Hold by Us", color: "255, 87, 34" }, // Deep Orange
+  { value: "hold-by-us", label: "Hold by Us", color: "121, 85, 72" }, // Brown
   { value: "hold-by-brand", label: "Hold by Brand", color: "233, 30, 99" }, // Pink
   { value: "hold-by-customer", label: "Hold by Customer", color: "103, 58, 183" }, // Purple
 
   {
     value: "assigned-to-technician",
     label: "Assigned to Technician",
-    color: "234, 84, 85", // Red
+    color: "63, 81, 181", // Indigo
   },
   {
     value: "part-demand",
     label: "Part Demand",
-    color: "244, 67, 54", // Bright Red
+    color: "33, 150, 243", // Blue
   },
   {
     value: "service-lifting",
     label: "Service Lifting",
-    color: "46, 204, 113", // Green
+    color: "0, 188, 212", // Cyan
   },
   {
     value: "party-lifting",
     label: "Party Lifting",
-    color: "52, 152, 219", // Blue
+    color: "0, 150, 136", // Teal
   },
   {
     value: "unit-in-service-center",
     label: "Unit in Service Center",
-    color: "155, 89, 182", // Purple
+    color: "76, 175, 80", // Green
   },
   {
     value: "kit-in-service-center",
     label: "Kit in Service Center",
-    color: "230, 126, 34", // Dark Orange
+    color: "139, 195, 74", // Light Green
   },
   {
     value: "delivery-pending",
     label: "Delivery Pending", 
-    color: "255, 193, 7", // Amber
+    color: "205, 220, 57", // Lime
   },
   {
     value: "quotation-applied",
     label: "Quotation Applied",
-    color: "156, 39, 176", // Purple
+    color: "255, 235, 59", // Yellow
   },
   {
     value: "installation-pending",
     label: "Installation Pending",
-    color: "121, 85, 72", // Brown
+    color: "255, 193, 7", // Amber
   },
   {
     value: "in-progress",
     label: "In Progress",
-    color: "241, 196, 15", // Yellow
+    color: "255, 152, 0", // Orange
   },
-  { value: "delivered", label: "Delivered", color: "26, 188, 156" }, // Teal
+  { value: "delivered", label: "Delivered", color: "255, 87, 34" }, // Deep Orange
   {
     value: "pending-by-brand",
     label: "Pending by Brand",
-    color: "231, 76, 60", // Dark Red
+    color: "244, 67, 54", // Red
   },
   {
     value: "feedback-pending",
     label: "Feedback Pending",
-    color: "255, 152, 0", // Dark Amber
+    color: "156, 39, 176", // Purple
   },
   {
     value: "completed",
     label: "Completed",
-    color: "39, 174, 96", // Green
+    color: "3, 169, 244", // Light Blue
   },
   {
     value: "amount-pending",
     label: "Amount Pending",
-    color: "255, 99, 132", // Soft Red
+    color: "96, 125, 139", // Blue Grey
   },
   {
     value: "closed",
     label: "Closed",
-    color: "41, 128, 185", // Blue
+    color: "158, 158, 158", // Grey
   },
   {
     value: "cancelled",
     label: "Cancelled",
-    color: "192, 57, 43", // Dark Red
+    color: "117, 117, 117", // Dark Grey
   },
 ];
 
