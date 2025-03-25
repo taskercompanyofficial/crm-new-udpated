@@ -46,7 +46,7 @@ export const StatusOptions = [
 
 export const ComplaintStatusOptions = [
   { value: "open", label: "Open", color: "255, 159, 67" },
-  { value: "hold-by-us", label: "Hold by Us", color: "121, 85, 72" }, 
+  { value: "objection", label: "Objecction", color: "121, 85, 72" }, 
   { value: "hold-by-brand", label: "Hold by Brand", color: "233, 30, 99" }, 
   { value: "hold-by-customer", label: "Hold by Customer", color: "103, 58, 183" },
   {
