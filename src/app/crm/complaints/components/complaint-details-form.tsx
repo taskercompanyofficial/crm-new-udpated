@@ -134,7 +134,7 @@ export default function ComplaintDetailsForm({
             </div>
           )}
           <Button
-            variant="outline"
+            variant="default"
             size="sm"
             onClick={() =>
               setData({
@@ -145,7 +145,7 @@ export default function ComplaintDetailsForm({
             className={`${data.send_message_to_technician ? "bg-blue-100 dark:bg-blue-900" : ""
               }`}
           >
-            Send Message
+            Send Message tso
           </Button>
         </div>
         <LabelInputContainer
