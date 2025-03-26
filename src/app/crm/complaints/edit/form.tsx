@@ -42,7 +42,7 @@ export default function Form({
     applicant_whatsapp: complaint?.applicant_whatsapp || "",
     applicant_adress: complaint?.applicant_adress || "",
     extra_numbers: complaint?.extra_numbers || "",
-    dealer: complaint?.dealer || "",
+    ref: complaint?.ref || "",
     extra: complaint?.extra || "",
     description: complaint?.description || "",
     branch_id: complaint?.branch_id || "",

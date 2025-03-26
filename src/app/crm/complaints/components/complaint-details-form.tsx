@@ -9,6 +9,7 @@ import { LabelInputContainer } from "@/components/ui/LabelInputContainer";
 import { TextareaInput } from "@/components/custom/TextareaInput";
 import { Checkbox } from "@/components/ui/checkbox";
 import Vendors from "./vendors";
+import { Button } from "@/components/ui/button";
 
 export default function ComplaintDetailsForm({
   data,
@@ -132,24 +133,20 @@ export default function ComplaintDetailsForm({
               <Skeleton className="w-full h-12" />
             </div>
           )}
-          <div className="flex items-center">
-            <Checkbox
-              id="send-message-tech"
-              checked={data.send_message_to_technician}
-              onCheckedChange={() =>
-                setData({
-                  ...data,
-                  send_message_to_technician: !data.send_message_to_technician,
-                })
-              }
-            />
-            <label
-              htmlFor="send-message-tech"
-              className="text-sm text-gray-600 dark:text-gray-400"
-            >
-              Send Message
-            </label>
-          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() =>
+              setData({
+                ...data,
+                send_message_to_technician: !data.send_message_to_technician,
+              })
+            }
+            className={`${data.send_message_to_technician ? "bg-blue-100 dark:bg-blue-900" : ""
+              }`}
+          >
+            Send Message
+          </Button>
         </div>
         <LabelInputContainer
           label="Amount"
@@ -160,6 +157,19 @@ export default function ComplaintDetailsForm({
           className="transition-all duration-200"
         />
       </div>
+
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+        <TextareaInput
+          label="Working Details"
+          placeholder="Enter any additional details..."
+          onChange={(e) =>
+            setData({ ...data, working_details: e.target.value })
+          }
+          value={data.working_details}
+          errorMessage={errors.working_details}
+          className="min-h-[120px] transition-all duration-200"
+          customizable={true}
+        />
         <TextareaInput
           label="Additional Comment For Technition"
           placeholder="Enter the comment for technician"
@@ -171,6 +181,7 @@ export default function ComplaintDetailsForm({
           className="min-h-[120px] transition-all duration-200"
           customizable={true}
         />
+      </div>
       <Vendors />
     </div>
   );

@@ -169,7 +169,7 @@ export type ComplaintsType = {
   id: string;
   brand_complaint_no: string;
   applicant_name: string;
-  dealer: string;
+  ref: string;
   applicant_phone: string;
   applicant_whatsapp: string;
   applicant_adress: string;
