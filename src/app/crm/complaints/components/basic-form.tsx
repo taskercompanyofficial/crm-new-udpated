@@ -7,7 +7,6 @@ import { dataTypeIds } from "@/types";
 import { API_URL } from "@/lib/apiEndPoints";
 import useFetch from "@/hooks/usefetch";
 import SearchSelect from "@/components/custom/search-select";
-import AddressTextarea from "./address-textarea";
 import { useState } from "react";
 import { TextareaInput } from "@/components/custom/TextareaInput";
 
@@ -231,10 +230,10 @@ export default function BasicForm({
           selected={data.complaint_type}
           errorMessage={errors.complaint_type}
         />
-        <AddressTextarea
+        <TextareaInput
           value={data.applicant_adress}
           errorMessage={errors.applicant_adress}
-          onChange={(value: string) => setData({ ...data, applicant_adress: value })}
+          onChange={(e) => setData({ ...data, applicant_adress: e.target.value })}
         />
         <TextareaInput
           label="Fault Description"
