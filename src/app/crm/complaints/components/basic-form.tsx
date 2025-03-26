@@ -231,6 +231,9 @@ export default function BasicForm({
           errorMessage={errors.complaint_type}
         />
         <TextareaInput
+          label="Address"
+          name="applicant_adress"
+          placeholder="Applicant Address"
           value={data.applicant_adress}
           errorMessage={errors.applicant_adress}
           onChange={(e) => setData({ ...data, applicant_adress: e.target.value })}
