@@ -43,7 +43,7 @@ export default function ComplaintTabs({
   return (
     <Tabs defaultValue="basic" value={tab} onValueChange={setTab}>
       <ScrollArea>
-        <TabsList className="min-w-max">
+        <TabsList className="min-w-max bg-primary text-white">
           {tabs.map((tabItem) => (
             <TabsTrigger
               key={tabItem}

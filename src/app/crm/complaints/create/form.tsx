@@ -29,16 +29,17 @@ export default function Form() {
 
   const { data, setData, processing, post, errors } = useForm({
     applicant_name: "",
-    applicant_email: "",
+    reference_by: "",
     brand_complaint_no: "",
     applicant_phone: "",
     applicant_whatsapp: "",
     brand_id: "",
     extra_numbers: "",
-    reference_by: "",
+    dealer: "",
     product: "",
     complaint_type: "",
     applicant_adress: "",
+    working_details: "",
     description: "",
     status: "open",
     call_status: "pending",
@@ -72,7 +73,7 @@ export default function Form() {
                   setPendingComplaints(prev => prev.filter(c => c !== complaint));
                   toast.success("Pending complaint submitted successfully");
                 },
-                onError: () => {/* Keep complaint in pending */}
+                onError: () => {/* Keep complaint in pending */ }
               },
               token
             );
@@ -97,16 +98,17 @@ export default function Form() {
       setHasUnsavedChanges(false);
       setData({
         applicant_name: "",
-        applicant_email: "",
+        reference_by: "",
         brand_complaint_no: "",
         applicant_phone: "",
         applicant_whatsapp: "",
         brand_id: "",
         extra_numbers: "",
-        reference_by: "",
+        dealer: "",
         product: "",
         complaint_type: "",
         applicant_adress: "",
+        working_details: "",
         description: "",
         status: "open",
         call_status: "pending",
@@ -220,7 +222,7 @@ export default function Form() {
               options={ComplaintStatusOptions}
               selected={data.status}
               onChange={(e) => updateData({ ...data, status: e })}
-              errorMessage={errors.status}  
+              errorMessage={errors.status}
             />
           </div>
           <SubmitBtn

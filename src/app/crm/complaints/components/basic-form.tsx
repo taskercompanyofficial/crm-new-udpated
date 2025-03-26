@@ -81,14 +81,14 @@ export default function BasicForm({
           </div>
           <LabelInputContainer
             type="text"
-            id="applicant-email"
-            placeholder="Applicant email"
-            label="Email"
-            value={data.applicant_email}
+            id="ref-by"
+            placeholder="Reference by"
+            label="Reference by"
+            value={data.reference_by}
             onChange={(e) =>
-              setData({ ...data, applicant_email: e.target.value })
+              setData({ ...data, reference_by: e.target.value })
             }
-            errorMessage={errors.applicant_email}
+            errorMessage={errors.reference_by}
           />
         </div>
         <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
@@ -144,13 +144,15 @@ export default function BasicForm({
                 { value: "Japan ELC ISB/RWP", label: "Japan ELC ISB/RWP", id: "11", image: "" },
                 { value: "Friends ELc ISB/RWP", label: "Friends ELc ISB/RWP", id: "12", image: "" },
                 { value: "Modern Center Collage Road LHR", label: "Modern Center Collage Road LHR", id: "13", image: "" },
-                { value: "Alfatah Electronics", label: "Alfatah Electronics", id: "14", image: "" }
+                { value: "Alfatah Electronics", label: "Alfatah Electronics", id: "14", image: "" },
+                { value: "CC", label: "CC", id: "15", image: "" },
+                { value: "Same Brand", label: "Same Brand", id: "16", image: "" }
               ];
 
               if (data.reference_by && !defaultOptions.find((opt) => opt.value === data.reference_by)) {
                 return [...defaultOptions, {
-                  value: data.reference_by,
-                  label: data.reference_by,
+                  value: data.dealer,
+                  label: data.dealer,
                   id: String(defaultOptions.length + 1),
                   image: ""
                 }];
@@ -238,41 +240,56 @@ export default function BasicForm({
           errorMessage={errors.applicant_adress}
           onChange={(e) => setData({ ...data, applicant_adress: e.target.value })}
         />
-        <TextareaInput
-          label="Fault Description"
-          name="fault_description"
-          value={data.description}
-          onChange={(e) => setData({ ...data, description: e.target.value })}
-          predefinedOptions={[
-            'Not cooling',
-            'Water leaking',
-            'Making loud noise',
-            'Not turning on',
-            'Fan not working',
-            'Compressor not starting',
-            'Ice formation on coils',
-            'Remote control not working',
-            'Strange smell from AC',
-            'Weak airflow',
-            'Temperature fluctuation',
-            'Unit short cycling',
-            'Thermostat issues',
-            'Drainage problems',
-            'Error Code',
-            'NO_COOLING',
-            'WATER_LEAKAGE',
-            'NOISE_ISSUE',
-            'NOT_STARTING',
-            'DISPLAY_NOT_WORKING',
-            'REMOTE_NOT_WORKING',
-            'LOW_COOLING',
-            'GAS_LEAKAGE',
-            'INSTALLATION_REQUIRED'
-          ]}
-          required
-          placeholder="Describe the AC fault in detail"
 
-        />
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+
+          <TextareaInput
+            label="Fault Description"
+            name="fault_description"
+            value={data.description}
+            onChange={(e) => setData({ ...data, description: e.target.value })}
+            predefinedOptions={[
+              'Not cooling',
+              'Water leaking',
+              'Making loud noise',
+              'Not turning on',
+              'Fan not working',
+              'Compressor not starting',
+              'Ice formation on coils',
+              'Remote control not working',
+              'Strange smell from AC',
+              'Weak airflow',
+              'Temperature fluctuation',
+              'Unit short cycling',
+              'Thermostat issues',
+              'Drainage problems',
+              'Error Code',
+              'NO_COOLING',
+              'WATER_LEAKAGE',
+              'NOISE_ISSUE',
+              'NOT_STARTING',
+              'DISPLAY_NOT_WORKING',
+              'REMOTE_NOT_WORKING',
+              'LOW_COOLING',
+              'GAS_LEAKAGE',
+              'INSTALLATION_REQUIRED'
+            ]}
+            required
+            placeholder="Describe the AC fault in detail"
+
+          />
+          <TextareaInput
+            label="Working Details"
+            placeholder="Enter any additional details..."
+            onChange={(e) =>
+              setData({ ...data, working_details: e.target.value })
+            }
+            value={data.working_details}
+            errorMessage={errors.working_details}
+            className="min-h-[120px] transition-all duration-200"
+            customizable={true}
+          />
+        </div>
       </div>
     </div>
   );

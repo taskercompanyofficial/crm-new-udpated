@@ -160,19 +160,6 @@ export default function ComplaintDetailsForm({
           className="transition-all duration-200"
         />
       </div>
-
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        <TextareaInput
-          label="Working Details"
-          placeholder="Enter any additional details..."
-          onChange={(e) =>
-            setData({ ...data, working_details: e.target.value })
-          }
-          value={data.working_details}
-          errorMessage={errors.working_details}
-          className="min-h-[120px] transition-all duration-200"
-          customizable={true}
-        />
         <TextareaInput
           label="Additional Comment For Technition"
           placeholder="Enter the comment for technician"
@@ -184,7 +171,6 @@ export default function ComplaintDetailsForm({
           className="min-h-[120px] transition-all duration-200"
           customizable={true}
         />
-      </div>
       <Vendors />
     </div>
   );
