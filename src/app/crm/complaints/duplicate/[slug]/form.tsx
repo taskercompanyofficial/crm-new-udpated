@@ -26,13 +26,14 @@ export default function DuplicateForm({
 
   const { data, setData, processing, post, errors } = useForm({
     applicant_name: complaint.applicant_name,
-    applicant_email: complaint.applicant_email,
     brand_complaint_no: complaint.brand_complaint_no,
     applicant_phone: complaint.applicant_phone,
     applicant_whatsapp: complaint.applicant_whatsapp,
+    reference_by: complaint.reference_by,
     brand_id: complaint.brand_id,
     extra_numbers: complaint.extra_numbers,
-    reference_by: complaint.reference_by,
+    dealer: complaint.dealer,
+    working_details: complaint.working_details,
     product: complaint.product,
     complaint_type: complaint.complaint_type,
     applicant_adress: complaint.applicant_adress,
