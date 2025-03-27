@@ -84,11 +84,11 @@ export default function BasicForm({
             id="ref-by"
             placeholder="Reference by"
             label="Reference by"
-            value={data.reference_by}
+            value={data.ref_by}
             onChange={(e) =>
-              setData({ ...data, reference_by: e.target.value })
+              setData({ ...data, ref_by: e.target.value })
             }
-            errorMessage={errors.reference_by}
+            errorMessage={errors.ref_by}
           />
         </div>
         <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
@@ -151,8 +151,8 @@ export default function BasicForm({
 
               if (data.reference_by && !defaultOptions.find((opt) => opt.value === data.reference_by)) {
                 return [...defaultOptions, {
-                  value: data.dealer,
-                  label: data.dealer,
+                  value: data.reference_by,
+                  label: data.reference_by,
                   id: String(defaultOptions.length + 1),
                   image: ""
                 }];
