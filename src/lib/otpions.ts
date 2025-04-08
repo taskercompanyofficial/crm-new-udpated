@@ -43,16 +43,33 @@ export const StatusOptions = [
   { value: "inactive", label: "Inactive", color: "234, 84, 85", icon: XCircle },
   { value: "paused", label: "Paused", color: "234, 84, 85", icon: PauseCircle },
 ];
+export const PriorityOptions = [{
+  value: "high",
+  label: "High",
+  color: "255, 159, 67",
+}
+  ,
+{
+  value: "medium",
+  label: "Medium",
+  color: "255, 159, 67",
+},
+{
+  value: "low",
+  label: "Low",
+  color: "255, 159, 67",
+}
 
+]
 export const ComplaintStatusOptions = [
   { value: "open", label: "Open", color: "255, 159, 67" },
-  { value: "objection", label: "Objecction", color: "121, 85, 72" }, 
-  { value: "hold-by-brand", label: "Hold by Brand", color: "233, 30, 99" }, 
+  { value: "objection", label: "Objecction", color: "121, 85, 72" },
+  { value: "hold-by-brand", label: "Hold by Brand", color: "233, 30, 99" },
   { value: "hold-by-customer", label: "Hold by Customer", color: "103, 58, 183" },
   {
     value: "assigned-to-technician",
     label: "Assigned to Technician",
-    color: "63, 81, 181", 
+    color: "63, 81, 181",
   },
   {
     value: "part-demand",
@@ -62,73 +79,73 @@ export const ComplaintStatusOptions = [
   {
     value: "service-lifting",
     label: "Service Lifting",
-    color: "0, 188, 212", 
+    color: "0, 188, 212",
   },
   {
     value: "party-lifting",
     label: "Party Lifting",
-    color: "0, 150, 136", 
+    color: "0, 150, 136",
   },
   {
     value: "unit-in-service-center",
     label: "Unit in Service Center",
-    color: "76, 175, 80", 
+    color: "76, 175, 80",
   },
   {
     value: "kit-in-service-center",
     label: "Kit in Service Center",
-    color: "139, 195, 74", 
+    color: "139, 195, 74",
   },
   {
     value: "delivery-pending",
-    label: "Delivery Pending", 
-    color: "205, 220, 57", 
+    label: "Delivery Pending",
+    color: "205, 220, 57",
   },
   {
     value: "quotation-applied",
     label: "Quotation Applied",
-    color: "255, 235, 59", 
+    color: "255, 235, 59",
   },
   {
     value: "installation-pending",
     label: "Installation Pending",
-    color: "255, 193, 7", 
+    color: "255, 193, 7",
   },
   {
     value: "in-progress",
     label: "In Progress",
-    color: "255, 152, 0", 
+    color: "255, 152, 0",
   },
-  { value: "delivered", label: "Delivered", color: "255, 87, 34" }, 
+  { value: "delivered", label: "Delivered", color: "255, 87, 34" },
   {
     value: "pending-by-brand",
     label: "Pending by Brand",
-    color: "244, 67, 54", 
+    color: "244, 67, 54",
   },
   {
     value: "feedback-pending",
     label: "Feedback Pending",
-    color: "156, 39, 176", 
+    color: "156, 39, 176",
   },
   {
     value: "completed",
     label: "Completed",
-    color: "76, 175, 80", 
+    color: "76, 175, 80",
   },
   {
     value: "amount-pending",
     label: "Amount Pending",
-    color: "96, 125, 139", 
+    color: "96, 125, 139",
   },
   {
     value: "closed",
     label: "Closed",
-    color: "158, 158, 158", 
+    color: "158, 158, 158",
   },
   {
     value: "cancelled",
     label: "Cancelled",
-    color: "117, 117, 117", 
+    color: "117, 117, 117",
   },
 ];
 
@@ -170,13 +187,13 @@ export const complaintTypeOptions = [
     color: "52, 152, 219" // Blue
   },
   {
-    value: "old-ac-free-installation", 
+    value: "old-ac-free-installation",
     label: "Old AC Free Installation",
     color: "230, 126, 34" // Dark Orange
   },
   {
     value: "old-c/o-free-installation",
-    label: "Old C/O Free Installation", 
+    label: "Old C/O Free Installation",
     color: "39, 174, 96" // Green
   },
   {
@@ -205,10 +222,10 @@ export const MessageTypeOptions = [
     color: "39, 174, 96" // Green
   }
 ];
-export const Dealers =[
-  {value: "metro", label: "Metro"},
-  {value: "metro", label: ""},
-  {value: "metro", label: "Metro"},
-  {value: "metro", label: "Metro"},
-  {value: "metro", label: "Metro"},
+export const Dealers = [
+  { value: "metro", label: "Metro" },
+  { value: "metro", label: "" },
+  { value: "metro", label: "Metro" },
+  { value: "metro", label: "Metro" },
+  { value: "metro", label: "Metro" },
 ]

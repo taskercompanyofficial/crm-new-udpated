@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Undo2, Redo2 } from "lucide-react";
 import { SelectInput } from "@/components/custom/SelectInput";
-import { CallStatusOptions, ComplaintStatusOptions } from "@/lib/otpions";
+import { CallStatusOptions, ComplaintStatusOptions, PriorityOptions } from "@/lib/otpions";
 import SubmitBtn from "@/components/custom/submit-button";
 import ProductReceipt from "../components/generate-reciving";
 import SendMessageCustomerBtn from "../components/send-message-cutomer-btn";
@@ -79,7 +79,13 @@ export default function ComplaintActions({
         onChange={(e) => setData({ ...data, call_status: e })}
         errorMessage={errors.call_status}
       />
-      <div className="w-full md:w-auto">
+      <div className="w-full md:w-auto space-y-2">
+        <SelectInput
+          options={PriorityOptions}
+          selected={data.priority}
+          onChange={(e) => setData({ ...data, priority: e })}
+          errorMessage={errors.priority}
+        />
         <SelectInput
           options={ComplaintStatusOptions}
           selected={data.status}
