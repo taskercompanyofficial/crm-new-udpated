@@ -7,7 +7,7 @@ import SubmitBtn from "@/components/custom/submit-button";
 import ProductReceipt from "../components/generate-reciving";
 import SendMessageCustomerBtn from "../components/send-message-cutomer-btn";
 import { Checkbox } from "@/components/ui/checkbox";
-import SearchSelect from '@/components/custom/search-select';
+import ComplaintSchedulerDialog from '../components/sceduale';
 
 interface ComplaintActionsProps {
   data: any;
@@ -25,6 +25,7 @@ interface ComplaintActionsProps {
   autoSaveEnabled: boolean;
   toggleAutoSave: () => void;
   errors: any;
+  id: number;
 }
 
 export default function ComplaintActions({
@@ -42,7 +43,8 @@ export default function ComplaintActions({
   role = "",
   autoSaveEnabled,
   toggleAutoSave,
-  errors
+  errors,
+  id,
 }: ComplaintActionsProps) {
   return (
     <div className="flex flex-wrap items-center justify-end gap-2">
@@ -108,16 +110,19 @@ export default function ComplaintActions({
             Auto Save
           </label>
         </div>
-        <SubmitBtn
-          className={`${buttonVariants({ effect: "shineHover" })} w-full md:w-auto ${hasUnsavedChanges ? "animate-pulse" : ""}`}
-          processing={processing}
-          size={"sm"}
-          onClick={onSubmit}
-        >
-          {hasUnsavedChanges
-            ? "Save Changes*"
-            : "Save Changes"}
-        </SubmitBtn>
+        <div className="flex flex-col gap-2">
+          <SubmitBtn
+            className={`${buttonVariants({ effect: "shineHover" })} w-full md:w-auto ${hasUnsavedChanges ? "animate-pulse" : ""}`}
+            processing={processing}
+            size={"sm"}
+            onClick={onSubmit}
+          >
+            {hasUnsavedChanges
+              ? "Save Changes*"
+              : "Save Changes"}
+          </SubmitBtn>
+          <ComplaintSchedulerDialog id={id} />
+        </div>
       </div>
     </div>
   );

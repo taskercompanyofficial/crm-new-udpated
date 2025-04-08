@@ -166,7 +166,7 @@ export type SubServicesType = {
   updated_at: string;
 };
 export type ComplaintsType = {
-  id: string;
+  id: id;
   brand_complaint_no: string;
   applicant_name: string;
 

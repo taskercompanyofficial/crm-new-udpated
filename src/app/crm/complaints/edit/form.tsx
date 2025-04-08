@@ -209,6 +209,7 @@ export default function Form({
         autoSaveEnabled={autoSaveEnabled}
         toggleAutoSave={toggleAutoSave}
         errors={errors}
+        id={complaint?.id || 0}
       />
       <ComplaintTabs
         tab={tab}
