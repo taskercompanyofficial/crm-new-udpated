@@ -7,6 +7,7 @@ import { DataTableColumnHeader } from "@/components/table/data-table-column-head
 import Status from "@/components/table/status";
 import Link from "next/link";
 import ReadMore from "@/components/custom/readmore";
+import { Priority } from "../table/priority";
 
 export const ComplaintsColumns = (): ColumnDef<ComplaintsType>[] => [
   {
@@ -247,7 +248,17 @@ export const ComplaintsColumns = (): ColumnDef<ComplaintsType>[] => [
     ),
     cell: ({ row }) => {
       const status = String(row.getValue("status"));
-      return <Status status={status}  />;
+      return <Status status={status} />;
+    },
+  },
+  {
+    accessorKey: "priority",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Priority" />
+    ),
+    cell: ({ row }) => {
+      const status = String(row.getValue("priority"));
+      return <Priority priority={status} />;
     },
   },
 ];
