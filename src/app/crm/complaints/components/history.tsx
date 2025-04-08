@@ -38,15 +38,20 @@ interface ComplaintHistoryEntry {
   };
 }
 
-export default function History({ id, token, open, onOpenChange }: { 
-  id?: number; 
+export default function History({
+  id,
+  token,
+  open,
+  onOpenChange,
+}: {
+  id?: number;
   token: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
   const { data: historyData, error, isLoading } = useFetch<ComplaintHistoryEntry[]>(
     `${API_URL}/crm/complaint-history/${id}`,
-    token,
+    token
   );
 
   const getIcon = (description: string) => {
@@ -62,9 +67,9 @@ export default function History({ id, token, open, onOpenChange }: {
   };
 
   const truncateText = (text: string, limit: number) => {
-    const words = text.split(' ');
+    const words = text.split(" ");
     if (words.length > limit) {
-      return words.slice(0, limit).join(' ') + '...';
+      return words.slice(0, limit).join(" ") + "...";
     }
     return text;
   };
@@ -79,7 +84,7 @@ export default function History({ id, token, open, onOpenChange }: {
         <DialogHeader>
           <DialogTitle>Complaint History</DialogTitle>
         </DialogHeader>
-        
+
         <div className="flex flex-col gap-4">
           <div className="flex items-center justify-between">
             <span className="text-sm text-muted-foreground">
@@ -101,8 +106,7 @@ export default function History({ id, token, open, onOpenChange }: {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {isLoading ? (
-                  // Loading skeleton rows
+                {isLoading && (
                   [...Array(5)].map((_, i) => (
                     <TableRow key={i}>
                       <TableCell>
@@ -125,8 +129,18 @@ export default function History({ id, token, open, onOpenChange }: {
                       </TableCell>
                     </TableRow>
                   ))
-                ) : (
-                  historyData?.map((entry) => (
+                )}
+
+                {!isLoading && historyData?.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center text-sm text-muted-foreground">
+                      No history found for this complaint.
+                    </TableCell>
+                  </TableRow>
+                )}
+
+                {!isLoading && historyData && historyData?.length > 0 &&
+                  historyData.map((entry) => (
                     <TableRow key={entry.id}>
                       <TableCell>
                         <div className="flex items-center gap-2">
@@ -147,8 +161,7 @@ export default function History({ id, token, open, onOpenChange }: {
                         {new Date(entry.created_at).toLocaleString()}
                       </TableCell>
                     </TableRow>
-                  ))
-                )}
+                  ))}
               </TableBody>
             </Table>
           </ScrollArea>
