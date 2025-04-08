@@ -59,14 +59,14 @@ export default function Form({
     product_type: complaint?.product_type || "",
     technician: complaint?.technician || "",
     status: complaint?.status || "",
-    priority: complaint?.priority || "",
+    priority: complaint?.priority || "medium",
     complaint_type: complaint?.complaint_type || "",
     provided_services: complaint?.provided_services || "",
     warranty_type: complaint?.warranty_type || "",
     comments_for_technician: complaint?.comments_for_technician || "",
     files: complaint?.files || [],
     send_message_to_technician: false,
-    call_status: complaint?.call_status || "normal",
+    call_status: complaint?.call_status || "",
   });
 
   // Fetch customer reviews
