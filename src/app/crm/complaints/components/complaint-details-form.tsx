@@ -37,7 +37,7 @@ export default function ComplaintDetailsForm({
           label="Brand Complaint No"
           value={data.brand_complaint_no}
           onChange={(e) =>
-            setData({ ...data, brand_complaint_no: e.target.value.toUpperCase() })
+            setData({ ...data, brand_complaint_no: e.target.value })
           }
           errorMessage={errors.brand_complaint_no}
           className="transition-all duration-200 hover:shadow-md"
@@ -46,29 +46,29 @@ export default function ComplaintDetailsForm({
           label="Serial Number In"
           placeholder="Serial Number In"
           onChange={(e) =>
-            setData({ ...data, serial_number_ind: e.target.value.toUpperCase() })
+            setData({ ...data, serial_number_ind: e.target.value })
           }
           value={data.serial_number_ind}
           errorMessage={errors.serial_number_ind}
-          className="transition-all duration-200 hover:shadow-md"
+          className="transition-all duration-200 hover:shadow-md uppercase"
         />
         <LabelInputContainer
           label="Serial Number Out"
           placeholder="Serial Number Out"
           onChange={(e) =>
-            setData({ ...data, serial_number_oud: e.target.value.toUpperCase() })
+            setData({ ...data, serial_number_oud: e.target.value })
           }
           value={data.serial_number_oud}
           errorMessage={errors.serial_number_oud}
-          className="transition-all duration-200 hover:shadow-md"
+          className="transition-all duration-200 hover:shadow-md uppercase"
         />
         <LabelInputContainer
           label="Model Number"
           placeholder="Model Number"
-          onChange={(e) => setData({ ...data, model: e.target.value.toUpperCase() })}
+          onChange={(e) => setData({ ...data, model: e.target.value })}
           value={data.model}
           errorMessage={errors.model}
-          className="transition-all duration-200 hover:shadow-md"
+          className="transition-all duration-200 hover:shadow-md uppercase"
         />
         <LabelInputContainer
           label="Extra Number"

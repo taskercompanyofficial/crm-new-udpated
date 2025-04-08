@@ -84,11 +84,11 @@ export default function BasicForm({
             id="ref-by"
             placeholder="Reference by"
             label="Reference by"
-            value={data.ref_by}
+            value={data.reference_by}
             onChange={(e) =>
-              setData({ ...data, ref_by: e.target.value })
+              setData({ ...data, reference_by: e.target.value })
             }
-            errorMessage={errors.ref_by}
+            errorMessage={errors.reference_by}
           />
         </div>
         <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
@@ -151,8 +151,8 @@ export default function BasicForm({
 
               if (data.reference_by && !defaultOptions.find((opt) => opt.value === data.reference_by)) {
                 return [...defaultOptions, {
-                  value: data.reference_by,
-                  label: data.reference_by,
+                  value: data.dealer,
+                  label: data.dealer,
                   id: String(defaultOptions.length + 1),
                   image: ""
                 }];
@@ -160,11 +160,11 @@ export default function BasicForm({
 
               return defaultOptions;
             })()}
-            value={data.reference_by}
-            onChange={(value: string) => setData({ ...data, reference_by: value })}
+            value={data.deaer}
+            onChange={(value: string) => setData({ ...data, dealer: value })}
             width="full"
             customizable
-            errorMessage={errors.reference_by}
+            errorMessage={errors.dealer}
           />
           <SearchSelect
             label="Product"

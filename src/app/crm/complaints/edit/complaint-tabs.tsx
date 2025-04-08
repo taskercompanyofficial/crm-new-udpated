@@ -80,7 +80,7 @@ export default function ComplaintTabs({
         <Remarks complaintId={complaintId || 0} />
       </TabsContent>
       <TabsContent value="history">
-        <History id={complaintId} token={token} />
+        <History id={complaintId} token={token} open={false} onOpenChange={() => {}} />
       </TabsContent>
     </Tabs>
   );

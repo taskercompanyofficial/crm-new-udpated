@@ -14,6 +14,12 @@ import useFetch from "@/hooks/usefetch";
 import { API_URL } from "@/lib/apiEndPoints";
 import { Clock, ArrowUpRight, ArrowDownRight, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface ComplaintHistoryEntry {
   id: number;
@@ -32,7 +38,12 @@ interface ComplaintHistoryEntry {
   };
 }
 
-export default function History({ id, token }: { id?: number; token: string }) {
+export default function History({ id, token, open, onOpenChange }: { 
+  id?: number; 
+  token: string;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
   const { data: historyData, error, isLoading } = useFetch<ComplaintHistoryEntry[]>(
     `${API_URL}/crm/complaint-history/${id}`,
     token,
@@ -63,93 +74,100 @@ export default function History({ id, token }: { id?: number; token: string }) {
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold">Complaint History</h2>
-        <span className="text-sm text-muted-foreground">
-          {isLoading ? "-" : historyData?.length || 0} events
-        </span>
-      </div>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-4xl">
+        <DialogHeader>
+          <DialogTitle>Complaint History</DialogTitle>
+        </DialogHeader>
+        
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-muted-foreground">
+              {isLoading ? "-" : historyData?.length || 0} events
+            </span>
+          </div>
 
-      <Separator />
+          <Separator />
 
-      <ScrollArea className="h-[500px]">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Event</TableHead>
-              <TableHead>User</TableHead>
-              <TableHead>Description</TableHead>
-              <TableHead>Actions</TableHead>
-              <TableHead>Timestamp</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {isLoading ? (
-              // Loading skeleton rows
-              [...Array(5)].map((_, i) => (
-                <TableRow key={i}>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 bg-gray-200 rounded animate-pulse" />
-                      <div className="w-16 h-3 bg-gray-200 rounded animate-pulse" />
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="w-24 h-3 bg-gray-200 rounded animate-pulse" />
-                  </TableCell>
-                  <TableCell>
-                    <div className="w-32 h-3 bg-gray-200 rounded animate-pulse" />
-                  </TableCell>
-                  <TableCell>
-                    <div className="w-20 h-6 bg-gray-200 rounded animate-pulse" />
-                  </TableCell>
-                  <TableCell>
-                    <div className="h-3 bg-gray-200 rounded w-28 animate-pulse" />
-                  </TableCell>
+          <ScrollArea className="h-[500px]">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Event</TableHead>
+                  <TableHead>User</TableHead>
+                  <TableHead>Description</TableHead>
+                  <TableHead>Actions</TableHead>
+                  <TableHead>Timestamp</TableHead>
                 </TableRow>
-              ))
-            ) : (
-              historyData?.map((entry) => (
-                <TableRow key={entry.id}>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      {getIcon(entry.description)}
-                      <span className="text-xs">{entry.description.split(":")[0]}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-xs font-medium">{entry.user.full_name}</TableCell>
-                  <TableCell className="max-w-[200px] text-xs">
-                    {truncateText(entry.description, 20)}
-                  </TableCell>
-                  <TableCell>
-                    <Button variant="outline" size="sm" className="text-xs">
-                      See Details
-                    </Button>
-                  </TableCell>
-                  <TableCell className="text-xs whitespace-nowrap text-muted-foreground">
-                    {new Date(entry.created_at).toLocaleString()}
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </ScrollArea>
+              </TableHeader>
+              <TableBody>
+                {isLoading ? (
+                  // Loading skeleton rows
+                  [...Array(5)].map((_, i) => (
+                    <TableRow key={i}>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <div className="w-4 h-4 bg-gray-200 rounded animate-pulse" />
+                          <div className="w-16 h-3 bg-gray-200 rounded animate-pulse" />
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="w-24 h-3 bg-gray-200 rounded animate-pulse" />
+                      </TableCell>
+                      <TableCell>
+                        <div className="w-32 h-3 bg-gray-200 rounded animate-pulse" />
+                      </TableCell>
+                      <TableCell>
+                        <div className="w-20 h-6 bg-gray-200 rounded animate-pulse" />
+                      </TableCell>
+                      <TableCell>
+                        <div className="h-3 bg-gray-200 rounded w-28 animate-pulse" />
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  historyData?.map((entry) => (
+                    <TableRow key={entry.id}>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          {getIcon(entry.description)}
+                          <span className="text-xs">{entry.description.split(":")[0]}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-xs font-medium">{entry.user.full_name}</TableCell>
+                      <TableCell className="max-w-[200px] text-xs">
+                        {truncateText(entry.description, 20)}
+                      </TableCell>
+                      <TableCell>
+                        <Button variant="outline" size="sm" className="text-xs">
+                          See Details
+                        </Button>
+                      </TableCell>
+                      <TableCell className="text-xs whitespace-nowrap text-muted-foreground">
+                        {new Date(entry.created_at).toLocaleString()}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </ScrollArea>
 
-      {/* History explanation */}
-      <div className="p-4 mt-4 rounded-lg bg-slate-50 dark:bg-slate-900">
-        <h3 className="mb-2 font-semibold">History Tracking:</h3>
-        <ol className="pl-4 text-sm list-decimal text-muted-foreground">
-          <li>Automatically tracks all important changes and events</li>
-          <li>Records status changes, edits, remarks, and file uploads</li>
-          <li>Shows detailed field-level changes with before/after values</li>
-          <li>Maintains complete audit trail with timestamps</li>
-          <li>
-            Helps monitor complaint progression and modifications over time
-          </li>
-        </ol>
-      </div>
-    </div>
+          {/* History explanation */}
+          <div className="p-4 mt-4 rounded-lg bg-slate-50 dark:bg-slate-900">
+            <h3 className="mb-2 font-semibold">History Tracking:</h3>
+            <ol className="pl-4 text-sm list-decimal text-muted-foreground">
+              <li>Automatically tracks all important changes and events</li>
+              <li>Records status changes, edits, remarks, and file uploads</li>
+              <li>Shows detailed field-level changes with before/after values</li>
+              <li>Maintains complete audit trail with timestamps</li>
+              <li>
+                Helps monitor complaint progression and modifications over time
+              </li>
+            </ol>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

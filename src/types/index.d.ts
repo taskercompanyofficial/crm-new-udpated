@@ -169,7 +169,7 @@ export type ComplaintsType = {
   id: string;
   brand_complaint_no: string;
   applicant_name: string;
-  ref_by: string;
+
   applicant_phone: string;
   applicant_whatsapp: string;
   applicant_adress: string;
@@ -179,6 +179,7 @@ export type ComplaintsType = {
   branch_id: string;
   extra_numbers: string | null;
   reference_by: string | null;
+  dealer: string | null;
   extra: string | null;
   company_complaint_no: string | null;
   product: string;
