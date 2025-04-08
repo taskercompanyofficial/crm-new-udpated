@@ -19,8 +19,11 @@ import useForm from "@/hooks/use-form";
 import { API_URL } from "@/lib/apiEndPoints";
 import { toast } from "react-toastify";
 import SubmitBtn from "@/components/custom/submit-button";
+import { useSession } from "next-auth/react";
 
 export default function ComplaintSchedulerDialog({ id }: { id: number }) {
+    const session = useSession();
+    const token = session?.data?.user?.token;
     const [isCalendarOpen, setIsCalendarOpen] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -40,7 +43,7 @@ export default function ComplaintSchedulerDialog({ id }: { id: number }) {
             onError(error) {
                 toast.error(error.message)
             }
-        });
+        }, token);
     };
 
 
