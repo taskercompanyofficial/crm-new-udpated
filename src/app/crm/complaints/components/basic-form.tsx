@@ -36,9 +36,10 @@ export default function BasicForm({
             label="Brand Complaint No"
             value={data.brand_complaint_no}
             onChange={(e) =>
-              setData({ ...data, brand_complaint_no: e.target.value.toUpperCase() })
+              setData({ ...data, brand_complaint_no: e.target.value })
             }
             errorMessage={errors.brand_complaint_no}
+            className="uppercase"
           />
           <div className="flex gap-2">
             <div className="w-[50px]">
@@ -146,13 +147,14 @@ export default function BasicForm({
                 { value: "Modern Center Collage Road LHR", label: "Modern Center Collage Road LHR", id: "13", image: "" },
                 { value: "Alfatah Electronics", label: "Alfatah Electronics", id: "14", image: "" },
                 { value: "CC", label: "CC", id: "15", image: "" },
-                { value: "Same Brand", label: "Same Brand", id: "16", image: "" }
+                { value: "Same Brand", label: "Same Brand", id: "16", image: "" },
+                { value: "Dealer Pending", label: "Dealer Pending", id: "16", image: "" }
               ];
 
               if (data.reference_by && !defaultOptions.find((opt) => opt.value === data.reference_by)) {
                 return [...defaultOptions, {
-                  value: data.dealer,
-                  label: data.dealer,
+                  value: data.reference_by,
+                  label: data.reference_by,
                   id: String(defaultOptions.length + 1),
                   image: ""
                 }];
@@ -160,7 +162,7 @@ export default function BasicForm({
 
               return defaultOptions;
             })()}
-            value={data.deaer}
+            value={data.dealer}
             onChange={(value: string) => setData({ ...data, dealer: value })}
             width="full"
             customizable
@@ -272,7 +274,9 @@ export default function BasicForm({
               'REMOTE_NOT_WORKING',
               'LOW_COOLING',
               'GAS_LEAKAGE',
-              'INSTALLATION_REQUIRED'
+              'INSTALLATION_REQUIRED',
+              'SERVICE_REQUIRED',
+              'OTHER '
             ]}
             required
             placeholder="Describe the AC fault in detail"
