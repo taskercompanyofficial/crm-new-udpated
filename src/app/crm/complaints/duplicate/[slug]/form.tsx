@@ -29,7 +29,7 @@ export default function DuplicateForm({
     brand_complaint_no: complaint.brand_complaint_no,
     applicant_phone: complaint.applicant_phone,
     applicant_whatsapp: complaint.applicant_whatsapp,
-    ref_by: complaint.ref_by,
+    dealer: complaint.dealer,
     reference_by: complaint.reference_by,
     brand_id: complaint.brand_id,
     extra_numbers: complaint.extra_numbers,
