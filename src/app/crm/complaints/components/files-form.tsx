@@ -49,7 +49,7 @@ export default function FilesForm({
   const [selectedFiles, setSelectedFiles] = useState<number[]>([]);
   const [downloading, setDownloading] = useState(false);
   const [selectedMedia, setSelectedMedia] = useState<any>(null);
-  const [viewMode, setViewMode] = useState<"grid" | "table">("grid");
+  const [viewMode, setViewMode] = useState<"grid" | "table">("table");
 
   const handleDocumentUpload = (files: any) => {
     if (files && files.length > 0) {
@@ -86,33 +86,26 @@ export default function FilesForm({
     try {
       setDownloading(true);
 
-      const response = await fetch(getImageUrl(file.document_path), {
+      const response = await fetch(file.document_path, {
         method: 'GET',
-        mode: 'cors',
         credentials: 'include',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Accept': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
-        }
       });
 
       if (!response.ok) {
-        throw new Error('Download failed');
+        throw new Error('Failed to download');
       }
 
       const blob = await response.blob();
-      saveAs(blob, file.file_name || "download");
+      saveAs(blob, file.file_name || 'download');
 
-    } catch (error: any) {
-      console.error('Download error:', error);
-      toast.error("Failed to download file. Please try again later.");
+    } catch (err) {
+      console.error('Download error:', err);
+      toast.error('Failed to download file.');
     } finally {
       setDownloading(false);
     }
   };
+
 
   const downloadFilesAsZip = async (filesToDownload: any[]) => {
     try {
