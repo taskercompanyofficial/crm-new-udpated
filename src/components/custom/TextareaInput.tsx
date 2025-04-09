@@ -38,9 +38,14 @@ export function TextareaInput({
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
   const dropdownRef = React.useRef<HTMLDivElement>(null);
 
+  // Check if there are any options to display
+  const hasOptions = predefinedOptions.length > 0 || customOptions.length > 0;
+
   React.useEffect(() => {
     if (predefinedOptions.length > 0) {
       setOptions([...predefinedOptions, ...customOptions]);
+    } else {
+      setOptions([...customOptions]);
     }
   }, [predefinedOptions, customOptions]);
 
@@ -66,8 +71,12 @@ export function TextareaInput({
     const newValue = e.target.value;
     setValue(newValue);
     setCharCount(newValue.length);
-    setSearchTerm(newValue.split(' ').pop() || '');
-    setOpen(true);
+    
+    // Only set searchTerm and open dropdown if we have options
+    if (hasOptions || customizable) {
+      setSearchTerm(newValue.split(' ').pop() || '');
+      setOpen(true);
+    }
 
     if (props.onChange) {
       props.onChange(e);
@@ -122,26 +131,35 @@ export function TextareaInput({
             {...props}
             value={value}
             onChange={handleChange}
-            className={cn(props.className, errorMessage && "border-red-500", "pr-20")}
+            className={cn(
+              props.className, 
+              errorMessage && "border-red-500", 
+              (hasOptions || customizable) ? "pr-20" : ""
+            )}
             rows={1}
           />
-          <div className="absolute right-2 top-2 flex gap-1">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-6 w-6"
-              onClick={toggleDropdown}
-            >
-              {open ? (
-                <ChevronUp className="h-4 w-4" />
-              ) : (
-                <ChevronDown className="h-4 w-4" />
-              )}
-            </Button>
-          </div>
+          
+          {/* Only show dropdown button if there are options or component is customizable */}
+          {(hasOptions || customizable) && (
+            <div className="absolute right-2 top-2 flex gap-1">         
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6"
+                onClick={toggleDropdown}
+              >
+                {open ? (
+                  <ChevronUp className="h-4 w-4" />
+                ) : (
+                  <ChevronDown className="h-4 w-4" />
+                )}
+              </Button>
+            </div>
+          )}
         </div>
 
-        {open || predefinedOptions && (
+        {/* Only render dropdown if open AND we have options or allow custom options */}
+        {open && (hasOptions || customizable) && (
           <div className="absolute z-50 w-full mt-1 bg-white border rounded-md shadow-lg">
             <Command className="w-full">
               <CommandList className="max-h-[200px] overflow-y-auto">
