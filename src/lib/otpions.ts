@@ -173,11 +173,18 @@ export const warrantyTypeOptions = [
   { value: "outdoor", label: "Outdoor", color: "41, 128, 185" }, // Blue
   { value: "ind-sr", label: "Ind-SR", color: "192, 57, 43" }, // Dark Red
   { value: "out-sr", label: "Out-SR", color: "255, 159, 64" }, // Orange
-  { value: "wiring", label: "Wiring", color: "121, 85, 72" }, // Brown
+  { value: "wiring-joint", label: "Wiring Joint", color: "121, 85, 72" }, // Brown
   { value: "connection", label: "Connection", color: "96, 125, 139" }, // Blue Grey
   { value: "hole-picture", label: "Hole Picture", color: "158, 158, 158" }, // Grey
   { value: "pipe-pic", label: "Pipe Picture", color: "117, 117, 117" }, // Dark Grey
-  { value: "clipping-wire", label: "Clipping Wire", color: "189, 189, 189" } // Light Grey
+  { value: "leakage-test", label: "Leakage Test", color: "117, 117, 117" }, // Dark Grey
+  { value: "clipping-wire", label: "Clipping Wire", color: "189, 189, 189" }, // Light Grey
+  { value: "installation-picture", label: "Installation Picture", color: "156, 39, 176" }, // Purple
+  { value: "complaint-picture", label: "Complaint Picture", color: "233, 30, 99" }, // Pink
+  { value: "warranty-bill", label: "Warranty Bill", color: "103, 58, 183" }, // Deep Purple
+  { value: "service-report", label: "Service Report", color: "63, 81, 181" }, // Indigo
+  { value: "installation-report", label: "Installation Report", color: "33, 150, 243" }, // Light Blue
+  { value: "customer-feedback", label: "Customer Feedback", color: "0, 188, 212" } // Cyan
 ];
 
 export const complaintTypeOptions = [
