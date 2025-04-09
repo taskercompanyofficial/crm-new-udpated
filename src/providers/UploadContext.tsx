@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode, useCallback } from "react";
+import { createContext, useContext, useState, ReactNode, useCallback, useEffect } from "react";
 import axios from "axios";
 import { API_URL } from "@/lib/apiEndPoints";
 import { useSession } from "next-auth/react";
@@ -48,6 +48,21 @@ export function UploadProvider({ children }: { children: ReactNode }) {
     const [progress, setProgress] = useState(0);
     const [error, setError] = useState<string | null>(null);
     const [uploadConfig, setUploadConfigState] = useState<UploadConfigType>(defaultConfig);
+
+    // Handle ESC key press
+    useEffect(() => {
+        const handleEscKey = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                resetUploadState();
+            }
+        };
+
+        window.addEventListener('keydown', handleEscKey);
+
+        return () => {
+            window.removeEventListener('keydown', handleEscKey);
+        };
+    }, []);
 
     // Method to configure upload settings
     const setUploadConfig = useCallback((config: Partial<UploadConfigType>) => {
@@ -162,7 +177,8 @@ export function UploadProvider({ children }: { children: ReactNode }) {
         </UploadContext.Provider>
     );
 }
- export function useUploadContext() {
+
+export function useUploadContext() {
     const context = useContext(UploadContext);
     if (context === undefined) {
         throw new Error("useUploadContext must be used within an UploadProvider");
