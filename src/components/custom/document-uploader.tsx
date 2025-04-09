@@ -1,11 +1,13 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -36,6 +38,27 @@ export default function DocumentUploader({
     document_type: "",
   });
 
+  // Handle keyboard shortcuts
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      // Ctrl/Cmd + U to trigger file upload
+      if ((e.ctrlKey || e.metaKey) && e.key === 'u') {
+        e.preventDefault();
+        if (!isUploading && formData.document_type) {
+          handleFileUpload();
+        }
+      }
+      // Esc to cancel upload
+      if (e.key === 'Escape' && formData.files.length > 0) {
+        e.preventDefault();
+        handleCancelUpload();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [formData, isUploading]);
+
   const handleFileUpload = async () => {
     setIsUploading(true);
     setError(null);
@@ -61,7 +84,6 @@ export default function DocumentUploader({
       if (response.data && response.data.data && response.data.data[0]) {
         onDone(response.data.data);
         toast.success("File uploaded successfully");
-        // Reset form after successful upload
         setFormData({
           files: [],
           document_type: "",
@@ -157,21 +179,26 @@ export default function DocumentUploader({
             <SelectValue placeholder="Document type" />
           </SelectTrigger>
           <SelectContent>
-            {warrantyTypeOptions.map((type) => (
-              <SelectItem key={type.value} value={type.value}>
-                {type.label}
-              </SelectItem>
-            ))}
-            <SelectItem value="other">Other Document</SelectItem>
+            <SelectGroup>
+              <SelectLabel>Warranty Documents</SelectLabel>
+              {warrantyTypeOptions.map((type) => (
+                <SelectItem key={type.value} value={type.value}>
+                  {type.label}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+            <SelectGroup>
+              <SelectLabel>Other Documents</SelectLabel>
+              <SelectItem value="other">Other Document</SelectItem>
+            </SelectGroup>
           </SelectContent>
         </Select>
 
         <div
-          className={`relative w-full flex-1 rounded border-2 border-dashed px-4 py-2 sm:py-1 min-h-[40px] sm:h-8 transition-colors ${
-            isDragging
+          className={`relative w-full flex-1 rounded border-2 border-dashed px-4 py-2 sm:py-1 min-h-[40px] sm:h-8 transition-colors ${isDragging
               ? "border-primary bg-primary/10"
               : "border-gray-300 hover:border-primary"
-          }`}
+            }`}
           onDrop={handleDrop}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
@@ -188,7 +215,7 @@ export default function DocumentUploader({
             <span className="text-center">
               {formData.files.length
                 ? `${formData.files.length} file(s) selected`
-                : "Drop files here or click to select"}
+                : "Drop files here or click to select (Ctrl+U to upload, Esc to cancel)"}
             </span>
           </div>
         </div>
@@ -200,7 +227,7 @@ export default function DocumentUploader({
             onClick={handleFileUpload}
             className="flex-1 sm:flex-none"
           >
-            Upload
+            Upload (Ctrl+U)
           </SubmitButton>
 
           {formData.files.length > 0 && (
@@ -210,7 +237,7 @@ export default function DocumentUploader({
               disabled={isUploading}
               className="flex-1 sm:flex-none"
             >
-              Cancel
+              Cancel (Esc)
             </Button>
           )}
         </div>
