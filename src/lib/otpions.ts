@@ -165,10 +165,6 @@ export const warrantyTypeOptions = [
   { value: "warranty-card", label: "Warranty Card", color: "52, 152, 219" }, // Blue
   { value: "jobsheet", label: "Jobsheet", color: "241, 196, 15" }, // Yellow
   { value: "invoice", label: "Invoice", color: "39, 174, 96" }, // Green
-  { value: "delivery-challan", label: "Delivery Challan", color: "230, 126, 34" }, // Dark Orange
-  { value: "service-challan", label: "Service Challan", color: "155, 89, 182" }, // Purple
-  { value: "defective-part", label: "Defective Part", color: "231, 76, 60" }, // Dark Red
-  { value: "defective-picture", label: "Defective Picture", color: "255, 99, 132" }, // Soft Red
   { value: "indoor", label: "Indoor", color: "26, 188, 156" }, // Teal
   { value: "outdoor", label: "Outdoor", color: "41, 128, 185" }, // Blue
   { value: "ind-sr", label: "Ind-SR", color: "192, 57, 43" }, // Dark Red
@@ -179,6 +175,11 @@ export const warrantyTypeOptions = [
   { value: "pipe-pic", label: "Pipe Picture", color: "117, 117, 117" }, // Dark Grey
   { value: "leakage-test", label: "Leakage Test", color: "117, 117, 117" }, // Dark Grey
   { value: "clipping-wire", label: "Clipping Wire", color: "189, 189, 189" }, // Light Grey
+  { value: "delivery-challan", label: "Delivery Challan", color: "230, 126, 34" }, // Dark Orange
+  { value: "part-slip", label: "Part Slip", color: "230, 126, 34" }, // Dark Orange
+  { value: "service-challan", label: "Service Challan", color: "155, 89, 182" }, // Purple
+  { value: "defective-part", label: "Defective Part", color: "231, 76, 60" }, // Dark Red
+  { value: "defective-picture", label: "Defective Picture", color: "255, 99, 132" }, // Soft Red
   { value: "installation-picture", label: "Installation Picture", color: "156, 39, 176" }, // Purple
   { value: "complaint-picture", label: "Complaint Picture", color: "233, 30, 99" }, // Pink
   { value: "warranty-bill", label: "Warranty Bill", color: "103, 58, 183" }, // Deep Purple

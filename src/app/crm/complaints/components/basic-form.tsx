@@ -149,6 +149,7 @@ export default function BasicForm({
                 { value: "Itfaq Electronincs", label: "Itfaq Electronincs", id: "12", image: "" },
                 { value: "Modern Center Collage Road LHR", label: "Modern Center Collage Road LHR", id: "13", image: "" },
                 { value: "Alfatah Electronics", label: "Alfatah Electronics", id: "14", image: "" },
+                { value: "Fridge Center", label: "Fridge Center", id: "14", image: "" },
                 { value: "CC", label: "CC", id: "15", image: "" },
                 { value: "Same Brand", label: "Same Brand", id: "16", image: "" },
                 { value: "Dealer Pending", label: "Dealer Pending", id: "16", image: "" }
