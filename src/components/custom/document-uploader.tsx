@@ -42,7 +42,7 @@ export default function DocumentUploader({
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
       // Ctrl/Cmd + U to trigger file upload
-      if ((e.ctrlKey || e.metaKey) && e.key === 'u') {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'q') {
         e.preventDefault();
         if (!isUploading && formData.document_type) {
           handleFileUpload();
