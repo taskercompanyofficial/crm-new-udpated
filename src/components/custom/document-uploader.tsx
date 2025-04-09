@@ -213,23 +213,6 @@ export default function DocumentUploader({
 
   return (
     <>
-      {isDragging && (
-        <div className="fixed inset-0 bg-primary/20 backdrop-blur-sm z-50 flex items-center justify-center">
-          <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl text-center max-w-md w-full">
-            <div className="mb-4 bg-primary/10 dark:bg-primary/20 p-4 rounded-full w-20 h-20 flex items-center justify-center mx-auto">
-              <Upload className="w-10 h-10 text-primary mx-auto" />
-            </div>
-            <h3 className="text-xl font-semibold mb-2">Drop files here</h3>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-              Release to upload your documents
-            </p>
-            <div className="text-xs text-gray-400 border border-dashed border-gray-300 dark:border-gray-600 rounded p-2">
-              Supported formats: {uploadConfig.allowedTypes.join(", ")}
-            </div>
-          </div>
-        </div>
-      )}
-
       <div className="flex flex-col gap-4">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
           <Select
