@@ -13,18 +13,16 @@ export function ThemeProvider({
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Check for Ctrl+Shift+N
+      // Check for Ctrl+Alt+N
       if (e.ctrlKey && e.altKey && e.key === 'N') {
         e.preventDefault()
-        window.open('/crm/complaints/create', '_blank')
+        router.push('/crm/complaints/create')
       }
     }
 
-
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [])
+  }, [router])
 
   return <NextThemesProvider {...props}>{children}</NextThemesProvider>
 }
-
