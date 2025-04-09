@@ -41,14 +41,12 @@ export default function DocumentUploader({
   // Handle keyboard shortcuts
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
-      // Ctrl/Cmd + U to trigger file upload
       if ((e.ctrlKey || e.metaKey) && e.key === 'q') {
         e.preventDefault();
         if (!isUploading && formData.document_type) {
           handleFileUpload();
         }
       }
-      // Esc to cancel upload
       if (e.key === 'Escape' && formData.files.length > 0) {
         e.preventDefault();
         handleCancelUpload();
@@ -58,6 +56,48 @@ export default function DocumentUploader({
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, [formData, isUploading]);
+
+  // Handle drag and drop events globally
+  useEffect(() => {
+    const handleDragOver = (e: DragEvent) => {
+      e.preventDefault();
+      setIsDragging(true);
+    };
+
+    const handleDragLeave = (e: DragEvent) => {
+      e.preventDefault();
+      if (e.clientX <= 0 || e.clientY <= 0 || 
+          e.clientX >= window.innerWidth || e.clientY >= window.innerHeight) {
+        setIsDragging(false);
+      }
+    };
+
+    const handleDrop = (e: DragEvent) => {
+      e.preventDefault();
+      setIsDragging(false);
+      
+      if (e.dataTransfer) {
+        const droppedFiles = Array.from(e.dataTransfer.files);
+        if (validateFiles(droppedFiles)) {
+          setFormData((prev) => ({
+            ...prev,
+            files: droppedFiles,
+          }));
+          setError(null);
+        }
+      }
+    };
+
+    window.addEventListener('dragover', handleDragOver);
+    window.addEventListener('dragleave', handleDragLeave);
+    window.addEventListener('drop', handleDrop);
+
+    return () => {
+      window.removeEventListener('dragover', handleDragOver);
+      window.removeEventListener('dragleave', handleDragLeave);
+      window.removeEventListener('drop', handleDrop);
+    };
+  }, []);
 
   const handleFileUpload = async () => {
     setIsUploading(true);
@@ -131,30 +171,6 @@ export default function DocumentUploader({
     }
   };
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-
-    const droppedFiles = Array.from(e.dataTransfer.files);
-    if (validateFiles(droppedFiles)) {
-      setFormData((prev) => ({
-        ...prev,
-        files: droppedFiles,
-      }));
-      setError(null);
-    }
-  }, []);
-
-  const handleDragOver = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(true);
-  }, []);
-
-  const handleDragLeave = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-  }, []);
-
   const handleCancelUpload = () => {
     setFormData({
       files: [],
@@ -195,13 +211,11 @@ export default function DocumentUploader({
         </Select>
 
         <div
-          className={`relative w-full flex-1 rounded border-2 border-dashed px-4 py-2 sm:py-1 min-h-[40px] sm:h-8 transition-colors ${isDragging
+          className={`relative w-full flex-1 rounded border-2 border-dashed px-4 py-2 sm:py-1 min-h-[40px] sm:h-8 transition-colors ${
+            isDragging
               ? "border-primary bg-primary/10"
               : "border-gray-300 hover:border-primary"
-            }`}
-          onDrop={handleDrop}
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
+          }`}
         >
           <input
             type="file"
@@ -215,7 +229,7 @@ export default function DocumentUploader({
             <span className="text-center">
               {formData.files.length
                 ? `${formData.files.length} file(s) selected`
-                : "Drop files here or click to select (Ctrl+U to upload, Esc to cancel)"}
+                : "Drop files anywhere or click to select (Ctrl+U to upload, Esc to cancel)"}
             </span>
           </div>
         </div>
@@ -227,7 +241,7 @@ export default function DocumentUploader({
             onClick={handleFileUpload}
             className="flex-1 sm:flex-none"
           >
-            Upload (Ctrl+U)
+            Upload (Ctrl+Q)
           </SubmitButton>
 
           {formData.files.length > 0 && (
