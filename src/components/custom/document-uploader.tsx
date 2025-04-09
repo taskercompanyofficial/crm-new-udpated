@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -11,191 +11,243 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useSession } from "next-auth/react";
 import { warrantyTypeOptions } from "@/lib/otpions";
-import axios from "axios";
-import { API_URL } from "@/lib/apiEndPoints";
-import { toast } from "react-toastify";
 import SubmitButton from "@/components/custom/submit-button";
-import { Upload, Loader2 } from "lucide-react";
+import { Upload, Loader2, X, FilePlus, AlertCircle } from "lucide-react";
+import { useUploadContext } from "@/providers/UploadContext";
 
-interface DocumentUploaderProps {
+interface ImageUploaderProps {
   onDone: (files: any) => void;
-  errorMessage: string;
+  errorMessage?: string;
+  showFileList?: boolean;
 }
 
 export default function DocumentUploader({
   onDone,
-  errorMessage,
-}: DocumentUploaderProps) {
-  const session = useSession();
-  const token = session.data?.user?.token || "";
-  const [isUploading, setIsUploading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  errorMessage = "",
+  showFileList = true,
+}: ImageUploaderProps) {
+  const {
+    status,
+    progress,
+    error: contextError,
+    uploadFiles,
+    cancelUpload,
+    resetUploadState,
+    uploadConfig,
+  } = useUploadContext();
+
+  const dropZoneRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const [isDragging, setIsDragging] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [formData, setFormData] = useState({
-    files: [] as File[],
-    document_type: "",
-  });
+  const [dragCounter, setDragCounter] = useState(0);
+  const [files, setFiles] = useState<File[]>([]);
+  const [documentType, setDocumentType] = useState("");
+  const [localError, setLocalError] = useState<string | null>(null);
+
+  const isUploading = status === "uploading";
 
   // Handle keyboard shortcuts
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
+      // Upload shortcut (Ctrl+Q or Command+Q)
       if ((e.ctrlKey || e.metaKey) && e.key === 'q') {
         e.preventDefault();
-        if (!isUploading && formData.document_type) {
-          handleFileUpload();
+        if (status !== "uploading" && documentType && files.length > 0) {
+          handleUpload();
         }
       }
-      if (e.key === 'Escape' && formData.files.length > 0) {
+      // Select files shortcut (Ctrl+U or Command+U)
+      else if ((e.ctrlKey || e.metaKey) && e.key === 'u') {
         e.preventDefault();
-        handleCancelUpload();
+        fileInputRef.current?.click();
+      }
+      // Cancel shortcut (Escape)
+      else if (e.key === 'Escape' && files.length > 0) {
+        e.preventDefault();
+        handleCancel();
       }
     };
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [formData, isUploading]);
+  }, [files, documentType, status]);
 
-  // Handle drag and drop events globally
+  // Reset state when upload is successful
   useEffect(() => {
-    const handleDragOver = (e: DragEvent) => {
+    if (status === "success") {
+      setFiles([]);
+      setDocumentType("");
+      setLocalError(null);
+    }
+  }, [status]);
+
+  // Handle drag and drop events for the drop zone
+  useEffect(() => {
+    const dropZone = dropZoneRef.current;
+    if (!dropZone) return;
+
+    const handleDragEnter = (e: DragEvent) => {
       e.preventDefault();
+      e.stopPropagation();
+      setDragCounter(prev => prev + 1);
       setIsDragging(true);
     };
 
     const handleDragLeave = (e: DragEvent) => {
       e.preventDefault();
-      if (e.clientX <= 0 || e.clientY <= 0 || 
-          e.clientX >= window.innerWidth || e.clientY >= window.innerHeight) {
+      e.stopPropagation();
+      setDragCounter(prev => prev - 1);
+      if (dragCounter - 1 === 0) {
         setIsDragging(false);
       }
     };
 
+    const handleDragOver = (e: DragEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+    };
+
     const handleDrop = (e: DragEvent) => {
       e.preventDefault();
+      e.stopPropagation();
       setIsDragging(false);
-      
+      setDragCounter(0);
+
       if (e.dataTransfer) {
         const droppedFiles = Array.from(e.dataTransfer.files);
         if (validateFiles(droppedFiles)) {
-          setFormData((prev) => ({
-            ...prev,
-            files: droppedFiles,
-          }));
-          setError(null);
+          setFiles(droppedFiles);
+          setLocalError(null);
         }
       }
     };
 
-    window.addEventListener('dragover', handleDragOver);
-    window.addEventListener('dragleave', handleDragLeave);
-    window.addEventListener('drop', handleDrop);
+    dropZone.addEventListener('dragenter', handleDragEnter);
+    dropZone.addEventListener('dragleave', handleDragLeave);
+    dropZone.addEventListener('dragover', handleDragOver);
+    dropZone.addEventListener('drop', handleDrop);
 
     return () => {
-      window.removeEventListener('dragover', handleDragOver);
-      window.removeEventListener('dragleave', handleDragLeave);
-      window.removeEventListener('drop', handleDrop);
+      dropZone.removeEventListener('dragenter', handleDragEnter);
+      dropZone.removeEventListener('dragleave', handleDragLeave);
+      dropZone.removeEventListener('dragover', handleDragOver);
+      dropZone.removeEventListener('drop', handleDrop);
     };
-  }, []);
+  }, [dragCounter, uploadConfig]);
 
-  const handleFileUpload = async () => {
-    setIsUploading(true);
-    setError(null);
-    setUploadProgress(0);
+  // Handle global drop events (overlay)
+  useEffect(() => {
+    const handleGlobalDragEnter = (e: DragEvent) => {
+      e.preventDefault();
+      setDragCounter(prev => prev + 1);
+      setIsDragging(true);
+    };
 
-    try {
-      if (!token) {
-        throw new Error("Authentication token is missing");
+    const handleGlobalDragLeave = (e: DragEvent) => {
+      e.preventDefault();
+      setDragCounter(prev => prev - 1);
+      if (dragCounter - 1 === 0) {
+        setIsDragging(false);
       }
+    };
 
-      const uploadData = new FormData();
-      formData.files.forEach((file) => {
-        uploadData.append("files[]", file);
-      });
-      uploadData.append("document_type", formData.document_type);
+    const handleGlobalDragOver = (e: DragEvent) => {
+      e.preventDefault();
+    };
 
-      const response = await axios.post(API_URL + "/upload-image", uploadData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
-        },
-        onUploadProgress: (progressEvent) => {
-          const progress = progressEvent.total
-            ? Math.round((progressEvent.loaded * 100) / progressEvent.total)
-            : 0;
-          setUploadProgress(progress);
-        },
-      });
+    const handleGlobalDrop = (e: DragEvent) => {
+      e.preventDefault();
+      setIsDragging(false);
+      setDragCounter(0);
 
-      if (response.data && response.data.data && response.data.data[0]) {
-        onDone(response.data.data);
-        toast.success("File uploaded successfully");
-        setFormData({
-          files: [],
-          document_type: "",
-        });
-      } else {
-        throw new Error("Invalid response format from server");
+      if (e.dataTransfer) {
+        const droppedFiles = Array.from(e.dataTransfer.files);
+        if (validateFiles(droppedFiles)) {
+          setFiles(droppedFiles);
+          setLocalError(null);
+        }
       }
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "An unexpected error occurred during upload";
-      setError(errorMessage);
-      toast.error(errorMessage);
-      console.error("Upload failed:", error);
-    } finally {
-      setIsUploading(false);
-      setUploadProgress(0);
-    }
-  };
+    };
 
-  const validateFiles = (files: File[]) => {
-    const maxSize = 100 * 1024 * 1024; // 100MB
-    const invalidFiles = files.filter((file) => file.size > maxSize);
+    window.addEventListener('dragenter', handleGlobalDragEnter);
+    window.addEventListener('dragleave', handleGlobalDragLeave);
+    window.addEventListener('dragover', handleGlobalDragOver);
+    window.addEventListener('drop', handleGlobalDrop);
 
-    if (invalidFiles.length > 0) {
-      setError("Some files exceed the maximum size limit of 10MB");
-      toast.error("Some files exceed the maximum size limit of 10MB");
+    return () => {
+      window.removeEventListener('dragenter', handleGlobalDragEnter);
+      window.removeEventListener('dragleave', handleGlobalDragLeave);
+      window.removeEventListener('dragover', handleGlobalDragOver);
+      window.removeEventListener('drop', handleGlobalDrop);
+    };
+  }, [dragCounter, uploadConfig]);
+
+  const validateFiles = (filesToValidate: File[]) => {
+    const maxSizeBytes = uploadConfig.maxFileSize * 1024 * 1024;
+
+    // Check file size
+    const oversizedFiles = filesToValidate.filter(file => file.size > maxSizeBytes);
+    if (oversizedFiles.length > 0) {
+      const fileNames = oversizedFiles.map(f => f.name).join(", ");
+      const errorMsg = `Files exceeding ${uploadConfig.maxFileSize}MB: ${fileNames}`;
+      setLocalError(errorMsg);
       return false;
     }
+
     return true;
   };
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (files) {
-      const fileArray = Array.from(files);
+    const selectedFiles = event.target.files;
+    if (selectedFiles) {
+      const fileArray = Array.from(selectedFiles);
       if (validateFiles(fileArray)) {
-        setFormData((prev) => ({
-          ...prev,
-          files: fileArray,
-        }));
-        setError(null);
+        setFiles(fileArray);
+        setLocalError(null);
       }
+      // Reset the input value to allow selecting the same file again
       event.target.value = "";
     }
   };
 
-  const handleCancelUpload = () => {
-    setFormData({
-      files: [],
-      document_type: "",
-    });
-    setError(null);
+  const handleUpload = async () => {
+    const result = await uploadFiles(files, documentType);
+    if (result) {
+      onDone(result);
+    }
   };
+
+  const handleCancel = () => {
+    if (status === "uploading") {
+      cancelUpload();
+    }
+    setFiles([]);
+    setLocalError(null);
+  };
+
+  const removeFile = (indexToRemove: number) => {
+    setFiles(prev => prev.filter((_, index) => index !== indexToRemove));
+  };
+
+  const displayError = localError || contextError || errorMessage;
 
   return (
     <>
       {isDragging && (
         <div className="fixed inset-0 bg-primary/20 backdrop-blur-sm z-50 flex items-center justify-center">
-          <div className="bg-white p-8 rounded-lg shadow-lg text-center">
-            <Upload className="w-12 h-12 text-primary mx-auto mb-4" />
-            <h3 className="text-lg font-semibold">Drop files here</h3>
-            <p className="text-sm text-gray-500">Release to upload your files</p>
+          <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl text-center max-w-md w-full">
+            <div className="mb-4 bg-primary/10 dark:bg-primary/20 p-4 rounded-full w-20 h-20 flex items-center justify-center mx-auto">
+              <Upload className="w-10 h-10 text-primary mx-auto" />
+            </div>
+            <h3 className="text-xl font-semibold mb-2">Drop files here</h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+              Release to upload your documents
+            </p>
+            <div className="text-xs text-gray-400 border border-dashed border-gray-300 dark:border-gray-600 rounded p-2">
+              Supported formats: {uploadConfig.allowedTypes.join(", ")}
+            </div>
           </div>
         </div>
       )}
@@ -203,13 +255,9 @@ export default function DocumentUploader({
       <div className="flex flex-col gap-4">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
           <Select
-            value={formData.document_type}
-            onValueChange={(value) =>
-              setFormData((prev) => ({
-                ...prev,
-                document_type: value,
-              }))
-            }
+            value={documentType}
+            onValueChange={setDocumentType}
+            disabled={isUploading}
           >
             <SelectTrigger className="w-full sm:w-[200px]">
               <SelectValue placeholder="Document type" />
@@ -231,32 +279,50 @@ export default function DocumentUploader({
           </Select>
 
           <div
-            className={`relative w-full flex-1 rounded border-2 border-dashed px-4 py-2 sm:py-1 min-h-[40px] sm:h-8 transition-colors ${
-              isDragging
-                ? "border-primary bg-primary/10"
-                : "border-gray-300 hover:border-primary"
-            }`}
+            ref={dropZoneRef}
+            className={`relative w-full flex-1 rounded border-2 border-dashed px-4 py-3 min-h-[45px] transition-all duration-200 ease-in-out ${isDragging
+                ? "border-primary bg-primary/10 dark:bg-primary/20"
+                : files.length > 0
+                  ? "border-green-500 bg-green-50 dark:bg-green-900/20"
+                  : "border-gray-300 dark:border-gray-600 hover:border-primary dark:hover:border-primary"
+              }`}
           >
             <input
+              ref={fileInputRef}
               type="file"
               onChange={handleFileSelect}
               multiple
-              accept="image/*,application/pdf,.doc,.docx,.xls,.xlsx"
+              accept={uploadConfig.allowedTypes.join(",")}
               className="absolute inset-0 opacity-0 cursor-pointer"
+              disabled={isUploading}
             />
-            <div className="flex items-center justify-center gap-2 text-xs text-gray-600">
-              <Upload className="w-4 h-4" />
-              <span className="text-center">
-                {formData.files.length
-                  ? `${formData.files.length} file(s) selected`
-                  : "Drop files anywhere or click to select (Ctrl+U to upload, Esc to cancel)"}
-              </span>
+            <div className="flex items-center justify-center gap-2 text-xs text-gray-600 dark:text-gray-400">
+              {files.length > 0 ? (
+                <div className="flex items-center gap-2">
+                  <FilePlus className="w-4 h-4 text-green-500" />
+                  <span>
+                    {files.length} file{files.length > 1 ? "s" : ""} selected
+                  </span>
+                </div>
+              ) : (
+                <>
+                  <Upload className="w-4 h-4" />
+                  <span className="text-center">
+                    Drop files or click to select (Ctrl+U)
+                  </span>
+                </>
+              )}
             </div>
             {isUploading && (
-              <div className="absolute inset-0 bg-primary/10 flex items-center justify-center">
-                <div className="flex items-center gap-2">
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  <span className="text-xs">{uploadProgress}% Uploading...</span>
+              <div className="absolute inset-0 bg-primary/10 dark:bg-primary/20 flex items-center justify-center">
+                <div className="flex flex-col items-center gap-2">
+                  <div className="w-full max-w-xs bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                    <div
+                      className="bg-primary h-2.5 rounded-full transition-all duration-300"
+                      style={{ width: `${progress}%` }}
+                    ></div>
+                  </div>
+                  <span className="text-xs">{progress}% Uploading...</span>
                 </div>
               </div>
             )}
@@ -265,17 +331,17 @@ export default function DocumentUploader({
           <div className="flex gap-2 w-full sm:w-auto">
             <SubmitButton
               processing={isUploading}
-              disabled={isUploading || !formData.document_type}
-              onClick={handleFileUpload}
+              disabled={isUploading || !documentType || files.length === 0}
+              onClick={handleUpload}
               className="flex-1 sm:flex-none"
             >
-              Upload (Ctrl+Q)
+              Upload {files.length > 0 && `(${files.length})`}
             </SubmitButton>
 
-            {formData.files.length > 0 && (
+            {files.length > 0 && (
               <Button
                 variant="outline"
-                onClick={handleCancelUpload}
+                onClick={handleCancel}
                 disabled={isUploading}
                 className="flex-1 sm:flex-none"
               >
@@ -285,7 +351,53 @@ export default function DocumentUploader({
           </div>
         </div>
 
-        {errorMessage && <p className="text-sm text-red-500">{errorMessage}</p>}
+        {/* File list display */}
+        {showFileList && files.length > 0 && (
+          <div className="mt-2">
+            <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">
+              Selected files:
+            </div>
+            <div className="max-h-32 overflow-y-auto">
+              <ul className="space-y-1">
+                {files.map((file, index) => (
+                  <li
+                    key={`${file.name}-${index}`}
+                    className="flex items-center justify-between bg-gray-50 dark:bg-gray-800 px-3 py-1 rounded text-sm"
+                  >
+                    <div className="flex items-center gap-2 truncate max-w-[80%]">
+                      <span className="truncate">{file.name}</span>
+                      <span className="text-xs text-gray-500">
+                        ({(file.size / (1024 * 1024)).toFixed(2)}MB)
+                      </span>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-6 w-6 p-0"
+                      onClick={() => removeFile(index)}
+                      disabled={isUploading}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
+
+        {/* Error display */}
+        {displayError && (
+          <div className="flex items-center gap-2 text-sm text-red-500 bg-red-50 dark:bg-red-900/20 p-2 rounded">
+            <AlertCircle className="h-4 w-4" />
+            <p>{displayError}</p>
+          </div>
+        )}
+
+        {/* Keyboard shortcuts help */}
+        <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+          <span className="font-medium">Shortcuts:</span> Upload (Ctrl+Q) · Select files (Ctrl+U) · Cancel (Esc)
+        </div>
       </div>
     </>
   );

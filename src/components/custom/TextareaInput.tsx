@@ -125,7 +125,7 @@ export function TextareaInput({
             className={cn(props.className, errorMessage && "border-red-500", "pr-20")}
             rows={1}
           />
-          <div className="absolute right-2 top-2 flex gap-1">         
+          <div className="absolute right-2 top-2 flex gap-1">
             <Button
               variant="ghost"
               size="icon"
@@ -141,7 +141,7 @@ export function TextareaInput({
           </div>
         </div>
 
-        {open && (
+        {open || predefinedOptions && (
           <div className="absolute z-50 w-full mt-1 bg-white border rounded-md shadow-lg">
             <Command className="w-full">
               <CommandList className="max-h-[200px] overflow-y-auto">

@@ -195,6 +195,7 @@ export default function CustomerRemarks({ complaintId }: { complaintId: number }
                         onChange={(e) =>
                             setData({ ...data, comment: e.target.value })
                         }
+                        
                     />
                 </div>
 

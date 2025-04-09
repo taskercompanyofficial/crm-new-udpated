@@ -45,6 +45,7 @@ export default function SearchSelect({
   const [customOptions, setCustomOptions] = useState<dataTypeIds[]>([]);
   const [options, setOptions] = useState<dataTypeIds[]>([]);
   const [selectedValues, setSelectedValues] = useState<string[]>(multiple ? [value] : []);
+  const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -102,17 +103,38 @@ export default function SearchSelect({
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
     if (!open) setOpen(true);
+    setHighlightedIndex(-1);
   };
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && customizable && searchTerm) {
+    if (e.key === 'Enter') {
       e.preventDefault();
-      handleAddCustom();
+      if (customizable && searchTerm && highlightedIndex === -1) {
+        handleAddCustom();
+      } else if (highlightedIndex >= 0 && highlightedIndex < filteredOptions.length) {
+        handleSelect(filteredOptions[highlightedIndex].value);
+      }
     }
     if (e.key === 'Escape') {
       setOpen(false);
+      setHighlightedIndex(-1);
     }
-  }, [searchTerm, customizable]);
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (!open) {
+        setOpen(true);
+      }
+      setHighlightedIndex(prev =>
+        prev < filteredOptions.length - 1 ? prev + 1 : 0
+      );
+    }
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setHighlightedIndex(prev =>
+        prev > 0 ? prev - 1 : filteredOptions.length - 1
+      );
+    }
+  }, [searchTerm, customizable, filteredOptions, highlightedIndex]);
 
   const handleSelect = (optionValue: string) => {
     if (multiple) {
@@ -126,6 +148,7 @@ export default function SearchSelect({
       setSearchTerm("");
       setOpen(false);
     }
+    setHighlightedIndex(-1);
   };
 
   return (
