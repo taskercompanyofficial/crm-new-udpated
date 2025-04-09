@@ -13,14 +13,15 @@ export function ThemeProvider({
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Check for Ctrl+N
-      if (e.ctrlKey && e.key === 'n') {
+      // Check for Ctrl+Shift+N
+      if (e.ctrlKey && e.shiftKey && e.key === 'N') {
         e.preventDefault()
         // Open complaint form in new tab
         window.open('/crm/complaint/new', '_blank')
       }
     }
 
+    
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [])
