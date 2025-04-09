@@ -14,7 +14,7 @@ export function ThemeProvider({
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Check for Ctrl+Alt+N
-      if (e.ctrlKey && e.altKey && e.key === 'N') {
+      if (e.altKey && e.key === 'N') {
         e.preventDefault()
         router.push('/crm/complaints/create')
       }
