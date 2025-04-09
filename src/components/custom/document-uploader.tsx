@@ -11,12 +11,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { warrantyTypeOptions } from "@/lib/otpions";
 import SubmitButton from "@/components/custom/submit-button";
-import { Upload, Loader2, X, FilePlus, AlertCircle } from "lucide-react";
+import { Upload, X, FilePlus, AlertCircle } from "lucide-react"; // Removed unused Loader2 import
 import { useUploadContext } from "@/providers/UploadContext";
+import { warrantyTypeOptions } from "@/lib/otpions";
 
-interface ImageUploaderProps {
+interface DocumentUploaderProps { // Renamed interface to match component name
   onDone: (files: any) => void;
   errorMessage?: string;
   showFileList?: boolean;
@@ -26,14 +26,13 @@ export default function DocumentUploader({
   onDone,
   errorMessage = "",
   showFileList = true,
-}: ImageUploaderProps) {
+}: DocumentUploaderProps) {
   const {
     status,
     progress,
     error: contextError,
     uploadFiles,
     cancelUpload,
-    resetUploadState,
     uploadConfig,
   } = useUploadContext();
 
@@ -51,20 +50,17 @@ export default function DocumentUploader({
   // Handle keyboard shortcuts
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
-      // Upload shortcut (Ctrl+Q or Command+Q)
-      if ((e.ctrlKey || e.metaKey) && e.key === 'q') {
-        e.preventDefault();
-        if (status !== "uploading" && documentType && files.length > 0) {
-          handleUpload();
+      if (e.ctrlKey || e.metaKey) {
+        if (e.key === 'q') {
+          e.preventDefault();
+          if (!isUploading && documentType && files.length > 0) {
+            handleUpload();
+          }
+        } else if (e.key === 'u') {
+          e.preventDefault();
+          !isUploading && fileInputRef.current?.click();
         }
-      }
-      // Select files shortcut (Ctrl+U or Command+U)
-      else if ((e.ctrlKey || e.metaKey) && e.key === 'u') {
-        e.preventDefault();
-        fileInputRef.current?.click();
-      }
-      // Cancel shortcut (Escape)
-      else if (e.key === 'Escape' && files.length > 0) {
+      } else if (e.key === 'Escape' && files.length > 0) {
         e.preventDefault();
         handleCancel();
       }
@@ -72,7 +68,7 @@ export default function DocumentUploader({
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [files, documentType, status]);
+  }, [files, documentType, status, isUploading]);
 
   // Reset state when upload is successful
   useEffect(() => {
@@ -98,8 +94,9 @@ export default function DocumentUploader({
     const handleDragLeave = (e: DragEvent) => {
       e.preventDefault();
       e.stopPropagation();
-      setDragCounter(prev => prev - 1);
-      if (dragCounter - 1 === 0) {
+      const newCounter = dragCounter - 1;
+      setDragCounter(newCounter);
+      if (newCounter === 0) {
         setIsDragging(false);
       }
     };
@@ -117,10 +114,7 @@ export default function DocumentUploader({
 
       if (e.dataTransfer) {
         const droppedFiles = Array.from(e.dataTransfer.files);
-        if (validateFiles(droppedFiles)) {
-          setFiles(droppedFiles);
-          setLocalError(null);
-        }
+        validateFiles(droppedFiles) && setFiles(droppedFiles);
       }
     };
 
@@ -135,67 +129,59 @@ export default function DocumentUploader({
       dropZone.removeEventListener('dragover', handleDragOver);
       dropZone.removeEventListener('drop', handleDrop);
     };
-  }, [dragCounter, uploadConfig]);
+  }, [dragCounter]);
 
   // Handle global drop events (overlay)
   useEffect(() => {
-    const handleGlobalDragEnter = (e: DragEvent) => {
-      e.preventDefault();
-      setDragCounter(prev => prev + 1);
-      setIsDragging(true);
-    };
-
-    const handleGlobalDragLeave = (e: DragEvent) => {
-      e.preventDefault();
-      setDragCounter(prev => prev - 1);
-      if (dragCounter - 1 === 0) {
+    const handlers = {
+      dragenter: (e: DragEvent) => {
+        e.preventDefault();
+        setDragCounter(prev => prev + 1);
+        setIsDragging(true);
+      },
+      dragleave: (e: DragEvent) => {
+        e.preventDefault();
+        const newCounter = dragCounter - 1;
+        setDragCounter(newCounter);
+        if (newCounter === 0) {
+          setIsDragging(false);
+        }
+      },
+      dragover: (e: DragEvent) => e.preventDefault(),
+      drop: (e: DragEvent) => {
+        e.preventDefault();
         setIsDragging(false);
-      }
-    };
+        setDragCounter(0);
 
-    const handleGlobalDragOver = (e: DragEvent) => {
-      e.preventDefault();
-    };
-
-    const handleGlobalDrop = (e: DragEvent) => {
-      e.preventDefault();
-      setIsDragging(false);
-      setDragCounter(0);
-
-      if (e.dataTransfer) {
-        const droppedFiles = Array.from(e.dataTransfer.files);
-        if (validateFiles(droppedFiles)) {
-          setFiles(droppedFiles);
-          setLocalError(null);
+        if (e.dataTransfer) {
+          const droppedFiles = Array.from(e.dataTransfer.files);
+          validateFiles(droppedFiles) && setFiles(droppedFiles);
         }
       }
     };
 
-    window.addEventListener('dragenter', handleGlobalDragEnter);
-    window.addEventListener('dragleave', handleGlobalDragLeave);
-    window.addEventListener('dragover', handleGlobalDragOver);
-    window.addEventListener('drop', handleGlobalDrop);
+    Object.entries(handlers).forEach(([event, handler]) => {
+      window.addEventListener(event as keyof typeof handlers, handler);
+    });
 
     return () => {
-      window.removeEventListener('dragenter', handleGlobalDragEnter);
-      window.removeEventListener('dragleave', handleGlobalDragLeave);
-      window.removeEventListener('dragover', handleGlobalDragOver);
-      window.removeEventListener('drop', handleGlobalDrop);
+      Object.entries(handlers).forEach(([event, handler]) => {
+        window.removeEventListener(event as keyof typeof handlers, handler);
+      });
     };
-  }, [dragCounter, uploadConfig]);
+  }, [dragCounter]);
 
   const validateFiles = (filesToValidate: File[]) => {
     const maxSizeBytes = uploadConfig.maxFileSize * 1024 * 1024;
-
-    // Check file size
     const oversizedFiles = filesToValidate.filter(file => file.size > maxSizeBytes);
+
     if (oversizedFiles.length > 0) {
       const fileNames = oversizedFiles.map(f => f.name).join(", ");
-      const errorMsg = `Files exceeding ${uploadConfig.maxFileSize}MB: ${fileNames}`;
-      setLocalError(errorMsg);
+      setLocalError(`Files exceeding ${uploadConfig.maxFileSize}MB: ${fileNames}`);
       return false;
     }
 
+    setLocalError(null);
     return true;
   };
 
@@ -203,26 +189,18 @@ export default function DocumentUploader({
     const selectedFiles = event.target.files;
     if (selectedFiles) {
       const fileArray = Array.from(selectedFiles);
-      if (validateFiles(fileArray)) {
-        setFiles(fileArray);
-        setLocalError(null);
-      }
-      // Reset the input value to allow selecting the same file again
-      event.target.value = "";
+      validateFiles(fileArray) && setFiles(fileArray);
+      event.target.value = ""; // Reset input
     }
   };
 
   const handleUpload = async () => {
     const result = await uploadFiles(files, documentType);
-    if (result) {
-      onDone(result);
-    }
+    result && onDone(result);
   };
 
   const handleCancel = () => {
-    if (status === "uploading") {
-      cancelUpload();
-    }
+    isUploading && cancelUpload();
     setFiles([]);
     setLocalError(null);
   };
@@ -351,7 +329,6 @@ export default function DocumentUploader({
           </div>
         </div>
 
-        {/* File list display */}
         {showFileList && files.length > 0 && (
           <div className="mt-2">
             <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">
@@ -386,7 +363,6 @@ export default function DocumentUploader({
           </div>
         )}
 
-        {/* Error display */}
         {displayError && (
           <div className="flex items-center gap-2 text-sm text-red-500 bg-red-50 dark:bg-red-900/20 p-2 rounded">
             <AlertCircle className="h-4 w-4" />
@@ -394,7 +370,6 @@ export default function DocumentUploader({
           </div>
         )}
 
-        {/* Keyboard shortcuts help */}
         <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
           <span className="font-medium">Shortcuts:</span> Upload (Ctrl+Q) · Select files (Ctrl+U) · Cancel (Esc)
         </div>
