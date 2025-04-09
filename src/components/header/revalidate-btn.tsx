@@ -1,13 +1,13 @@
 "use client";
-import React, { FormEvent } from "react";
+import React, { FormEvent, useEffect } from "react";
 import { Loader, RefreshCcw } from "lucide-react";
 import { revalidate } from "@/actions/revalidate";
 import { toast } from "react-toastify";
 
 export function RevalidateBtn() {
   const [revalidating, setRevalidating] = React.useState(false);
-  const onSubmit = async (e: FormEvent) => {
-    e.preventDefault();
+
+  const handleRevalidate = async () => {
     setRevalidating(true);
     try {
       await revalidate({ path: "/" });
@@ -18,6 +18,25 @@ export function RevalidateBtn() {
       setRevalidating(false);
     }
   };
+
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (event.altKey && event.key === 'r') {
+        handleRevalidate();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, []);
+
+  const onSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    await handleRevalidate();
+  };
+
   return (
     <form onSubmit={onSubmit}>
       <React.Fragment>
