@@ -14,7 +14,7 @@ export function ThemeProvider({
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Check for Ctrl+Shift+N
-      if (e.ctrlKey && e.shiftKey && e.key === 'N') {
+      if (e.ctrlKey && e.altKey && e.key === 'N') {
         e.preventDefault()
         window.open('/crm/complaints/create', '_blank')
       }
