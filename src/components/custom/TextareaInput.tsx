@@ -33,7 +33,7 @@ export function TextareaInput({
   const [value, setValue] = React.useState<string>(String(props.value || ''));
   const [searchTerm, setSearchTerm] = React.useState('');
   const [customOptions, setCustomOptions] = React.useState<string[]>([]);
-  const [options, setOptions] = React.useState<string[]>([]);
+  const [options, setOptions] = React.useState<string[]>(predefinedOptions);
   const [open, setOpen] = React.useState(false);
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
   const dropdownRef = React.useRef<HTMLDivElement>(null);
@@ -42,11 +42,7 @@ export function TextareaInput({
   const hasOptions = predefinedOptions.length > 0 || customOptions.length > 0;
 
   React.useEffect(() => {
-    if (predefinedOptions.length > 0) {
-      setOptions([...predefinedOptions, ...customOptions]);
-    } else {
-      setOptions([...customOptions]);
-    }
+    setOptions([...predefinedOptions, ...customOptions]);
   }, [predefinedOptions, customOptions]);
 
   // Handle clicking outside to close dropdown
@@ -106,8 +102,7 @@ export function TextareaInput({
 
   const handleAddCustom = () => {
     if (searchTerm.trim()) {
-      setCustomOptions([...customOptions, searchTerm]);
-      setOptions([...options, searchTerm]);
+      setCustomOptions(prev => [...prev, searchTerm]);
       handleSelect(searchTerm);
     }
   };

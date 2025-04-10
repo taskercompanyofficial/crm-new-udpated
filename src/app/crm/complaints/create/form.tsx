@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
 export default function Form() {
+  const router = useRouter();
   const session = useSession();
   const token = session.data?.user?.token || "";
   const [history, setHistory] = useState<any[]>([]);
@@ -44,7 +45,6 @@ export default function Form() {
     status: "open",
     call_status: "pending",
   });
-  const router = useRouter();
 
   // Check online status
   useEffect(() => {
@@ -122,7 +122,8 @@ export default function Form() {
         onSuccess: (response) => {
           toast.success(response.message);
           setHasUnsavedChanges(false);
-          router.push("/crm/complaints/edit/" + response.data.id);
+          const url = `/crm/complaints/edit/${response.data.id}`;
+          window.location.href = url;
         },
         onError: (error) => {
           toast.error(error.message);
