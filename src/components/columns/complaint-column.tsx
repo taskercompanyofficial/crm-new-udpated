@@ -131,6 +131,12 @@ export const ComplaintsColumns = (): ColumnDef<ComplaintsType>[] => [
     ),
   },
   {
+    accessorKey: "dealer",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Dealer" />
+    )
+  },
+  {
     accessorKey: "reference_by",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Reference By" />
