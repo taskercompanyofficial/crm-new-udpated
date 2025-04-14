@@ -38,11 +38,14 @@ export function TasksTableFloatingBar({ table }: TasksTableFloatingBarProps) {
     return () => window.removeEventListener("keydown", clearSelection);
   }, [table]);
 
-  // Copy on Ctrl+C
+  // Copy on Ctrl+C and Edit on Ctrl+E
   React.useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
       if ((event.ctrlKey || event.metaKey) && event.key === 'c' && selectedRows.length > 0) {
         copyToClipboard(selectedRows);
+      }
+      if ((event.ctrlKey || event.metaKey) && event.key === 'e' && selectedRows.length === 1) {
+        window.open(`${window.location.pathname}/edit/${selectedRows[0].original.id}`, '_blank');
       }
     };
 
@@ -225,7 +228,7 @@ export function TasksTableFloatingBar({ table }: TasksTableFloatingBarProps) {
                       <Edit className="w-4 h-4" />
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent>Edit record</TooltipContent>
+                  <TooltipContent>Edit record (Ctrl+E)</TooltipContent>
                 </Tooltip>
               )}
 

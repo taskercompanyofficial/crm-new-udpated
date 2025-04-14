@@ -9,12 +9,7 @@ export default function LoginLayout({ children }: { children: React.ReactNode })
         <div className="flex flex-col gap-6 pt-8 lg:pt-12">
           <div className="flex justify-center lg:justify-start">
             <Link href="/" className="flex items-center gap-2 font-medium">
-              <div className="flex h-6 w-6 items-center justify-center rounded-md bg-blue-100/20 text-blue-50">
-                <Laptop2 className="size-4" />
-              </div>
-              <span className="text-lg sm:text-xl font-medium text-blue-50">
-                Tasker Company CRM
-              </span>
+              <Image src="/simple-icon.png" alt="Tasker Company CRM" width={100} height={100} />
             </Link>
           </div>
           <div className="flex flex-1 items-center justify-center py-8 lg:py-12">
