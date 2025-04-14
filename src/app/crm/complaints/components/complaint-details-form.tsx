@@ -41,29 +41,31 @@ export default function ComplaintDetailsForm({
           className="transition-all duration-200 hover:shadow-md"
         />
         <LabelInputContainer
-          label="Serial Number In"
-          placeholder="Serial Number In"
+          label="SERIAL NUMBER IN"
+          placeholder="SERIAL NUMBER IN"
           onChange={(e) =>
-            setData({ ...data, serial_number_ind: e.target.value })
+            setData({ ...data, serial_number_ind: e.target.value.toUpperCase() })
           }
           value={data.serial_number_ind}
           errorMessage={errors.serial_number_ind}
           className="transition-all duration-200 hover:shadow-md uppercase"
         />
         <LabelInputContainer
-          label="Serial Number Out"
-          placeholder="Serial Number Out"
+          label="SERIAL NUMBER OUT"
+          placeholder="SERIAL NUMBER OUT"
           onChange={(e) =>
-            setData({ ...data, serial_number_oud: e.target.value })
+            setData({ ...data, serial_number_oud: e.target.value.toUpperCase() })
           }
           value={data.serial_number_oud}
           errorMessage={errors.serial_number_oud}
           className="transition-all duration-200 hover:shadow-md uppercase"
         />
         <LabelInputContainer
-          label="Model Number"
-          placeholder="Model Number"
-          onChange={(e) => setData({ ...data, model: e.target.value })}
+          label="MODEL NUMBER"
+          placeholder="MODEL NUMBER"
+          onChange={(e) => 
+            setData({ ...data, model: e.target.value.toUpperCase() })
+          }
           value={data.model}
           errorMessage={errors.model}
           className="transition-all duration-200 hover:shadow-md uppercase"
