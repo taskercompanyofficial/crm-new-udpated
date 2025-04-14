@@ -43,9 +43,13 @@ export default function ComplaintDetailsForm({
         <LabelInputContainer
           label="SERIAL NUMBER IN"
           placeholder="SERIAL NUMBER IN"
-          onChange={(e) =>
-            setData({ ...data, serial_number_ind: e.target.value.toUpperCase() })
-          }
+          onChange={(e) => {
+            const cursorPosition = e.target.selectionStart;
+            const newValue = e.target.value.toUpperCase();
+            setData({ ...data, serial_number_ind: newValue });
+            // Maintain cursor position after uppercase conversion
+            setTimeout(() => e.target.setSelectionRange(cursorPosition, cursorPosition), 0);
+          }}
           value={data.serial_number_ind}
           errorMessage={errors.serial_number_ind}
           className="transition-all duration-200 hover:shadow-md uppercase"
@@ -53,9 +57,13 @@ export default function ComplaintDetailsForm({
         <LabelInputContainer
           label="SERIAL NUMBER OUT"
           placeholder="SERIAL NUMBER OUT"
-          onChange={(e) =>
-            setData({ ...data, serial_number_oud: e.target.value.toUpperCase() })
-          }
+          onChange={(e) => {
+            const cursorPosition = e.target.selectionStart;
+            const newValue = e.target.value.toUpperCase();
+            setData({ ...data, serial_number_oud: newValue });
+            // Maintain cursor position after uppercase conversion
+            setTimeout(() => e.target.setSelectionRange(cursorPosition, cursorPosition), 0);
+          }}
           value={data.serial_number_oud}
           errorMessage={errors.serial_number_oud}
           className="transition-all duration-200 hover:shadow-md uppercase"
@@ -63,9 +71,13 @@ export default function ComplaintDetailsForm({
         <LabelInputContainer
           label="MODEL NUMBER"
           placeholder="MODEL NUMBER"
-          onChange={(e) => 
-            setData({ ...data, model: e.target.value.toUpperCase() })
-          }
+          onChange={(e) => {
+            const cursorPosition = e.target.selectionStart;
+            const newValue = e.target.value.toUpperCase();
+            setData({ ...data, model: newValue });
+            // Maintain cursor position after uppercase conversion
+            setTimeout(() => e.target.setSelectionRange(cursorPosition, cursorPosition), 0);
+          }}
           value={data.model}
           errorMessage={errors.model}
           className="transition-all duration-200 hover:shadow-md uppercase"
