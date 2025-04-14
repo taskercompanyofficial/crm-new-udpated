@@ -22,9 +22,7 @@ export default function ComplaintDetailsForm({
   errors: any;
   technician?: dataTypeIds[];
 }) {
-  const { data: branchesData, isLoading: branchesLoading } = useFetch<
-    dataTypeIds[]
-  >(`${API_URL}/crm/fetch-branches`);
+
 
   return (
     <div className="p-4 space-y-6 bg-white rounded-lg shadow-sm dark:bg-slate-900">
@@ -97,23 +95,7 @@ export default function ComplaintDetailsForm({
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-        {!branchesLoading && branchesData ? (
-          <SearchSelect
-            options={branchesData}
-            label="Branch"
-            value={data.branch_id}
-            onChange={(e) => setData({ ...data, branch_id: e })}
-            width="full"
-            className="transition-all duration-200"
-            errorMessage={errors.branch_id}
-          />
-        ) : (
-          <div className="space-y-2">
-            <Skeleton className="w-24 h-4" />
-            <Skeleton className="w-full h-12" />
-          </div>
-        )}
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <div className="space-y-2">
           {technician ? (
             <div className="flex-1">

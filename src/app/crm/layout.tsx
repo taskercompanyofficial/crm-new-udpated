@@ -15,6 +15,7 @@ import Link from "next/link";
 import React from "react";
 import Header from "@/components/header/header";
 import { UploadProvider } from "@/providers/UploadContext";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 export default async function AuthenticatedLayout({
   children,
@@ -46,14 +47,16 @@ export default async function AuthenticatedLayout({
     );
   }
   return (
-    <UploadProvider>
-      <SidebarProvider>
-        <AppSidebar />
-        <SidebarInset className="overflow-x-hidden">
-          <Header userDetails={userDetails} />
-          <div className="p-4 bg-background">{children}</div>
-        </SidebarInset>
-      </SidebarProvider>
-    </UploadProvider>
+    <GoogleOAuthProvider clientId="333114966119-p58epscu427btagfugqtkfv8q3tq1an4.apps.googleusercontent.com">
+      <UploadProvider>
+        <SidebarProvider>
+          <AppSidebar />
+          <SidebarInset className="overflow-x-hidden">
+            <Header userDetails={userDetails} />
+            <div className="p-4 bg-background">{children}</div>
+          </SidebarInset>
+        </SidebarProvider>
+      </UploadProvider>
+    </GoogleOAuthProvider>
   );
 }
