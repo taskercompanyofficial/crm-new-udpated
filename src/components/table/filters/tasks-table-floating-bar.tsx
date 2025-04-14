@@ -26,16 +26,34 @@ export function TasksTableFloatingBar({ table }: TasksTableFloatingBarProps) {
     "export" | "generate-image"
   >();
 
-  // Clear selection with Escape key
+  // Handle keyboard navigation and selection
   React.useEffect(() => {
-    const clearSelection = (event: KeyboardEvent) => {
+    const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         table.toggleAllRowsSelected(false);
       }
+
+      // Handle Ctrl + Arrow keys for selection
+      if (event.ctrlKey) {
+        const allRows = table.getRowModel().rows;
+        const currentSelectedIndex = allRows.findIndex(row => row.getIsSelected());
+
+        if (event.key === "ArrowDown" && currentSelectedIndex < allRows.length - 1) {
+          event.preventDefault();
+          const nextRow = allRows[currentSelectedIndex + 1];
+          table.setRowSelection({ [nextRow.id]: true });
+        }
+
+        if (event.key === "ArrowUp" && currentSelectedIndex > 0) {
+          event.preventDefault();
+          const prevRow = allRows[currentSelectedIndex - 1];
+          table.setRowSelection({ [prevRow.id]: true });
+        }
+      }
     };
 
-    window.addEventListener("keydown", clearSelection);
-    return () => window.removeEventListener("keydown", clearSelection);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [table]);
 
   // Copy on Ctrl+C and Edit on Ctrl+E
@@ -53,6 +71,7 @@ export function TasksTableFloatingBar({ table }: TasksTableFloatingBarProps) {
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, [selectedRows]);
 
+  // Rest of the component remains the same...
   const copyToClipboard = (rows: any[]) => {
     const formattedText = rows
       .map((row) => {
