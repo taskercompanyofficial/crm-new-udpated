@@ -32,6 +32,7 @@ export default function DuplicateForm({
     dealer: complaint.dealer,
     reference_by: complaint.reference_by,
     brand_id: complaint.brand_id,
+    branch_id: complaint.branch_id,
     extra_numbers: complaint.extra_numbers,
     working_details: complaint.working_details,
     product: complaint.product,
