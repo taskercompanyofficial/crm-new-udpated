@@ -130,125 +130,125 @@ export default function BasicForm({
             }
             errorMessage={errors.extra_numbers}
           />
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-4">
-            {!branchesLoading && branchesData ? (
-              <SearchSelect
-                options={branchesData}
-                label="Branch"
-                value={data.branch_id}
-                onChange={(e) => setData({ ...data, branch_id: e })}
-                width="full"
-                className="transition-all duration-200"
-                errorMessage={errors.branch_id}
-              />
-            ) : (
-              <div className="space-y-2">
-                <Skeleton className="w-24 h-4" />
-                <Skeleton className="w-full h-12" />
-              </div>
-            )}
+        </div>
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-4">
+          {!branchesLoading && branchesData ? (
             <SearchSelect
-              label="Dealers"
-              options={(() => {
-                const defaultOptions: dataTypeIds[] = [
-                  { value: "Lahore Center", label: "Lahore Center", id: "1", image: "" },
-                  { value: "Multi Electronics", label: "Multi Electronics", id: "2", image: "" },
-                  { value: "Afzal Electronics", label: "Afzal Electronics", id: "3", image: "" },
-                  { value: "Madina Electronics", label: "Madina Electronics", id: "4", image: "" },
-                  { value: "Metro Cash & Carry LHR", label: "Metro Cash & Carry LHR", id: "5", image: "" },
-                  { value: "Metro Cash & Carry ISB", label: "Metro Cash & Carry ISB", id: "6", image: "" },
-                  { value: "Imtiaz Store", label: "Imtiaz Store", id: "7", image: "" },
-                  { value: "E-Lux", label: "E-Lux", id: "8", image: "" },
-                  { value: "Dawlance Experience Store", label: "Dawlance Experience Store", id: "9", image: "" },
-                  { value: "Al-Mumtaz Group", label: "Al-Mumtaz Group", id: "10", image: "" },
-                  { value: "Japan ELC ISB/RWP", label: "Japan ELC ISB/RWP", id: "11", image: "" },
-                  { value: "Friends ELc ISB/RWP", label: "Friends ELc ISB/RWP", id: "12", image: "" },
-                  { value: "Minhaj Trader Bedian RD", label: "Minhaj Trader Bedian RD", id: "12", image: "" },
-                  { value: "Minhaj Trader Bedian Walton", label: "Minhaj Trader Bedian Walton", id: "12", image: "" },
-                  { value: "Itfaq Electronincs", label: "Itfaq Electronincs", id: "12", image: "" },
-                  { value: "Modern Center Collage Road LHR", label: "Modern Center Collage Road LHR", id: "13", image: "" },
-                  { value: "Alfatah Electronics", label: "Alfatah Electronics", id: "14", image: "" },
-                  { value: "Fridge Center", label: "Fridge Center", id: "14", image: "" },
-                  { value: "CC", label: "CC", id: "15", image: "" },
-                  { value: "Same Brand", label: "Same Brand", id: "16", image: "" },
-                  { value: "Dealer Pending", label: "Dealer Pending", id: "16", image: "" }
-                ];
-
-                if (data.reference_by && !defaultOptions.find((opt) => opt.value === data.reference_by)) {
-                  return [...defaultOptions, {
-                    value: data.reference_by,
-                    label: data.reference_by,
-                    id: String(defaultOptions.length + 1),
-                    image: ""
-                  }];
-                }
-
-                return defaultOptions;
-              })()}
-              value={data.dealer}
-              onChange={(value: string) => setData({ ...data, dealer: value })}
+              options={branchesData}
+              label="Branch"
+              value={data.branch_id}
+              onChange={(e) => setData({ ...data, branch_id: e })}
               width="full"
-              customizable
-              errorMessage={errors.dealer}
+              className="transition-all duration-200"
+              errorMessage={errors.branch_id}
             />
+          ) : (
+            <div className="space-y-2">
+              <Skeleton className="w-24 h-4" />
+              <Skeleton className="w-full h-12" />
+            </div>
+          )}
+          <SearchSelect
+            label="Dealers"
+            options={(() => {
+              const defaultOptions: dataTypeIds[] = [
+                { value: "Lahore Center", label: "Lahore Center", id: "1", image: "" },
+                { value: "Multi Electronics", label: "Multi Electronics", id: "2", image: "" },
+                { value: "Afzal Electronics", label: "Afzal Electronics", id: "3", image: "" },
+                { value: "Madina Electronics", label: "Madina Electronics", id: "4", image: "" },
+                { value: "Metro Cash & Carry LHR", label: "Metro Cash & Carry LHR", id: "5", image: "" },
+                { value: "Metro Cash & Carry ISB", label: "Metro Cash & Carry ISB", id: "6", image: "" },
+                { value: "Imtiaz Store", label: "Imtiaz Store", id: "7", image: "" },
+                { value: "E-Lux", label: "E-Lux", id: "8", image: "" },
+                { value: "Dawlance Experience Store", label: "Dawlance Experience Store", id: "9", image: "" },
+                { value: "Al-Mumtaz Group", label: "Al-Mumtaz Group", id: "10", image: "" },
+                { value: "Japan ELC ISB/RWP", label: "Japan ELC ISB/RWP", id: "11", image: "" },
+                { value: "Friends ELc ISB/RWP", label: "Friends ELc ISB/RWP", id: "12", image: "" },
+                { value: "Minhaj Trader Bedian RD", label: "Minhaj Trader Bedian RD", id: "12", image: "" },
+                { value: "Minhaj Trader Bedian Walton", label: "Minhaj Trader Bedian Walton", id: "12", image: "" },
+                { value: "Itfaq Electronincs", label: "Itfaq Electronincs", id: "12", image: "" },
+                { value: "Modern Center Collage Road LHR", label: "Modern Center Collage Road LHR", id: "13", image: "" },
+                { value: "Alfatah Electronics", label: "Alfatah Electronics", id: "14", image: "" },
+                { value: "Fridge Center", label: "Fridge Center", id: "14", image: "" },
+                { value: "CC", label: "CC", id: "15", image: "" },
+                { value: "Same Brand", label: "Same Brand", id: "16", image: "" },
+                { value: "Dealer Pending", label: "Dealer Pending", id: "16", image: "" }
+              ];
+
+              if (data.reference_by && !defaultOptions.find((opt) => opt.value === data.reference_by)) {
+                return [...defaultOptions, {
+                  value: data.reference_by,
+                  label: data.reference_by,
+                  id: String(defaultOptions.length + 1),
+                  image: ""
+                }];
+              }
+
+              return defaultOptions;
+            })()}
+            value={data.dealer}
+            onChange={(value: string) => setData({ ...data, dealer: value })}
+            width="full"
+            customizable
+            errorMessage={errors.dealer}
+          />
+          <SearchSelect
+            label="Product"
+            options={(() => {
+              const defaultOptions: dataTypeIds[] = [
+                { value: "Refrigerator", label: "Refrigerator", id: "1", image: "" },
+                { value: "Refrigerator Side by Side", label: "Refrigerator Side by Side", id: "2", image: "" },
+                { value: "Refrigerator French Door", label: "Refrigerator French Door", id: "3", image: "" },
+                { value: "Refrigerator Top Freezer", label: "Refrigerator Top Freezer", id: "4", image: "" },
+                { value: "Refrigerator Bottom Freezer", label: "Refrigerator Bottom Freezer", id: "5", image: "" },
+                { value: "Washing Machine", label: "Washing Machine", id: "6", image: "" },
+                { value: "Washing Machine Top Load", label: "Washing Machine Top Load", id: "7", image: "" },
+                { value: "Washing Machine Front Load", label: "Washing Machine Front Load", id: "8", image: "" },
+                { value: "Washing Machine Semi-Automatic", label: "Washing Machine Semi-Automatic", id: "9", image: "" },
+                { value: "Air Conditioner", label: "Air Conditioner", id: "10", image: "" },
+                { value: "Microwave", label: "Microwave", id: "11", image: "" },
+                { value: "Dishwasher", label: "Dishwasher", id: "12", image: "" },
+                { value: "Water Heater", label: "Water Heater", id: "13", image: "" },
+                { value: "Dryer", label: "Dryer", id: "14", image: "" },
+                { value: "Stove", label: "Stove", id: "15", image: "" },
+                { value: "Oven", label: "Oven", id: "16", image: "" },
+                { value: "LCD TV", label: "LCD TV", id: "17", image: "" },
+                { value: "LCD Monitor", label: "LCD Monitor", id: "18", image: "" }
+              ];
+
+              if (data.product && !defaultOptions.find((opt) => opt.value === data.product)) {
+                return [...defaultOptions, {
+                  value: data.product,
+                  label: data.product,
+                  id: String(defaultOptions.length + 1),
+                  image: ""
+                }];
+              }
+
+              return defaultOptions;
+            })()}
+            value={data.product}
+            onChange={(value: string) => setData({ ...data, product: value })}
+            width="full"
+            customizable
+          />
+          {!brandsLoading && brandsData ? (
             <SearchSelect
-              label="Product"
-              options={(() => {
-                const defaultOptions: dataTypeIds[] = [
-                  { value: "Refrigerator", label: "Refrigerator", id: "1", image: "" },
-                  { value: "Refrigerator Side by Side", label: "Refrigerator Side by Side", id: "2", image: "" },
-                  { value: "Refrigerator French Door", label: "Refrigerator French Door", id: "3", image: "" },
-                  { value: "Refrigerator Top Freezer", label: "Refrigerator Top Freezer", id: "4", image: "" },
-                  { value: "Refrigerator Bottom Freezer", label: "Refrigerator Bottom Freezer", id: "5", image: "" },
-                  { value: "Washing Machine", label: "Washing Machine", id: "6", image: "" },
-                  { value: "Washing Machine Top Load", label: "Washing Machine Top Load", id: "7", image: "" },
-                  { value: "Washing Machine Front Load", label: "Washing Machine Front Load", id: "8", image: "" },
-                  { value: "Washing Machine Semi-Automatic", label: "Washing Machine Semi-Automatic", id: "9", image: "" },
-                  { value: "Air Conditioner", label: "Air Conditioner", id: "10", image: "" },
-                  { value: "Microwave", label: "Microwave", id: "11", image: "" },
-                  { value: "Dishwasher", label: "Dishwasher", id: "12", image: "" },
-                  { value: "Water Heater", label: "Water Heater", id: "13", image: "" },
-                  { value: "Dryer", label: "Dryer", id: "14", image: "" },
-                  { value: "Stove", label: "Stove", id: "15", image: "" },
-                  { value: "Oven", label: "Oven", id: "16", image: "" },
-                  { value: "LCD TV", label: "LCD TV", id: "17", image: "" },
-                  { value: "LCD Monitor", label: "LCD Monitor", id: "18", image: "" }
-                ];
-
-                if (data.product && !defaultOptions.find((opt) => opt.value === data.product)) {
-                  return [...defaultOptions, {
-                    value: data.product,
-                    label: data.product,
-                    id: String(defaultOptions.length + 1),
-                    image: ""
-                  }];
-                }
-
-                return defaultOptions;
-              })()}
-              value={data.product}
-              onChange={(value: string) => setData({ ...data, product: value })}
+              options={brandsData}
+              label="Brand"
+              value={data.brand_id}
+              onChange={(e) => setData({ ...data, brand_id: e })}
               width="full"
+              className="mt-1"
               customizable
+              errorMessage={errors.brand_id}
             />
-            {!brandsLoading && brandsData ? (
-              <SearchSelect
-                options={brandsData}
-                label="Brand"
-                value={data.brand_id}
-                onChange={(e) => setData({ ...data, brand_id: e })}
-                width="full"
-                className="mt-1"
-                customizable
-                errorMessage={errors.brand_id}
-              />
-            ) : (
-              <div className="mt-1 space-y-2">
-                <Skeleton className="w-24 h-4" />
-                <Skeleton className="w-full h-12" />
-              </div>
-            )}
-          </div>
+          ) : (
+            <div className="mt-1 space-y-2">
+              <Skeleton className="w-24 h-4" />
+              <Skeleton className="w-full h-12" />
+            </div>
+          )}
         </div>
         <SelectInput
           label="Complaint Type"
@@ -319,6 +319,6 @@ export default function BasicForm({
           />
         </div>
       </div>
-    </div>
+    </div >
   );
 }
