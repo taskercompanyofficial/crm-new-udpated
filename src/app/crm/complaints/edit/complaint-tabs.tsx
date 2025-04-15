@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
@@ -39,6 +39,27 @@ export default function ComplaintTabs({
     "remarks",
     "history",
   ];
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey) {
+        if (e.key === 'ArrowRight') {
+          const currentIndex = tabs.indexOf(tab);
+          if (currentIndex < tabs.length - 1) {
+            setTab(tabs[currentIndex + 1]);
+          }
+        } else if (e.key === 'ArrowLeft') {
+          const currentIndex = tabs.indexOf(tab);
+          if (currentIndex > 0) {
+            setTab(tabs[currentIndex - 1]);
+          }
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [tab, tabs, setTab]);
 
   return (
     <Tabs defaultValue="basic" value={tab} onValueChange={setTab}>
