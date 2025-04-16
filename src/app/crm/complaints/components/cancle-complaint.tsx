@@ -4,7 +4,7 @@ import { Textarea } from '@/components/ui/textarea'
 import useForm from '@/hooks/use-form'
 import React from 'react'
 
-export default function CancelComplaint({ complaintId, token }: { complaintId: number, token: string }) {
+export default function CancelComplaint({ complaintId }: { complaintId: number }) {
     const { data, setData, processing, errors, put } = useForm({
         reason: '',
         details: ''

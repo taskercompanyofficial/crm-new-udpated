@@ -8,6 +8,7 @@ import ProductReceipt from "../components/generate-reciving";
 import SendMessageCustomerBtn from "../components/send-message-cutomer-btn";
 import { Checkbox } from "@/components/ui/checkbox";
 import ComplaintSchedulerDialog from '../components/sceduale';
+import CancelComplaint from '../components/cancle-complaint';
 
 interface ComplaintActionsProps {
   data: any;
@@ -92,6 +93,7 @@ export default function ComplaintActions({
           onChange={(e) => setData({ ...data, status: e })}
           errorMessage={errors.status}
         />
+        <CancelComplaint complaintId={id} />
       </div>
       <div className="flex items-center gap-2">
         <ProductReceipt
