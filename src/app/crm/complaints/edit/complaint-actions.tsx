@@ -50,7 +50,7 @@ export default function ComplaintActions({
     <>
       <div className="sticky top-0 z-10 bg-white rounded-lg border border-gray-100 shadow-sm">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-2 md:p-4">
-          <div className="flex flex-col gap-4 md:flex-row md:items-center justify-between w-full">
+          <div className="flex gap-4 items-center justify-between w-full">
             <div className="flex gap-1 md:gap-4">
               <Button
                 variant="ghost"
