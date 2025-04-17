@@ -192,7 +192,7 @@ export default function Form({
 
 
   return (
-    <div className="overflow-auto">
+    <div className="overflow-auto space-y-4">
       <ComplaintActions
         data={data}
         setData={handleDataUpdate}
