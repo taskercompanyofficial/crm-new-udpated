@@ -115,15 +115,15 @@ export default function History({
   return (
     <ScrollArea className="h-[500px]">
       <Table>
-        <TableHead>
+         <TableHeader>
           <TableRow>
-            <TableHeader>Event</TableHeader>
-            <TableHeader>User</TableHeader>
-            <TableHeader>Description</TableHeader>
-            <TableHeader>Actions</TableHeader>
-            <TableHeader>Timestamp</TableHeader>
+            <TableHead className="whitespace-nowrap">Event</TableHead>
+            <TableHead className="whitespace-nowrap">User</TableHead>
+            <TableHead className="whitespace-nowrap">Description</TableHead>
+            <TableHead className="whitespace-nowrap">Actions</TableHead>
+            <TableHead className="whitespace-nowrap">Timestamp</TableHead>
           </TableRow>
-        </TableHead>
+        </TableHeader>
         <TableBody>
           {isLoading && (
             [...Array(5)].map((_, i) => (
