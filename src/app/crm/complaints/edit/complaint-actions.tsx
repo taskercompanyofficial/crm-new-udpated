@@ -50,8 +50,11 @@ export default function ComplaintActions({
     <>
       <div className="sticky top-0 z-10 bg-white rounded-lg border border-gray-100 shadow-sm">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-2 md:p-4">
-          <div className="flex gap-4 items-center justify-between w-full">
+          <div className="flex gap-4 justify-between w-full">
             <div className="flex gap-1 md:gap-4">
+              {data.complain_num}
+            </div>
+            <div className="flex flex-col gap-4 md:flex-row md:gap-4">
               <Button
                 variant="ghost"
                 size="sm"
@@ -70,8 +73,6 @@ export default function ComplaintActions({
               >
                 <Redo2 className="h-4 w-4 text-gray-600" />
               </Button>
-            </div>
-            <div className="flex flex-col gap-4 md:flex-row md:gap-4">
               <SelectInput
                 options={PriorityOptions}
                 selected={data.priority}
@@ -102,6 +103,11 @@ export default function ComplaintActions({
                 className="w-full mt-4"
               />
               <div className="flex gap-2 items-center">
+                <Checkbox
+                  checked={autoSaveEnabled}
+                  onChange={toggleAutoSave}
+                  className="mr-2"
+                />
                 <SubmitBtn
                   className={`w-full ${buttonVariants({ variant: "default" })} ${hasUnsavedChanges ? "animate-pulse ring-2 ring-blue-200" : ""
                     }`}
@@ -111,11 +117,7 @@ export default function ComplaintActions({
                   <Save className="mr-2 h-4 w-4" />
                   {hasUnsavedChanges ? "Save Changes*" : "Save Changes"}
                 </SubmitBtn>
-                <Checkbox
-                  checked={autoSaveEnabled}
-                  onChange={toggleAutoSave}
-                  className="mr-2"
-                />
+
               </div>
             </div>
           </div>
