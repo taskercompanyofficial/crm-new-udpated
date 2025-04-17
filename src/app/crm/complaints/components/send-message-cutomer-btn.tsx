@@ -127,22 +127,13 @@ export default function SendMessageCustomerBtn({
       <CredenzaTrigger asChild>
         <Button
           variant="outline"
-          size="sm"
-          className={cn(
-            "flex min-w-[100px] items-center gap-1 text-xs sm:min-w-[120px] md:min-w-[140px] md:text-sm",
-            className,
-          )}
+          size="icon"
+          className="p-2"
         >
           {processing ? (
-            <>
-              <Loader2Icon className="h-3 w-3 animate-spin sm:h-3.5 sm:w-3.5 md:h-4 md:w-4" />
-              <span>Sending...</span>
-            </>
+            <Loader2Icon className="h-6 w-6 animate-spin" />
           ) : (
-            <>
-              <MessageCircleIcon className="h-3 w-3 sm:h-3.5 sm:w-3.5 md:h-4 md:w-4" />
-              <span>Send Message</span>
-            </>
+            <MessageCircleIcon className="h-6 w-6" />
           )}
         </Button>
       </CredenzaTrigger>

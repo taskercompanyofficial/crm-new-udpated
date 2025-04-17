@@ -14,8 +14,6 @@ import ComplaintActions from "./complaint-actions";
 import ComplaintFooter from "./complaint-footer";
 import useAutoSave from "@/hooks/complaint/use-auto-save";
 
-// Import custom hooks
-
 export default function Form({
   complaint,
   technician,
@@ -31,6 +29,7 @@ export default function Form({
   const [tab, setTab] = useState("advanced");
   const session = useSession();
   const token = session.data?.user?.token || "";
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   // Initialize form with useForm hook
   const { data, setData, processing, put, errors } = useForm({
@@ -103,7 +102,6 @@ export default function Form({
 
   const {
     isOnline,
-    pendingChanges,
     addPendingChange,
     pendingChangesCount
   } = useOfflineSync<ComplaintsType>(complaint?.id, syncData);
@@ -192,8 +190,9 @@ export default function Form({
   const filledDataFieldsCount = Object.values(data).filter(Boolean).length;
   const dataFieldsCount = Object.keys(data).length;
 
+
   return (
-    <div className="rounded-lg bg-white p-2 shadow-md dark:bg-slate-950 md:p-4 space-y-4">
+    <div className="overflow-auto">
       <ComplaintActions
         data={data}
         setData={handleDataUpdate}
@@ -204,7 +203,6 @@ export default function Form({
         redo={handleRedo}
         canUndo={canUndo}
         canRedo={canRedo}
-        complaintNumber={complaint?.complain_num}
         username={username}
         role={role}
         autoSaveEnabled={autoSaveEnabled}
@@ -222,6 +220,7 @@ export default function Form({
         complaintId={Number(complaint?.id || 0)}
         token={token}
       />
+
       <ComplaintFooter
         lastSaveTime={lastSaveTime}
         isOnline={isOnline}
@@ -233,6 +232,7 @@ export default function Form({
         autoSaveEnabled={autoSaveEnabled}
         timeUntilNextSave={timeUntilNextSave}
       />
+
     </div>
   );
 }

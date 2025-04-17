@@ -141,9 +141,8 @@ export default function ProductReceipt({ complaint, username, role }: Props) {
 
   return (
     <div>
-      <Button size="sm" variant="outline" onClick={handlePrint}>
+      <Button size="icon" variant='outline' onClick={handlePrint}>
         <Printer className="mr-2 h-4 w-4" />
-        Print Receipt
       </Button>
 
       <div style={receiptContainerStyle}>
@@ -159,14 +158,14 @@ export default function ProductReceipt({ complaint, username, role }: Props) {
               height: "auto",
             }}
           />
-          <div style={{...headerStyle}}>
-            <h2 style={{...titleStyle, margin: '0px'}}>PRODUCT RECEIPT</h2>
-            <h3 style={{...companyNameStyle, margin: '0px'}}>Tasker Company</h3>
-            <p style={{...contactInfoStyle, margin: '0px'}}>
+          <div style={{ ...headerStyle }}>
+            <h2 style={{ ...titleStyle, margin: '0px' }}>PRODUCT RECEIPT</h2>
+            <h3 style={{ ...companyNameStyle, margin: '0px' }}>Tasker Company</h3>
+            <p style={{ ...contactInfoStyle, margin: '0px' }}>
               <strong>CALL - WHATSAPP</strong> 03025117000 -{" "}
               <strong>Landline</strong> 04236667000
             </p>
-            <p style={{...addressStyle, margin: '0px'}}>
+            <p style={{ ...addressStyle, margin: '0px' }}>
               St: 09 Iqbal Park DHA Main Boulevard Lahore
             </p>
           </div>

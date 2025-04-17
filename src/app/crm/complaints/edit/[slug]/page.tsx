@@ -84,12 +84,12 @@ export default async function Page({ params }: { params: { slug: string } }) {
     }
 
     return (
-      <Form
-        complaint={response.data}
-        technician={technicians.data}
-        username={userDetails?.full_name || ""}
-        role={userDetails?.role || ""}
-      />
+        <Form
+          complaint={response.data}
+          technician={technicians.data}
+          username={userDetails?.full_name || ""}
+          role={userDetails?.role || ""}
+        />
     );
   } catch (error) {
     console.error("Error fetching complaint:", error);

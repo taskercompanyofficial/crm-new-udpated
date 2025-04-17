@@ -45,7 +45,7 @@ export const ComplaintsColumns = (): ColumnDef<ComplaintsType>[] => [
   {
     accessorKey: "created_at",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Pending Days" />
+      <DataTableColumnHeader column={column} title="Job Age" />
     ),
     cell: ({ row }) => {
       const created_at = row.getValue("created_at") as Date;

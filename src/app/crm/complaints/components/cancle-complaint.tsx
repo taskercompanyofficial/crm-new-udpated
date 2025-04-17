@@ -1,16 +1,33 @@
 import { Credenza, CredenzaBody, CredenzaContent, CredenzaDescription, CredenzaHeader, CredenzaTitle, CredenzaTrigger } from '@/components/custom/credenza'
+import { Button } from '@/components/ui/button'
+import { LabelInputContainer } from '@/components/ui/LabelInputContainer'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import useForm from '@/hooks/use-form'
-import React from 'react'
+import { X } from 'lucide-react'
+import React, { ChangeEvent } from 'react'
 
 export default function CancelComplaint({ complaintId }: { complaintId: number }) {
     const { data, setData, processing, errors, put } = useForm({
         reason: '',
-        details: ''
+        details: '',
+        file: null as File | null
     })
 
+    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            setData({ ...data, file: e.target.files[0] })
+        }
+    }
+
     const handleSubmit = () => {
+        const formData = new FormData()
+        formData.append('reason', data.reason)
+        formData.append('details', data.details)
+        if (data.file) {
+            formData.append('file', data.file)
+        }
+
         put(`/api/complaints/${complaintId}/cancel`, {
             onSuccess: () => {
                 window.location.href = `/complaints/${complaintId}`
@@ -20,7 +37,11 @@ export default function CancelComplaint({ complaintId }: { complaintId: number }
 
     return (
         <Credenza>
-            <CredenzaTrigger>Cancel</CredenzaTrigger>
+            <CredenzaTrigger>
+                <Button variant="destructive" size="icon">
+                    <X className='h-4 w-4' />
+                </Button>
+            </CredenzaTrigger>
             <CredenzaContent>
                 <CredenzaHeader>
                     <CredenzaTitle>
@@ -42,7 +63,11 @@ export default function CancelComplaint({ complaintId }: { complaintId: number }
                             <SelectItem value="other">Other</SelectItem>
                         </SelectContent>
                     </Select>
-
+                    <LabelInputContainer
+                        label='Attach File'
+                        type='file'
+                        onChange={handleFileChange}
+                    />
                     <Textarea
                         placeholder="Please provide additional details about cancellation..."
                         className="min-h-[100px]"
