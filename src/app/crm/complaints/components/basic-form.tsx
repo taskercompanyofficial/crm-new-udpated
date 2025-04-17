@@ -28,7 +28,7 @@ export default function BasicForm({
     dataTypeIds[]
   >(`${API_URL}/crm/fetch-branches`);
   return (
-    <div className="w-full space-y-2 bg-white dark:bg-gray-800">
+    <div className="w-full space-y-2 bg-white dark:bg-gray-800 p-2 rounded">
       <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
         <LabelInputContainer
           type="text"
