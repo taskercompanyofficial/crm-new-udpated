@@ -34,14 +34,20 @@ export default function ComplaintTabs({
   role
 }: ComplaintTabsProps) {
   const tabs = role === "administrator" 
-    ? ["history"] 
-    : [
+    ? [
         "basic",
         "advanced",
         "attachments",
         "store",
         "remarks",
         "history",
+      ] 
+    : [
+        "basic",
+        "advanced",
+        "attachments",
+        "store",
+        "remarks",
       ];
 
   useEffect(() => {
