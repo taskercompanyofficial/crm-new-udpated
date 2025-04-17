@@ -19,6 +19,7 @@ interface ComplaintTabsProps {
   technician?: dataTypeIds[];
   complaintId: number;
   token: string;
+  role: string
 }
 
 export default function ComplaintTabs({
@@ -29,16 +30,19 @@ export default function ComplaintTabs({
   errors,
   technician,
   complaintId,
-  token
+  token,
+  role
 }: ComplaintTabsProps) {
-  const tabs = [
-    "basic",
-    "advanced",
-    "attachments",
-    "store",
-    "remarks",
-    "history",
-  ];
+  const tabs = role === "administrator" 
+    ? ["history"] 
+    : [
+        "basic",
+        "advanced",
+        "attachments",
+        "store",
+        "remarks",
+        "history",
+      ];
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -77,9 +81,9 @@ export default function ComplaintTabs({
         </TabsList>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
-      
+
       <Separator className="my-2" />
-      
+
       <TabsContent value="basic">
         <BasicForm data={data} setData={setData} errors={errors} />
       </TabsContent>
@@ -100,9 +104,11 @@ export default function ComplaintTabs({
       <TabsContent value="remarks">
         <Remarks complaintId={complaintId || 0} />
       </TabsContent>
-      <TabsContent value="history">
-        <History id={complaintId} token={token} open={false} onOpenChange={() => {}} />
-      </TabsContent>
+      {role === 'administrator' &&
+        <TabsContent value="history">
+          <History id={complaintId} token={token} />
+        </TabsContent>
+      }
     </Tabs>
   );
 }

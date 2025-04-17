@@ -29,6 +29,7 @@ export default function Form({
   const [tab, setTab] = useState("advanced");
   const session = useSession();
   const token = session.data?.user?.token || "";
+  const userRole = session.data?.user?.role || "";
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   // Initialize form with useForm hook
@@ -204,7 +205,7 @@ export default function Form({
         canUndo={canUndo}
         canRedo={canRedo}
         username={username}
-        role={role}
+        role={userRole}
         autoSaveEnabled={autoSaveEnabled}
         toggleAutoSave={toggleAutoSave}
         errors={errors}
@@ -219,6 +220,7 @@ export default function Form({
         technician={technician}
         complaintId={Number(complaint?.id || 0)}
         token={token}
+        role={userRole}
       />
 
       <ComplaintFooter

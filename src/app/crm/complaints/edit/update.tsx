@@ -4,13 +4,9 @@ import Link from "next/link";
 import { Edit, Eye } from "lucide-react";
 
 export default function UpdateComplaint({
-  slug,
-  role,
-  status,
+  slug
 }: {
   slug: number;
-  role: string;
-  status: string;
 }) {
   return (
     <>
@@ -25,17 +21,17 @@ export default function UpdateComplaint({
         View
         <Eye />
       </Link>
-        <Link
-          href={`/authenticated/complaints/edit/${slug}`}
-          target="_blank"
-          className={`m-0 w-full py-1 ${buttonVariants({
-            variant: "ghost",
-            size: "sm",
-          })}`}
-        >
-          <Edit />
-          Update
-        </Link>
+      <Link
+        href={`/authenticated/complaints/edit/${slug}`}
+        target="_blank"
+        className={`m-0 w-full py-1 ${buttonVariants({
+          variant: "ghost",
+          size: "sm",
+        })}`}
+      >
+        <Edit />
+        Update
+      </Link>
     </>
   );
 }
