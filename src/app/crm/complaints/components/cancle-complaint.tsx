@@ -7,6 +7,7 @@ import useForm from '@/hooks/use-form'
 import { API_URL } from '@/lib/apiEndPoints'
 import { X } from 'lucide-react'
 import React, { ChangeEvent } from 'react'
+import { toast } from 'react-toastify'
 
 export default function CancelComplaint({ complaintId }: { complaintId: number }) {
     const { data, setData, processing, errors, put } = useForm({
@@ -30,9 +31,12 @@ export default function CancelComplaint({ complaintId }: { complaintId: number }
         }
 
         put(API_URL + `/crm/complaints/cancel/${complaintId}`, {
-            onSuccess: () => {
-                window.location.href = `/complaints/${complaintId}`
+            onSuccess: (response) => {
+                toast.success(response.message)
             },
+            onError: (error) => {
+                toast.error(error.message)
+            }
         })
     }
 
