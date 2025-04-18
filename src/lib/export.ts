@@ -74,8 +74,8 @@ export function exportTableToExcel<TData>(
         const cellRef = XLSX.utils.encode_cell({ r: 0, c: col });
         if (!ws[cellRef]) ws[cellRef] = { v: '' };
         ws[cellRef].s = {
-            fill: { fgColor: { rgb: "008000" } }, // Green background
-            font: { color: { rgb: "FFFFFF" } }    // White text
+            fill: { patternType: "solid", fgColor: { rgb: "FF008000" } }, // Green background
+            font: { bold: true, color: { rgb: "FFFFFFFF" } }    // White text
         };
     }
 
