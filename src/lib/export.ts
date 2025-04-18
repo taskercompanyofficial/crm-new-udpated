@@ -1,6 +1,7 @@
 import { type Table } from "@tanstack/react-table";
+import * as XLSX from "xlsx";
 
-export function exportTableToCSV<TData>(
+export function exportTableToExcel<TData>(
     /**
      * The table to export.
      * @type Table<TData>
@@ -8,13 +9,13 @@ export function exportTableToCSV<TData>(
     table: Table<TData>,
     opts: {
         /**
-         * The filename for the CSV file.
+         * The filename for the Excel file.
          * @default "table"
          * @example "tasks"
          */
         filename?: string;
         /**
-         * The columns to exclude from the CSV file.
+         * The columns to exclude from the Excel file.
          * @default []
          * @example ["select", "actions"]
          */
@@ -39,35 +40,24 @@ export function exportTableToCSV<TData>(
         .map((column) => column.id)
         .filter((id) => !excludeColumns.includes(id as keyof TData | "select" | "actions"));
 
-    // Build CSV content
-    const csvContent = [
-        headers.join(","),
-        ...(onlySelected
-            ? table.getFilteredSelectedRowModel().rows
-            : table.getRowModel().rows
-        ).map((row) =>
-            headers
-                .map((header) => {
-                    const cellValue = row.getValue(header);
-                    // Handle values that might contain commas or newlines
-                    return typeof cellValue === "string"
-                        ? `"${cellValue.replace(/"/g, '""')}"`
-                        : cellValue;
-                })
-                .join(","),
-        ),
-    ].join("\n");
+    // Get rows data
+    const rows = (onlySelected
+        ? table.getFilteredSelectedRowModel().rows
+        : table.getRowModel().rows
+    ).map((row) =>
+        headers.map((header) => row.getValue(header))
+    );
 
-    // Create a Blob with CSV content
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    // Create worksheet data with headers
+    const wsData = [headers, ...rows];
 
-    // Create a link and trigger the download
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.setAttribute("href", url);
-    link.setAttribute("download", `${filename}.csv`);
-    link.style.visibility = "hidden";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // Create workbook and worksheet
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(wsData);
+
+    // Add worksheet to workbook
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+    // Generate Excel file and trigger download
+    XLSX.writeFile(wb, `${filename}.xlsx`);
 }

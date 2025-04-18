@@ -1,7 +1,5 @@
-"use client";
-
+"use client";;
 import * as React from "react";
-import { type Row } from "@tanstack/react-table";
 
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { Button } from "@/components/ui/button";

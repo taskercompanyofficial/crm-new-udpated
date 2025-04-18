@@ -15,7 +15,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { exportTableToCSV } from "@/lib/export";
+import { exportTableToExcel } from "@/lib/export";
 import {
   CheckIcon,
   ChevronsUpDown,
@@ -80,7 +80,7 @@ export function DataTableViewOptions<TData>({
         role="combobox"
         size="sm"
         onClick={() =>
-          exportTableToCSV<TData>(table, {
+          exportTableToExcel<TData>(table, {
             filename: "Records",
             excludeColumns: getHiddenColumns() as Array<keyof TData | "select" | "actions">,
           })

@@ -9,7 +9,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-import { exportTableToCSV } from "@/lib/export";
+import { exportTableToExcel } from "@/lib/export";
 import { Kbd } from "@/components/ui/kbd";
 import { ClipboardCopyIcon, FileImage, X, DownloadIcon, Loader, Edit } from "lucide-react";
 import { toast } from "react-toastify";
@@ -294,7 +294,7 @@ export function TasksTableFloatingBar({ table }: TasksTableFloatingBarProps) {
                     onClick={() => {
                       setActiveMethod("export");
                       startTransition(() => {
-                        exportTableToCSV(table, {
+                        exportTableToExcel(table, {
                           excludeColumns: ["select", "actions"],
                           onlySelected: true,
                         });
@@ -305,7 +305,7 @@ export function TasksTableFloatingBar({ table }: TasksTableFloatingBarProps) {
                     <DownloadIcon className="w-4 h-4" />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent>Export CSV</TooltipContent>
+                <TooltipContent>Export Excel</TooltipContent>
               </Tooltip>
             </div>
           </div>
