@@ -170,7 +170,6 @@ export default function BasicForm({
               { value: "Alfatah Electronics", label: "Alfatah Electronics", id: "14", image: "" },
               { value: "Fridge Center", label: "Fridge Center", id: "14", image: "" },
               { value: "CC", label: "CC", id: "15", image: "" },
-              { value: "Same Brand", label: "Same Brand", id: "16", image: "" },
               { value: "Dealer Pending", label: "Dealer Pending", id: "16", image: "" }
             ];
 
