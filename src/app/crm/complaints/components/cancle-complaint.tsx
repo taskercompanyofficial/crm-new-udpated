@@ -4,6 +4,7 @@ import { LabelInputContainer } from '@/components/ui/LabelInputContainer'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import useForm from '@/hooks/use-form'
+import { API_URL } from '@/lib/apiEndPoints'
 import { X } from 'lucide-react'
 import React, { ChangeEvent } from 'react'
 
@@ -28,7 +29,7 @@ export default function CancelComplaint({ complaintId }: { complaintId: number }
             formData.append('file', data.file)
         }
 
-        put(`/api/complaints/${complaintId}/cancel`, {
+        put(API_URL + `/crm/complaints/cancel/${complaintId}`, {
             onSuccess: () => {
                 window.location.href = `/complaints/${complaintId}`
             },
