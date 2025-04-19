@@ -22,7 +22,7 @@ export default function Form({
   complaint,
   technician,
   username,
-  role,
+  role = "user",
 }: {
   complaint?: ComplaintsType;
   technician?: dataTypeIds[];
@@ -33,7 +33,6 @@ export default function Form({
   const [tab, setTab] = useState("advanced");
   const session = useSession();
   const token = session.data?.user?.token || "";
-  const userRole = session.data?.user?.role || "";
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [accessDeniedOpen, setAccessDeniedOpen] = useState(
     complaint?.status === "closed" || complaint?.status === "cancelled"
@@ -210,7 +209,7 @@ export default function Form({
 
   // Check if complaint is closed/cancelled and user doesn't have admin privileges
   if ((data.status === "closed" || data.status === "cancelled") &&
-    (userRole !== "admin" && userRole !== "administrator")) {
+    (role !== "admin" && role !== "administrator")) {
     return (
       <Dialog open={accessDeniedOpen} onOpenChange={setAccessDeniedOpen}>
         <DialogContent className="sm:max-w-md">
@@ -271,7 +270,7 @@ export default function Form({
         canUndo={canUndo}
         canRedo={canRedo}
         username={username}
-        role={userRole}
+        role={role}
         autoSaveEnabled={autoSaveEnabled}
         toggleAutoSave={toggleAutoSave}
         errors={errors}
@@ -287,7 +286,7 @@ export default function Form({
           technician={technician}
           complaintId={Number(complaint?.id || 0)}
           token={token}
-          role={userRole}
+          role={role}
         />
         <ComplaintFooter
           lastSaveTime={lastSaveTime}
