@@ -6,10 +6,13 @@ import { Textarea } from '@/components/ui/textarea'
 import useForm from '@/hooks/use-form'
 import { API_URL } from '@/lib/apiEndPoints'
 import { X } from 'lucide-react'
+import { useSession } from 'next-auth/react'
 import React, { ChangeEvent } from 'react'
 import { toast } from 'react-toastify'
 
 export default function CancelComplaint({ complaintId }: { complaintId: number }) {
+    const session = useSession();
+    const token = session.data?.user.token;
     const { data, setData, processing, errors, put } = useForm({
         reason: '',
         details: '',
@@ -37,7 +40,7 @@ export default function CancelComplaint({ complaintId }: { complaintId: number }
             onError: (error) => {
                 toast.error(error.message)
             }
-        })
+        }, token)
     }
 
     return (
