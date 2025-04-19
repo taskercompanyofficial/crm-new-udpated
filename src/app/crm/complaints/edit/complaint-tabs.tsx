@@ -33,22 +33,22 @@ export default function ComplaintTabs({
   token,
   role
 }: ComplaintTabsProps) {
-  const tabs = role === "administrator" 
+  const tabs = role === "administrator"
     ? [
-        "basic",
-        "advanced",
-        "attachments",
-        "store",
-        "remarks",
-        "history",
-      ] 
+      "basic",
+      "advanced",
+      "attachments",
+      "store",
+      "remarks",
+      "history",
+    ]
     : [
-        "basic",
-        "advanced",
-        "attachments",
-        "store",
-        "remarks",
-      ];
+      "basic",
+      "advanced",
+      "attachments",
+      "store",
+      "remarks",
+    ];
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -110,11 +110,9 @@ export default function ComplaintTabs({
       <TabsContent value="remarks">
         <Remarks complaintId={complaintId || 0} />
       </TabsContent>
-      {role === 'administrator' &&
-        <TabsContent value="history">
-          <History id={complaintId} token={token} />
-        </TabsContent>
-      }
+      <TabsContent value="history">
+        <History id={complaintId} token={token} />
+      </TabsContent>
     </Tabs>
   );
 }
