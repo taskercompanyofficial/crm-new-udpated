@@ -89,32 +89,29 @@ export default function ComplaintTabs({
       </ScrollArea>
 
       <Separator className="my-2" />
-      <ScrollArea className='h-[500px] overflow-y-auto'>
-        <TabsContent value="basic">
-          <BasicForm data={data} setData={setData} errors={errors} />
-        </TabsContent>
-        <TabsContent value="advanced">
-          <ComplaintDetailsForm
-            data={data}
-            setData={setData}
-            errors={errors}
-            technician={technician}
-          />
-        </TabsContent>
-        <TabsContent value="attachments">
-          <FilesForm data={data} setData={setData} errors={errors} />
-        </TabsContent>
-        <TabsContent value="store">
-          <Store />
-        </TabsContent>
-        <TabsContent value="remarks">
-          <Remarks complaintId={complaintId || 0} />
-        </TabsContent>
-        <TabsContent value="history">
-          <History id={complaintId} token={token} />
-        </TabsContent>
-
-      </ScrollArea>
+      <TabsContent value="basic">
+        <BasicForm data={data} setData={setData} errors={errors} />
+      </TabsContent>
+      <TabsContent value="advanced">
+        <ComplaintDetailsForm
+          data={data}
+          setData={setData}
+          errors={errors}
+          technician={technician}
+        />
+      </TabsContent>
+      <TabsContent value="attachments">
+        <FilesForm data={data} setData={setData} errors={errors} />
+      </TabsContent>
+      <TabsContent value="store">
+        <Store />
+      </TabsContent>
+      <TabsContent value="remarks">
+        <Remarks complaintId={complaintId || 0} />
+      </TabsContent>
+      <TabsContent value="history">
+        <History id={complaintId} token={token} />
+      </TabsContent>
     </Tabs>
   );
 }
