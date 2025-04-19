@@ -204,7 +204,7 @@ export default function Form({
     const timer = setTimeout(() => {
       setLoading(false);
     }, 1000);
-    
+
     return () => clearTimeout(timer);
   }, []);
 
@@ -220,7 +220,7 @@ export default function Form({
               Access Denied
             </DialogTitle>
             <DialogDescription>
-              You don't have permission to edit this complaint because it has been {data.status}.
+              You don&apos;t have permission to edit this complaint because it has been {data.status}.
               Only administrators can edit closed or cancelled complaints.
             </DialogDescription>
           </DialogHeader>
