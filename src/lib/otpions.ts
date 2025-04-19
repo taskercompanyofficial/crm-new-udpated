@@ -92,6 +92,11 @@ export const ComplaintStatusOptions = [
     color: "76, 175, 80",
   },
   {
+    value: "reinstallation-pending",
+    label: "Reinstallation Pending",
+    color: "76, 175, 80",
+  },
+  {
     value: "kit-in-service-center",
     label: "Kit in Service Center",
     color: "139, 195, 74",
@@ -185,7 +190,8 @@ export const warrantyTypeOptions = [
   { value: "service-report", label: "Service Report", color: "63, 81, 181" }, // Indigo
   { value: "warranty-bill", label: "Warranty Bill", color: "103, 58, 183" }, // Deep Purple
   { value: "warranty-card", label: "Warranty Card", color: "52, 152, 219" }, // Blue
-  { value: "wiring-joint", label: "Wiring Joint", color: "121, 85, 72" } // Brown
+  { value: "wiring-joint", label: "Wiring Joint", color: "121, 85, 72" }, // Brown
+  { value: "technician-with-customer", label: "Wiring Joint", color: "121, 85, 72" } // Brown
 ];
 
 export const complaintTypeOptions = [
@@ -209,6 +215,7 @@ export const complaintTypeOptions = [
     label: "Old C/O Installation",
     color: "155, 89, 182" // Purple
   },
+
   { value: "free-installation", label: "Free Installation", color: "26, 188, 156" }, // Teal
   { value: "paid-installation", label: "Paid Installation", color: "241, 196, 15" }, // Yellow
   { value: "warranty", label: "Warranty", color: "41, 128, 185" }, // Blue

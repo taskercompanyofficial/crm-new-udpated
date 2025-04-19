@@ -211,7 +211,8 @@ export default function BasicForm({
               { value: "Stove", label: "Stove", id: "15", image: "" },
               { value: "Oven", label: "Oven", id: "16", image: "" },
               { value: "LCD TV", label: "LCD TV", id: "17", image: "" },
-              { value: "LCD Monitor", label: "LCD Monitor", id: "18", image: "" }
+              { value: "LCD Monitor", label: "LCD Monitor", id: "18", image: "" },
+              { value: "Water Dispenser", label: "Water Dispenser", id: "19", image: "" }
             ];
 
             if (data.product && !defaultOptions.find((opt) => opt.value === data.product)) {
