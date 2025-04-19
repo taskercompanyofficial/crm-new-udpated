@@ -42,7 +42,7 @@ export default function Login() {
         </p>
       </div>
       <div className="grid gap-4">
-        <LabelInputContainer labelClassName="text-white" label="Email" type="email" value={data.email} onChange={(e) => setData("email", e.target.value)} placeholder="example@domain.com" required />
+        <LabelInputContainer labelClassName="text-white" label="Email" type="email" value={data.email} onChange={(e) => setData("email", e.target.value)} placeholder="example@domain.com" required autoFocus />
         <LabelInputContainer labelClassName="text-white" label="Password" type="password" value={data.password} onChange={(e) => setData("password", e.target.value)} placeholder="********" required />
         <SubmitBtn processing={processing} onClick={submitHandler}>
           Login to your account <LogInIcon className="size-4" />
