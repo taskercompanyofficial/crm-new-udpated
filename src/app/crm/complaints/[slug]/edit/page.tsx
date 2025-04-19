@@ -6,6 +6,8 @@ import { notFound } from "next/navigation";
 import Form from "./form";
 import { fetchData } from "@/hooks/fetchData";
 import { getUserDetails } from "@/lib/getUserDetails";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { AlertTriangle } from "lucide-react";
 
 // Function to dynamically generate metadata
 export async function generateMetadata({
@@ -82,7 +84,27 @@ export default async function Page({ params }: { params: { slug: string } }) {
         if (!response || !response.data) {
             notFound();
         }
-
+        const data = response.data;
+        // Check if complaint is closed/cancelled and user doesn't have admin privileges
+        if ((data.status === "closed" || data.status === "cancelled") &&
+            (userDetails?.role !== "admin" && userDetails?.role !== "administrator")) {
+            return (
+                <Dialog open={true}>
+                    <DialogContent className="sm:max-w-md">
+                        <DialogHeader>
+                            <DialogTitle className="flex items-center gap-2">
+                                <AlertTriangle className="h-5 w-5 text-yellow-500" />
+                                Access Denied
+                            </DialogTitle>
+                            <DialogDescription>
+                                You don&apos;t have permission to edit this complaint because it has been {data.status}.
+                                Only administrators can edit closed or cancelled complaints.
+                            </DialogDescription>
+                        </DialogHeader>
+                    </DialogContent>
+                </Dialog>
+            );
+        }
         return (
             <Form
                 complaint={response.data}
