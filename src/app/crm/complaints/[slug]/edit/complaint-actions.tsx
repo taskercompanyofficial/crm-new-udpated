@@ -47,7 +47,7 @@ export default function ComplaintActions({
 }: ComplaintActionsProps) {
   return (
     <div className="bg-white dark:bg-slate-900 rounded-lg border border-muted shadow-sm">
-      <div className="flex gap-4 justify-between w-full items-center p-2">
+      <div className="flex gap-4 w-full items-center p-2">
         <div className="flex gap-1 md:gap-4">
           {data.complain_num}
         </div>

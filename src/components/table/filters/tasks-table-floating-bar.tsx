@@ -63,7 +63,7 @@ export function TasksTableFloatingBar({ table }: TasksTableFloatingBarProps) {
         copyToClipboard(selectedRows);
       }
       if ((event.ctrlKey || event.metaKey) && event.key === 'e' && selectedRows.length === 1) {
-        window.open(`${window.location.pathname}/edit/${selectedRows[0].original.id}`, '_blank');
+        window.open(`${window.location.pathname}/${selectedRows[0].original.id}/edit`, '_blank');
       }
     };
 

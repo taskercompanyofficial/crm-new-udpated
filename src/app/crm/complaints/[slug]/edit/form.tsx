@@ -32,9 +32,6 @@ export default function Form({
   const [tab, setTab] = useState("advanced");
   const session = useSession();
   const token = session.data?.user?.token || "";
-  const [accessDeniedOpen, setAccessDeniedOpen] = useState(
-    complaint?.status === "closed" || complaint?.status === "cancelled"
-  );
   const [loading, setLoading] = useState(true);
 
   // Initialize form with useForm hook
