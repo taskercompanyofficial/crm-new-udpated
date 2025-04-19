@@ -242,7 +242,7 @@ export function TasksTableFloatingBar({ table }: TasksTableFloatingBarProps) {
                       variant="outline"
                       size="sm"
                       className="w-8 h-8"
-                      onClick={() => window.open(`${window.location.pathname}/edit/${selectedRows[0].original.id}`, '_blank')}
+                      onClick={() => window.open(`${window.location.pathname}/${selectedRows[0].original.id}/edit`, '_blank')}
                     >
                       <Edit className="w-4 h-4" />
                     </Button>
