@@ -66,7 +66,7 @@ const Update = ({ row }: { row: any }) => {
       variant="ghost"
       size="sm"
       className="flex w-full items-center justify-between px-3 py-2 transition-colors hover:bg-gray-100"
-      onClick={() => window.open(`/crm/complaints/edit/${row.id}`, "_blank")}
+      onClick={() => window.open(`/crm/complaints/${row.id}/edit`, "_blank")}
       disabled={row.status === "closed" && role !== "administrator"}
     >
       <span className="mr-2">Update</span>

@@ -36,7 +36,7 @@ export default function CancelComplaint({ complaintId }: { complaintId: number }
         put(API_URL + `/crm/complaints/cancel/${complaintId}`, {
             onSuccess: (response) => {
                 toast.success(response.message)
-
+                window.location.reload()
             },
             onError: (error) => {
                 toast.error(error.message)

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { ComplaintsType, dataTypeIds, ReviewType } from "@/types";
 import useForm from "@/hooks/use-form";
 import { toast } from "react-toastify";
@@ -14,6 +14,9 @@ import ComplaintActions from "./complaint-actions";
 import ComplaintFooter from "./complaint-footer";
 import useAutoSave from "@/hooks/complaint/use-auto-save";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { AlertTriangle, Loader2 } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Form({
   complaint,
@@ -32,6 +35,10 @@ export default function Form({
   const token = session.data?.user?.token || "";
   const userRole = session.data?.user?.role || "";
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [accessDeniedOpen, setAccessDeniedOpen] = useState(
+    complaint?.status === "closed" || complaint?.status === "cancelled"
+  );
+  const [loading, setLoading] = useState(true);
 
   // Initialize form with useForm hook
   const { data, setData, processing, put, errors } = useForm({
@@ -192,6 +199,64 @@ export default function Form({
   const filledDataFieldsCount = Object.values(data).filter(Boolean).length;
   const dataFieldsCount = Object.keys(data).length;
 
+  useEffect(() => {
+    // Simulate loading state
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+    
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Check if complaint is closed/cancelled and user doesn't have admin privileges
+  if ((data.status === "closed" || data.status === "cancelled") &&
+    (userRole !== "admin" && userRole !== "administrator")) {
+    return (
+      <Dialog open={accessDeniedOpen} onOpenChange={setAccessDeniedOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-yellow-500" />
+              Access Denied
+            </DialogTitle>
+            <DialogDescription>
+              You don't have permission to edit this complaint because it has been {data.status}.
+              Only administrators can edit closed or cancelled complaints.
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="space-y-4 p-4">
+        <div className="flex items-center justify-between">
+          <Skeleton className="h-10 w-1/3" />
+          <div className="flex gap-2">
+            <Skeleton className="h-9 w-20" />
+            <Skeleton className="h-9 w-20" />
+            <Skeleton className="h-9 w-20" />
+          </div>
+        </div>
+        <div className="flex items-center space-x-2 py-2">
+          <Skeleton className="h-10 w-24" />
+          <Skeleton className="h-10 w-24" />
+          <Skeleton className="h-10 w-24" />
+        </div>
+        <div className="space-y-4">
+          {Array(5).fill(0).map((_, i) => (
+            <Skeleton key={i} className="h-16 w-full" />
+          ))}
+        </div>
+        <Skeleton className="h-10 w-full" />
+        <div className="flex justify-center py-4">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-2 overflow-y-auto">
