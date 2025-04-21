@@ -124,7 +124,7 @@ export default function Form() {
         onSuccess: (response) => {
           toast.success(response.message);
           setHasUnsavedChanges(false);
-          const url = `/crm/complaints/edit/${response.data.id}`;
+          const url = `/crm/complaints/${response.data.id}/edit`;
           window.location.href = url;
         },
         onError: (error) => {
