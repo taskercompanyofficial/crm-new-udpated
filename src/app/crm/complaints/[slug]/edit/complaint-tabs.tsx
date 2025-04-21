@@ -31,23 +31,15 @@ export default function ComplaintTabs({
   technician,
   complaintId,
   token,
-  role
 }: ComplaintTabsProps) {
-  const tabs = role === "administrator"
-    ? [
+  const tabs =
+    [
       "basic",
       "advanced",
       "attachments",
       "store",
       "remarks",
       "history",
-    ]
-    : [
-      "basic",
-      "advanced",
-      "attachments",
-      "store",
-      "remarks",
     ];
 
   useEffect(() => {
