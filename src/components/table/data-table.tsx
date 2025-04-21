@@ -60,7 +60,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between bg-white rounded-md p-2">
         <div className="flex gap-2">
           {FacedFilter}
           <DataTableFiltersToolbar columns={columns} />

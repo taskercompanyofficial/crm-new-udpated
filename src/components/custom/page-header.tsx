@@ -1,6 +1,5 @@
 "use client";
 import { usePathname } from "next/navigation";
-import { DateRangePicker } from "./date-range-picker";
 import useFetch from "@/hooks/usefetch";
 import { ROUTESMETA } from "@/lib/apiEndPoints";
 import { Skeleton } from "../ui/skeleton";
@@ -39,7 +38,6 @@ export function PageHeader() {
           </>
         )}
       </div>
-      <DateRangePicker />
     </div>
   );
 }

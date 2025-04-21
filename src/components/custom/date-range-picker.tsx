@@ -126,7 +126,7 @@ export function DateRangePicker({
             variant={triggerVariant}
             size={triggerSize}
             className={cn(
-              "w-full justify-start truncate text-left font-normal",
+              "w-full justify-start truncate text-left font-normal rounded-full",
               !date && "text-muted-foreground",
               triggerClassName
             )}
