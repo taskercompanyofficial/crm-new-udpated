@@ -178,6 +178,15 @@ export default function ComplaintDetailsForm({
           customizable={true}
         />
       </div>
+      <TextareaInput
+        label="Cancellation Reason"
+        placeholder="Enter the cancellation reason"
+        value={data.cancellation_reason}
+        errorMessage={errors.cancellation_reason}
+        className="min-h-[120px] transition-all duration-200"
+        customizable={true}
+      />
+
       <Vendors />
     </div>
   );
