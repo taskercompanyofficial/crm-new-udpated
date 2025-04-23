@@ -169,8 +169,11 @@ export default function BasicForm({
               { value: "Modern Center Collage Road LHR", label: "Modern Center Collage Road LHR", id: "13", image: "" },
               { value: "Alfatah Electronics", label: "Alfatah Electronics", id: "14", image: "" },
               { value: "Fridge Center", label: "Fridge Center", id: "14", image: "" },
-              { value: "CC", label: "CC", id: "15", image: "" },
-              { value: "Dealer Pending", label: "Dealer Pending", id: "16", image: "" }
+              { value: "Subhan Electronics", label: "Subhan Electronics", id: "15", image: "" },
+              { value: "AM Electronics", label: "AM Electronics", id: "16", image: "" },
+              { value: "Friends Electronics", label: "Friends Electronics", id: "17", image: "" },
+              { value: "CC", label: "CC", id: "18", image: "" },
+              { value: "Dealer Pending", label: "Dealer Pending", id: "19", image: "" }
             ];
 
             if (data.reference_by && !defaultOptions.find((opt) => opt.value === data.reference_by)) {
