@@ -58,17 +58,17 @@ export default function ComplaintTabs({
           }
         }
         // Direct tab shortcuts
-        else if (e.key.toLowerCase() === 'b') {
+        else if (e.key.toLowerCase() === '1') {
           setTab('basic');
-        } else if (e.key.toLowerCase() === 'a') {
+        } else if (e.key.toLowerCase() === '2') {
           setTab('advanced');
-        } else if (e.key.toLowerCase() === 't') {
+        } else if (e.key.toLowerCase() === '3') {
           setTab('attachments');
-        } else if (e.key.toLowerCase() === 's') {
+        } else if (e.key.toLowerCase() === '4') {
           setTab('store');
-        } else if (e.key.toLowerCase() === 'r') {
+        } else if (e.key.toLowerCase() === '5') {
           setTab('remarks');
-        } else if (e.key.toLowerCase() === 'h') {
+        } else if (e.key.toLowerCase() === '6') {
           setTab('history');
         }
       }
@@ -89,9 +89,6 @@ export default function ComplaintTabs({
               className="min-w-[100px] flex-1"
             >
               {tabItem.charAt(0).toUpperCase() + tabItem.slice(1)}
-              <span className="ml-2 text-xs opacity-60">
-                (Ctrl+{tabItem.charAt(0).toUpperCase()})
-              </span>
             </TabsTrigger>
           ))}
         </TabsList>
