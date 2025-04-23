@@ -45,6 +45,7 @@ export default function ComplaintTabs({
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.ctrlKey) {
+        // Arrow key navigation
         if (e.key === 'ArrowRight') {
           const currentIndex = tabs.indexOf(tab);
           if (currentIndex < tabs.length - 1) {
@@ -55,6 +56,20 @@ export default function ComplaintTabs({
           if (currentIndex > 0) {
             setTab(tabs[currentIndex - 1]);
           }
+        }
+        // Direct tab shortcuts
+        else if (e.key.toLowerCase() === 'b') {
+          setTab('basic');
+        } else if (e.key.toLowerCase() === 'a') {
+          setTab('advanced');
+        } else if (e.key.toLowerCase() === 't') {
+          setTab('attachments');
+        } else if (e.key.toLowerCase() === 's') {
+          setTab('store');
+        } else if (e.key.toLowerCase() === 'r') {
+          setTab('remarks');
+        } else if (e.key.toLowerCase() === 'h') {
+          setTab('history');
         }
       }
     };
@@ -74,6 +89,9 @@ export default function ComplaintTabs({
               className="min-w-[100px] flex-1"
             >
               {tabItem.charAt(0).toUpperCase() + tabItem.slice(1)}
+              <span className="ml-2 text-xs opacity-60">
+                (Ctrl+{tabItem.charAt(0).toUpperCase()})
+              </span>
             </TabsTrigger>
           ))}
         </TabsList>
