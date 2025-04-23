@@ -10,6 +10,7 @@ import { TextareaInput } from "@/components/custom/TextareaInput";
 import { Checkbox } from "@/components/ui/checkbox";
 import Vendors from "./vendors";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 export default function ComplaintDetailsForm({
   data,
@@ -178,11 +179,18 @@ export default function ComplaintDetailsForm({
           customizable={true}
         />
       </div>
+      <Badge
+        variant="outline"
+        className="cursor-pointer"
+        onClick={() => setData({ ...data, cancellation_reason: !data.cancellation_reason })}
+      >
+        {data.cancellation_reason ? "Cancel" : "Add Cancellation Reason"}
+      </Badge>
       <TextareaInput
-        label="Cancellation Reason"
-        placeholder="Enter the cancellation reason"
-        value={data.cancellation_reason}
-        errorMessage={errors.cancellation_reason}
+        label="Cancellation Details"
+        placeholder="Enter the cancellation details"
+        value={data.cancellation_details}
+        errorMessage={errors.cancellation_details}
         className="min-h-[120px] transition-all duration-200"
         customizable={true}
       />

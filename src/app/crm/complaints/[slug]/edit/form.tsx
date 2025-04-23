@@ -70,6 +70,7 @@ export default function Form({
     send_message_to_technician: false,
     call_status: complaint?.call_status || "",
     cancellation_reason: complaint?.cancellation_reason || "",
+    cancellation_details: complaint?.cancellation_details || "",
   });
 
   // Fetch customer reviews
