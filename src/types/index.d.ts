@@ -205,6 +205,7 @@ export type ComplaintsType = {
   updated_at: string;
   call_status: string;
   priority: string;
+  cancellation_reason: string | null;
 };
 export type ComplaintDetailsType = {
   id: number;

@@ -69,6 +69,7 @@ export default function Form({
     files: complaint?.files || [],
     send_message_to_technician: false,
     call_status: complaint?.call_status || "",
+    cancellation_reason: complaint?.cancellation_reason || "",
   });
 
   // Fetch customer reviews
