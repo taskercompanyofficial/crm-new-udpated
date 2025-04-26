@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, buttonVariants } from "@/components/ui/button";
-import { Undo2, Redo2, Save } from "lucide-react";
+import { Undo2, Redo2, Save, ClipboardCopyIcon } from "lucide-react";
 import { SelectInput } from "@/components/custom/SelectInput";
 import { CallStatusOptions, ComplaintStatusOptions, PriorityOptions } from "@/lib/otpions";
 import SubmitBtn from "@/components/custom/submit-button";
@@ -9,6 +9,7 @@ import CancelComplaint from '../../components/cancle-complaint';
 import ProductReceipt from '../../components/generate-reciving';
 import SendMessageCustomerBtn from '../../components/send-message-cutomer-btn';
 import { Checkbox } from '@/components/ui/checkbox';
+import { copyToClipboard } from '@/hooks/copy-to-clipboard';
 
 interface ComplaintActionsProps {
   data: any;
@@ -99,6 +100,15 @@ export default function ComplaintActions({
             to={data.applicant_whatsapp}
             className="w-full mt-4"
           />
+          <Button
+            variant="outline"
+            size="sm"
+            className="w-8 h-8"
+            onClick={() => copyToClipboard(data)}
+            disabled={processing}
+          >
+            <ClipboardCopyIcon className="w-4 h-4" />
+          </Button>
           <div className="flex gap-2 items-center">
             <Checkbox
               checked={autoSaveEnabled}

@@ -14,6 +14,7 @@ import { Kbd } from "@/components/ui/kbd";
 import { ClipboardCopyIcon, FileImage, X, DownloadIcon, Loader, Edit } from "lucide-react";
 import { toast } from "react-toastify";
 import html2canvas from "html2canvas";
+import { copyToClipboard } from "@/hooks/copy-to-clipboard";
 
 interface TasksTableFloatingBarProps {
   table: Table<any>;
@@ -60,7 +61,7 @@ export function TasksTableFloatingBar({ table }: TasksTableFloatingBarProps) {
   React.useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
       if ((event.ctrlKey || event.metaKey) && event.key === 'c' && selectedRows.length > 0) {
-        copyToClipboard(selectedRows);
+        copyToClipboard(selectedRows.map(row => row.original));
       }
       if ((event.ctrlKey || event.metaKey) && event.key === 'e' && selectedRows.length === 1) {
         window.open(`${window.location.pathname}/${selectedRows[0].original.id}/edit`, '_blank');
@@ -71,42 +72,6 @@ export function TasksTableFloatingBar({ table }: TasksTableFloatingBarProps) {
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, [selectedRows]);
 
-  // Rest of the component remains the same...
-  const copyToClipboard = (rows: any[]) => {
-    const formattedText = rows
-      .map((row) => {
-        const data = row.original;
-        return `
-📋 *Complaint #${data.complain_num}*
-*Brand Ref:* ${data.brand_complaint_no}
-
-👤 *Applicant Details*
-*Name:* ${data.applicant_name}
-*Phone:* ${data.applicant_phone}
-*WhatsApp:* ${data.applicant_whatsapp || "N/A"}
-*Extra Numbers:* ${data.extra_numbers || "N/A"}
-*Address:* ${data.applicant_adress}
-
-📦 *Product Details*
-*Product:* ${data.product || "N/A"}
-*Brand:* ${data.brand_id || "N/A"}
-*Model:* ${data.model || "N/A"}
-*Serial (IND):* ${data.serial_number_ind || "N/A"}
-*Serial (OUD):* ${data.serial_number_oud || "N/A"}
-
-🔧 *Service Information*
-*Branch:* ${data.branch_id || "N/A"}
-*Type:* ${data.complaint_type}
-*Complaint:* ${data.description}
-
-*Created:* ${new Date(data.created_at).toLocaleDateString()}
--------------------`;
-      })
-      .join("\n\n");
-
-    navigator.clipboard.writeText(formattedText);
-    toast.success("Details copied to clipboard");
-  };
 
   const generateImage = async (rows: any[]) => {
     setActiveMethod("generate-image");
@@ -257,7 +222,7 @@ export function TasksTableFloatingBar({ table }: TasksTableFloatingBarProps) {
                     variant="outline"
                     size="sm"
                     className="w-8 h-8"
-                    onClick={() => copyToClipboard(selectedRows)}
+                    onClick={() => copyToClipboard(selectedRows.map(row => row.original))}
                     disabled={isPending}
                   >
                     <ClipboardCopyIcon className="w-4 h-4" />
