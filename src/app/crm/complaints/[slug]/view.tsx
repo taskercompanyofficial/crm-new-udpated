@@ -17,19 +17,14 @@ import {
   Clock,
   AlertCircle,
   FileVideo,
+  MessageSquare,
+  Pencil,
 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import useFetch from "@/hooks/usefetch";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { ComplaintStatusOptions } from "@/lib/otpions";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 interface ReviewType {
   rating: number;
@@ -60,15 +55,15 @@ export default function ViewComplaint({ complaint }: { complaint: any }) {
     token,
   );
 
-  const { 
-    data: csoRemarksData, 
-    error: csoRemarksError, 
-    isLoading: csoRemarksLoading 
+  const {
+    data: csoRemarksData,
+    error: csoRemarksError,
+    isLoading: csoRemarksLoading
   } = useFetch<CsoRemark>(
     `https://api.taskercompany.com/api/crm/cso-remarks/${complaint?.id}`,
     token,
   );
-  
+
   const statusOption =
     ComplaintStatusOptions.find((option) => option.value === complaint.status) ||
     ComplaintStatusOptions[0];
@@ -92,18 +87,42 @@ export default function ViewComplaint({ complaint }: { complaint: any }) {
   const creationDate = formatDate(complaint.created_at);
 
   return (
-    <div className="mx-auto max-w-7xl p-4 print:p-0">
-      <div className="flex justify-between items-center mb-4">
+    <div className="mx-auto max-w-7xl p-4 print:p-0 overflow-x-hidden overflow-y-auto">
+      <div className="flex justify-between items-center mb-4 sticky top-0 z-50 bg-white p-4 shadow-sm">
         <h1 className="text-2xl font-bold text-primary print:text-black">Service Job Sheet</h1>
-        <Button
-          onClick={handlePrint}
-          variant="outline"
-          size="sm"
-          className="flex items-center gap-2 print:hidden"
-        >
-          <Printer className="h-4 w-4" />
-          Print
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            asChild
+            variant="outline"
+            size="sm"
+            className="flex items-center gap-2 print:hidden"
+          >
+            <Link href={`/crm/complaints/${complaint.complain_num}/edit`}>
+              <Pencil className="h-4 w-4" />
+              Edit
+            </Link>
+          </Button>
+          <Button
+            asChild
+            variant="outline"
+            size="sm"
+            className="flex items-center gap-2 print:hidden"
+          >
+            <Link href={`/crm/complaints/${complaint.complain_num}/chat`}>
+              <MessageSquare className="h-4 w-4" />
+              Chat
+            </Link>
+          </Button>
+          <Button
+            onClick={handlePrint}
+            variant="outline"
+            size="sm"
+            className="flex items-center gap-2 print:hidden"
+          >
+            <Printer className="h-4 w-4" />
+            Print
+          </Button>
+        </div>
       </div>
 
       {/* Header Card */}
@@ -206,7 +225,7 @@ export default function ViewComplaint({ complaint }: { complaint: any }) {
                 <span className="text-sm font-medium">{complaint.model}</span>
               </div>
             </div>
-            
+
             <div className="flex flex-col">
               <span className="text-xs text-gray-600">Serial Numbers</span>
               <div className="grid grid-cols-2 gap-2 mt-1">
@@ -220,7 +239,7 @@ export default function ViewComplaint({ complaint }: { complaint: any }) {
                 </div>
               </div>
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col">
                 <span className="text-xs text-gray-600">Purchase Date</span>
@@ -231,7 +250,7 @@ export default function ViewComplaint({ complaint }: { complaint: any }) {
                 <span className="text-sm capitalize">{complaint.complaint_type?.replace(/-/g, " ") || "N/A"}</span>
               </div>
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col">
                 <span className="text-xs text-gray-600">Assigned Technician</span>
@@ -277,8 +296,8 @@ export default function ViewComplaint({ complaint }: { complaint: any }) {
               <div className="flex items-center justify-between bg-gray-50 p-2 rounded-md">
                 <span className="text-xs text-gray-600">Completion Date</span>
                 <span className="text-sm flex items-center gap-1">
-                  {complaint.status === "closed" ? 
-                    <CheckCircle className="h-3.5 w-3.5 text-green-600" /> : 
+                  {complaint.status === "closed" ?
+                    <CheckCircle className="h-3.5 w-3.5 text-green-600" /> :
                     <Clock className="h-3.5 w-3.5 text-orange-500" />
                   }
                   {completionDate}
@@ -377,7 +396,7 @@ export default function ViewComplaint({ complaint }: { complaint: any }) {
           <ImageIcon className="h-4 w-4" />
           Documentation & Images
         </h3>
-        
+
         {files.length > 0 ? (
           <div className="space-y-6">
             {Object.entries(groupedFiles).map(([docType, docFiles]: [string, any]) => (
@@ -391,12 +410,12 @@ export default function ViewComplaint({ complaint }: { complaint: any }) {
                   {docType === "out-sr" && <FileText className="h-3.5 w-3.5" />}
                   {docType.replace(/-/g, " ")}
                 </h4>
-                
+
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
                   {docFiles.map((file: any, index: number) => {
                     const isImage = file.document_path.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i);
                     const isVideo = file.document_path.match(/\.(mp4|webm|mov)$/i);
-                    
+
                     return (
                       <Card key={index} className="overflow-hidden border border-gray-100 bg-white hover:shadow-md transition-shadow">
                         {isImage ? (
