@@ -19,7 +19,7 @@ import {
 import { formatDate } from "@/lib/utils";
 
 const BUSINESS_INFO = {
-    name: "Tasker Company", 
+    name: "Tasker Company",
     ntn: "5054911-7",
     contact: "03015117000",
     contactPerson: "Naveed Majeed",
@@ -96,12 +96,11 @@ export function GenerateBill({ complaint }: GenerateBillProps) {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="outline" size="sm" className="flex items-center gap-2">
+                <Button variant="outline">
                     <Receipt className="w-4 h-4" />
-                    <span>Generate Bill</span>
                 </Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="h-full overflow-y-auto scrollbar-hide p-4">
                 <DialogHeader>
                     <DialogTitle>Generate Bill</DialogTitle>
                     <DialogDescription>
@@ -135,8 +134,8 @@ export function GenerateBill({ complaint }: GenerateBillProps) {
                     </div>
 
                     <table className="w-full mb-6">
-                        <thead>
-                            <tr>
+                        <thead className="border-b border-gray-600">
+                            <tr >
                                 <th className="text-left border-b py-2">Description</th>
                                 <th className="text-center border-b py-2">Qty</th>
                                 <th className="text-right border-b py-2">Amount</th>
@@ -145,13 +144,13 @@ export function GenerateBill({ complaint }: GenerateBillProps) {
                         </thead>
                         <tbody>
                             {items.map((item, index) => (
-                                <tr key={index} className="border-b">
+                                <tr key={index} className="border-b border-gray-600 group">
                                     <td className="py-2">
                                         <input
                                             placeholder="Description"
                                             value={item.description}
                                             onChange={(e) => handleItemChange(index, "description", e.target.value)}
-                                            className="border-none w-full bg-transparent focus:outline-none focus:ring-0"
+                                            className="border-none w-full bg-transparent focus:outline-none focus:ring-0 text-xs font-bold"
                                             required
                                         />
                                     </td>
@@ -160,7 +159,7 @@ export function GenerateBill({ complaint }: GenerateBillProps) {
                                             type="number"
                                             value={item.quantity === 0 ? "" : item.quantity}
                                             onChange={(e) => handleItemChange(index, "quantity", e.target.value)}
-                                            className="border-none text-center w-20 mx-auto bg-transparent focus:outline-none focus:ring-0"
+                                            className="border-none text-center w-20 mx-auto bg-transparent focus:outline-none focus:ring-0 text-xs"
                                             required
                                             min="1"
                                         />
@@ -170,23 +169,36 @@ export function GenerateBill({ complaint }: GenerateBillProps) {
                                             type="number"
                                             value={item.amount === 0 ? "" : item.amount}
                                             onChange={(e) => handleItemChange(index, "amount", e.target.value)}
-                                            className="border-none text-right w-full bg-transparent focus:outline-none focus:ring-0"
+                                            className="border-none text-right w-full bg-transparent focus:outline-none focus:ring-0 text-xs"
                                             required
                                             min="0"
                                         />
                                     </td>
                                     <td className="py-2">
-                                        {items.length > 1 && (
-                                            <Button
-                                                type="button"
-                                                variant="ghost"
-                                                size="sm"
-                                                onClick={() => handleRemoveItem(index)}
-                                                className="p-0 h-8 w-8 text-red-500 hover:text-red-600 no-print"
-                                            >
-                                                <Trash2 className="h-4 w-4" />
-                                            </Button>
-                                        )}
+                                        <div className="flex gap-1">
+                                            {items.length > 1 && (
+                                                <Button
+                                                    type="button"
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    onClick={() => handleRemoveItem(index)}
+                                                    className="opacity-0 group-hover:opacity-100 transition-opacity p-0 h-8 w-8 text-red-500 hover:text-red-600 no-print"
+                                                >
+                                                    <Trash2 className="h-4 w-4" />
+                                                </Button>
+                                            )}
+                                            {index === items.length - 1 && (
+                                                <Button
+                                                    type="button"
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    onClick={() => setItems([...items, { description: '', quantity: 0, amount: 0 }])}
+                                                    className="p-0 h-8 w-8 text-gray-500 hover:text-gray-600 no-print opacity-0 group-hover:opacity-100 transition-opacity"
+                                                >
+                                                    <Plus className="h-4 w-4" />
+                                                </Button>
+                                            )}
+                                        </div>
                                     </td>
                                 </tr>
                             ))}
