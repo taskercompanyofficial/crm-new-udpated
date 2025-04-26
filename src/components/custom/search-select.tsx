@@ -3,7 +3,7 @@ import { Command, CommandEmpty, CommandGroup, CommandItem, CommandList } from "@
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Plus, ChevronDown, ChevronUp, Loader2, Loader } from "lucide-react";
+import { Plus, ChevronDown, ChevronUp, Loader2, Loader, X } from "lucide-react";
 import { CheckIcon } from "lucide-react";
 
 interface dataTypeIds {
@@ -151,6 +151,12 @@ export default function SearchSelect({
     setHighlightedIndex(-1);
   };
 
+  const handleClear = () => {
+    onChange('');
+    setSearchTerm('');
+    setSelectedValues([]);
+  };
+
   return (
     <div className={cn("space-y-1 pt-1 mt-2", className)}>
       {label && (
@@ -190,6 +196,16 @@ export default function SearchSelect({
           )}
 
           <div className="flex items-center gap-1">
+            {selectedOption && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-6 px-2"
+                onClick={handleClear}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            )}
 
             {customizable && searchTerm && (
               <Button

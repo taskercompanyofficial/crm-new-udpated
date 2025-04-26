@@ -95,7 +95,7 @@ export default function Form({
 
   // Handle form submission including offline sync
   const syncData = useCallback(async (formData: ComplaintsType) => {
-    return await put(
+    return put(
       `${COMPLAINTS}/${complaint?.id}`,
       {
         onSuccess: () => { },
