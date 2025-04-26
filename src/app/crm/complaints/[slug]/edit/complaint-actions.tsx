@@ -102,7 +102,7 @@ export default function ComplaintActions({
           <div className="flex gap-2 items-center">
             <Checkbox
               checked={autoSaveEnabled}
-              onChange={toggleAutoSave}
+              onCheckedChange={toggleAutoSave}
               className="mr-2"
             />
             <SubmitBtn
