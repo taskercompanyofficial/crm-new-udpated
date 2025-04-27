@@ -14,8 +14,9 @@ import ComplaintActions from "./complaint-actions";
 import ComplaintFooter from "./complaint-footer";
 import useAutoSave from "@/hooks/complaint/use-auto-save";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Loader2 } from "lucide-react";
+import { Loader2, Redo2, Undo2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 
 export default function Form({
   complaint,
@@ -59,7 +60,7 @@ export default function Form({
     complete_date: complaint?.complete_date || "",
     amount: complaint?.amount || "",
     product_type: complaint?.product_type || "",
-    technician: complaint?.technician || "",
+    technician: complaint?.technician?.id || "",
     status: complaint?.status || "",
     priority: complaint?.priority || "medium",
     complaint_type: complaint?.complaint_type || "",
@@ -154,7 +155,6 @@ export default function Form({
           resetUnsavedChanges();
           updateLastSaveTime();
           setData({ ...data, send_message_to_technician: false });
-          router.refresh();
         },
         onError: (error) => {
           toast.error(error.message);

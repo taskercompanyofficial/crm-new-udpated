@@ -190,7 +190,7 @@ export type ComplaintsType = {
   p_date: string | null;
   complete_date: string | null;
   amount: number | null;
-  technician: string | null;
+  technician: User | null;
   complaint_type: string;
   provided_services: string;
   warranty_type: string;

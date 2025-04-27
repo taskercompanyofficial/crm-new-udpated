@@ -254,7 +254,7 @@ export default function ViewComplaint({ complaint }: { complaint: any }) {
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col">
                 <span className="text-xs text-gray-600">Assigned Technician</span>
-                <span className="text-sm">{complaint.technician || "Unassigned"}</span>
+                <span className="text-sm">{complaint.technician?.full_name || "Unassigned"}</span>
               </div>
               <div className="flex flex-col">
                 <span className="text-xs text-gray-600">Warranty Type</span>
