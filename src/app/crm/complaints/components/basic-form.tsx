@@ -316,7 +316,7 @@ export default function BasicForm({
           }
           value={data.working_details}
           errorMessage={errors.working_details}
-          className="min-h-[120px] transition-all duration-200"
+          className="transition-all duration-200"
           customizable={true}
         />
       </div>

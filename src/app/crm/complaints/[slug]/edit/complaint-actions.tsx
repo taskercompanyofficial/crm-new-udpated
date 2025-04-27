@@ -49,13 +49,21 @@ export default function ComplaintActions({
 }: ComplaintActionsProps) {
   return (
     <div className="bg-white dark:bg-slate-900 rounded-lg border border-muted shadow-sm">
-      <div className="flex gap-4 w-full items-center p-2">
+      <div className="flex gap-4 w-full items-center p-2 justify-between">
         <div className="flex gap-1 md:gap-4">
           <strong className="text-sm font-bold">
             {data.complain_num}
           </strong>
         </div>
         <div className="flex flex-col gap-4 md:flex-row md:gap-4">
+          <div className="flex gap-2">
+            <Label>Is Care Of Customer</Label>
+            <Checkbox
+              checked={data.is_care_of_customer}
+              onCheckedChange={() => setData({ ...data, is_care_of_customer: !data.is_care_of_customer })}
+              className="mr-2"
+            />
+          </div>
           <Button
             variant="ghost"
             size="sm"
@@ -92,6 +100,30 @@ export default function ComplaintActions({
             onChange={(e) => setData({ ...data, call_status: e })}
             errorMessage={errors.call_status}
           />
+        </div>
+      </div>
+      <div className="fixed inset-x-0 z-50 px-4 mx-auto bottom-4 w-fit">
+        <div className="border rounded-lg shadow-lg bg-card flex gap-2 p-2">
+          <CancelComplaint complaintId={id} />
+          <ProductReceipt
+            complaint={data}
+            username={username}
+            role={role}
+          />
+          <SendMessageCustomerBtn
+            complaint={data}
+            to={data.applicant_whatsapp}
+            className="w-full"
+          />
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => copyToClipboard(data)}
+            disabled={processing}
+          >
+            <ClipboardCopyIcon className="w-4 h-4" />
+          </Button>
+          <GenerateBill complaint={data} />
           <div className="flex gap-2 items-center">
             <Checkbox
               checked={autoSaveEnabled}
@@ -109,31 +141,6 @@ export default function ComplaintActions({
             </SubmitBtn>
 
           </div>
-        </div>
-      </div>
-      <div className="border border-muted rounded-lg fixed right-4 top-1/2 -translate-y-1/2 bg-white p-4 z-50 shadow-xl">
-        <div className="flex flex-col gap-2">
-
-          <CancelComplaint complaintId={id} />
-          <ProductReceipt
-            complaint={data}
-            username={username}
-            role={role}
-          />
-          <SendMessageCustomerBtn
-            complaint={data}
-            to={data.applicant_whatsapp}
-            className="w-full mt-4"
-          />
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => copyToClipboard(data)}
-            disabled={processing}
-          >
-            <ClipboardCopyIcon className="w-4 h-4" />
-          </Button>
-          <GenerateBill complaint={data} />
         </div>
       </div>
     </div>

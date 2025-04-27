@@ -202,6 +202,7 @@ export default function SearchSelect({
                 size="sm"
                 className="h-6 px-2"
                 onClick={handleClear}
+                type="button"
               >
                 <X className="h-4 w-4" />
               </Button>
@@ -213,6 +214,7 @@ export default function SearchSelect({
                 size="sm"
                 className="h-6 px-2"
                 onClick={handleAddCustom}
+                type="button"
               >
                 <Plus className="h-4 w-4" />
               </Button>
@@ -225,6 +227,7 @@ export default function SearchSelect({
                 size="sm"
                 className="h-6 px-2"
                 onClick={() => setOpen(!open)}
+                type="button"
               >
                 {open ? (
                   <ChevronUp className="h-4 w-4 opacity-50" />

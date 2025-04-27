@@ -1,16 +1,10 @@
-"use client";
-import useFetch from "@/hooks/usefetch";
-import { API_URL } from "@/lib/apiEndPoints";
+"use client";;
 import { dataTypeIds } from "@/types";
-import SearchSelect from "@/components/custom/search-select";
-import React from "react";
-import { Skeleton } from "@/components/ui/skeleton";
 import { LabelInputContainer } from "@/components/ui/LabelInputContainer";
 import { TextareaInput } from "@/components/custom/TextareaInput";
-import { Checkbox } from "@/components/ui/checkbox";
 import Vendors from "./vendors";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import AssignedToTechnician from "./assigned-to-technician";
 
 export default function ComplaintDetailsForm({
   data,
@@ -108,43 +102,10 @@ export default function ComplaintDetailsForm({
           errorMessage={errors.mq_nmb}
           className="transition-all duration-200"
         />
+        <AssignedToTechnician technician={technician || []} data={data} setData={setData} />
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        <div className="space-y-2">
-          {technician ? (
-            <div className="flex-1">
-              <SearchSelect
-                options={technician}
-                label="Technician"
-                value={data.technician}
-                onChange={(e) => setData({ ...data, technician: e })}
-                width="full"
-                className="transition-all duration-200"
-                errorMessage={errors.technician}
-              />
-            </div>
-          ) : (
-            <div className="flex-1 space-y-2">
-              <Skeleton className="w-24 h-4" />
-              <Skeleton className="w-full h-12" />
-            </div>
-          )}
-          <Button
-            variant="default"
-            size="sm"
-            onClick={() =>
-              setData({
-                ...data,
-                send_message_to_technician: !data.send_message_to_technician,
-              })
-            }
-            className={`${data.send_message_to_technician ? "bg-blue-100 dark:bg-blue-900" : ""
-              }`}
-          >
-            Send Message tso
-          </Button>
-        </div>
         <LabelInputContainer
           label="Amount"
           placeholder="Amount"
@@ -196,6 +157,6 @@ export default function ComplaintDetailsForm({
       />
 
       <Vendors />
-    </div>
+    </div >
   );
 }
