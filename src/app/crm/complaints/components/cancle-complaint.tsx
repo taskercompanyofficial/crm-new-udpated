@@ -69,6 +69,15 @@ export default function CancelComplaint({ complaintId }: { complaintId: number }
                             <SelectItem value="resolved">Issue Resolved</SelectItem>
                             <SelectItem value="duplicate">Duplicate Complaint</SelectItem>
                             <SelectItem value="mistake">Filed by Mistake</SelectItem>
+                            <SelectItem value="third_party">Installed by Third Party</SelectItem>
+                            <SelectItem value="wrong_product">Wrong Product Delivered</SelectItem>
+                            <SelectItem value="customer_request">Customer Request</SelectItem>
+                            <SelectItem value="warranty_expired">Warranty Expired</SelectItem>
+                            <SelectItem value="not_reachable">Customer Not Reachable</SelectItem>
+                            <SelectItem value="no_issue">No Issue Found</SelectItem>
+                            <SelectItem value="out_of_scope">Out of Service Scope</SelectItem>
+                            <SelectItem value="parts_unavailable">Parts Not Available</SelectItem>
+                            <SelectItem value="customer_delay">Delayed by Customer</SelectItem>
                             <SelectItem value="other">Other</SelectItem>
                         </SelectContent>
                     </Select>
