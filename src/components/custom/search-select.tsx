@@ -1,18 +1,26 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
-import { Command, CommandEmpty, CommandGroup, CommandItem, CommandList } from "@/components/ui/command";
+import React, { useState, useEffect, useRef } from "react";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Plus, ChevronDown, ChevronUp, Loader2, Loader, X } from "lucide-react";
+import { Plus, ChevronDown, ChevronUp, Loader2, X } from "lucide-react";
 import { CheckIcon } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
-interface dataTypeIds {
+interface DataTypeIds {
   value: string;
   label: string;
 }
 
 interface SearchSelectProps {
-  options: dataTypeIds[];
+  options: DataTypeIds[];
   value: string;
   onChange: (value: string) => void;
   label?: string;
@@ -27,7 +35,7 @@ interface SearchSelectProps {
 }
 
 export default function SearchSelect({
-  options: items,
+  options: initialOptions,
   value,
   onChange,
   label = "",
@@ -35,130 +43,89 @@ export default function SearchSelect({
   className = "",
   width = "auto",
   required = false,
-  customizable,
+  customizable = false,
   errorMessage,
   isLoading = false,
   multiple = false,
 }: SearchSelectProps) {
   const [open, setOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [customOptions, setCustomOptions] = useState<dataTypeIds[]>([]);
-  const [options, setOptions] = useState<dataTypeIds[]>([]);
-  const [selectedValues, setSelectedValues] = useState<string[]>(multiple ? [value] : []);
-  const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  // Handle clicking outside to close dropdown
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  useEffect(() => {
-    if (items && items.length > 0) {
-      setOptions([...items, ...customOptions]);
-    }
-  }, [items, customOptions]);
-
-  useEffect(() => {
-    if (open && inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, [open]);
-
-  const normalizedOptions = options.map((option) => ({
-    ...option,
-    value: String(option.value),
-  }));
-  const normalizedValue = String(value);
-
-  const selectedOption = normalizedOptions.find(
-    (option) => option.value === normalizedValue
+  const [inputValue, setInputValue] = useState("");
+  const [customOptions, setCustomOptions] = useState<DataTypeIds[]>([]);
+  const [selectedValues, setSelectedValues] = useState<string[]>(
+    multiple && value ? value.split(',') : value ? [value] : []
   );
 
-  const filteredOptions = searchTerm
-    ? normalizedOptions.filter(option =>
-      option.label.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-    : normalizedOptions;
+  // Combine initial options with custom options
+  const allOptions = [...initialOptions, ...customOptions].map(option => ({
+    ...option,
+    value: String(option.value)
+  }));
 
-  const handleAddCustom = () => {
-    if (searchTerm.trim()) {
-      const newOption = { value: searchTerm, label: searchTerm };
-      setCustomOptions([...customOptions, newOption]);
-      setOptions([...options, newOption]);
-      onChange(newOption.value);
-      setSearchTerm("");
-      setOpen(false);
-    }
+  // Get currently selected option(s)
+  const selectedOption = allOptions.find(option => option.value === value);
+  const selectedOptions = multiple
+    ? allOptions.filter(option => selectedValues.includes(option.value))
+    : [];
+
+  // Handle clicking outside
+  const popoverRef = useRef<HTMLDivElement>(null);
+
+  const handleAddCustomOption = () => {
+    if (!inputValue.trim()) return;
+
+    const newOption = { value: inputValue, label: inputValue };
+    setCustomOptions(prev => [...prev, newOption]);
+    handleSelectOption(newOption.value);
+    setInputValue("");
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-    if (!open) setOpen(true);
-    setHighlightedIndex(-1);
-  };
-
-  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      if (customizable && searchTerm && highlightedIndex === -1) {
-        handleAddCustom();
-      } else if (highlightedIndex >= 0 && highlightedIndex < filteredOptions.length) {
-        handleSelect(filteredOptions[highlightedIndex].value);
-      }
-    }
-    if (e.key === 'Escape') {
-      setOpen(false);
-      setHighlightedIndex(-1);
-    }
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      if (!open) {
-        setOpen(true);
-      }
-      setHighlightedIndex(prev =>
-        prev < filteredOptions.length - 1 ? prev + 1 : 0
-      );
-    }
-    if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      setHighlightedIndex(prev =>
-        prev > 0 ? prev - 1 : filteredOptions.length - 1
-      );
-    }
-  }, [searchTerm, customizable, filteredOptions, highlightedIndex]);
-
-  const handleSelect = (optionValue: string) => {
+  const handleSelectOption = (optionValue: string) => {
     if (multiple) {
       const newValues = selectedValues.includes(optionValue)
         ? selectedValues.filter(v => v !== optionValue)
         : [...selectedValues, optionValue];
+
       setSelectedValues(newValues);
       onChange(newValues.join(','));
     } else {
       onChange(optionValue);
-      setSearchTerm("");
       setOpen(false);
     }
-    setHighlightedIndex(-1);
   };
 
-  const handleClear = () => {
+  const handleClear = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
     onChange('');
-    setSearchTerm('');
     setSelectedValues([]);
   };
 
+  // Display selected values in multiple selection mode
+  const renderSelectedValues = () => {
+    if (!multiple || selectedValues.length === 0) return null;
+
+    return (
+      <div className="flex flex-wrap gap-1 p-1">
+        {selectedOptions.map(option => (
+          <div
+            key={option.value}
+            className="bg-primary/10 text-primary rounded px-2 py-1 text-xs flex items-center gap-1"
+          >
+            {option.label}
+            <X
+              className="h-3 w-3 cursor-pointer"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleSelectOption(option.value);
+              }}
+            />
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   return (
-    <div className={cn("space-y-1 pt-1 mt-2", className)}>
+    <div className={cn("space-y-1 pt-1 mt-2", className)} ref={popoverRef}>
       {label && (
         <Label
           className={cn("flex items-center gap-1", errorMessage && "text-red-500")}
@@ -168,119 +135,138 @@ export default function SearchSelect({
         </Label>
       )}
 
-      <div className="relative" ref={dropdownRef}>
-        <div
-          className={cn(
-            "flex items-center border rounded-md p-1",
-            width === "full" ? "w-full" : "w-[250px]",
-            open && "border-primary ring-2 ring-primary/20"
-          )}
-        >
-          {/* Show selected option as text when not searching */}
-          {!open && selectedOption && (
-            <div className="flex-1 truncate px-2">{selectedOption.label}</div>
-          )}
-
-          {/* Show input field only when dropdown is open or no selection */}
-          {(open || !selectedOption) && (
-            <input
-              ref={inputRef}
-              type="text"
-              value={searchTerm}
-              onChange={handleInputChange}
-              onKeyDown={handleKeyDown}
-              className="w-full bg-transparent border-none focus:outline-none pr-8"
-              placeholder={`Search ${label.toLowerCase()}...`}
-              onClick={() => setOpen(true)}
-            />
-          )}
-
-          <div className="flex items-center gap-1">
-            {selectedOption && (
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-6 px-2"
-                onClick={handleClear}
-                type="button"
-              >
-                <X className="h-4 w-4" />
-              </Button>
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <div
+            className={cn(
+              "flex flex-col border rounded-md cursor-pointer",
+              width === "full" ? "w-full" : "w-64",
+              open && "border-primary ring-2 ring-primary/20",
+              errorMessage && "border-red-500"
             )}
+          >
+            {renderSelectedValues()}
 
-            {customizable && searchTerm && (
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-6 px-2"
-                onClick={handleAddCustom}
-                type="button"
-              >
-                <Plus className="h-4 w-4" />
-              </Button>
-            )}
-            {isLoading ? (
-              <Loader className="h-4 w-4 animate-spin" />
-            ) : (
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-6 px-2"
-                onClick={() => setOpen(!open)}
-                type="button"
-              >
-                {open ? (
-                  <ChevronUp className="h-4 w-4 opacity-50" />
+            <div className="flex items-center p-2">
+              {/* Show selected option as text when not multiple and not searching */}
+              {selectedOption && !multiple ? (
+                <div className="flex-1 truncate">{selectedOption.label}</div>
+              ) : (multiple && selectedValues.length === 0) || (!multiple && !selectedOption) ? (
+                <div className="flex-1 truncate text-muted-foreground text-sm">
+                  {`Select ${label.toLowerCase() || 'option'}...`}
+                </div>
+              ) : null}
+
+              <div className="flex items-center gap-1 ml-auto">
+                {(selectedOption || (multiple && selectedValues.length > 0)) && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-6 px-2"
+                    onClick={handleClear}
+                    type="button"
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                )}
+
+                {isLoading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
                   <ChevronDown className="h-4 w-4 opacity-50" />
                 )}
-              </Button>
-            )}
+              </div>
+            </div>
           </div>
-        </div>
+        </PopoverTrigger>
 
-        {open && (
-          <div className="absolute z-50 w-full mt-1 bg-white border rounded-md shadow-lg">
-            <Command className="w-full">
-              <CommandList className="max-h-[200px] overflow-y-auto">
-                <CommandEmpty>
-                  {isLoading ? (
-                    <div className="flex items-center justify-center p-2">
-                      <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                      Loading...
-                    </div>
-                  ) : customizable ? (
-                    <div className="flex items-center justify-center p-2">
-                      No options found
-                    </div>
-                  ) : (
-                    `No ${label.toLowerCase()} found.`
-                  )}
-                </CommandEmpty>
-                <CommandGroup>
-                  {filteredOptions.map((option) => (
+        <PopoverContent
+          className="p-0"
+          align="start"
+          sideOffset={5}
+          style={{ width: popoverRef.current?.getBoundingClientRect().width }}
+        >
+          <Command shouldFilter={false}>
+            <CommandInput
+              placeholder={`Search ${label.toLowerCase() || 'options'}...`}
+              value={inputValue}
+              onValueChange={setInputValue}
+              className="h-9"
+            />
+
+            <CommandList className="max-h-60 overflow-y-auto">
+              <CommandEmpty>
+                {isLoading ? (
+                  <div className="flex items-center justify-center p-2">
+                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                    Loading...
+                  </div>
+                ) : customizable && inputValue ? (
+                  <div className="p-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full flex items-center justify-center"
+                      onClick={handleAddCustomOption}
+                    >
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add "{inputValue}"
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="p-2 text-center text-sm text-muted-foreground">
+                    No options found
+                  </div>
+                )}
+              </CommandEmpty>
+
+              <CommandGroup>
+                {allOptions
+                  .filter(option =>
+                    inputValue === "" ||
+                    option.label.toLowerCase().includes(inputValue.toLowerCase())
+                  )
+                  .map((option) => (
                     <CommandItem
                       key={option.value}
-                      onSelect={() => handleSelect(option.value)}
-                      className="text-xs"
+                      onSelect={() => handleSelectOption(option.value)}
+                      className="flex items-center cursor-pointer"
                     >
-                      <CheckIcon
-                        className={cn(
-                          "mr-2 h-4 w-4",
-                          (multiple ? selectedValues.includes(option.value) : normalizedValue === option.value)
-                            ? "opacity-100"
-                            : "opacity-0"
-                        )}
-                      />
-                      {option.label}
+                      <div className="flex items-center w-full">
+                        <CheckIcon
+                          className={cn(
+                            "mr-2 h-4 w-4",
+                            (multiple ? selectedValues.includes(option.value) : value === option.value)
+                              ? "opacity-100"
+                              : "opacity-0"
+                          )}
+                        />
+                        <span className="flex-1">{option.label}</span>
+                      </div>
                     </CommandItem>
-                  ))}
-                </CommandGroup>
-              </CommandList>
-            </Command>
-          </div>
-        )}
-      </div>
+                  ))
+                }
+              </CommandGroup>
+
+              {customizable && inputValue && allOptions.some(option =>
+                option.label.toLowerCase().includes(inputValue.toLowerCase())
+              ) && (
+                  <div className="p-2 border-t">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full flex items-center justify-center"
+                      onClick={handleAddCustomOption}
+                    >
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add "{inputValue}"
+                    </Button>
+                  </div>
+                )}
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
 
       {/* Error and Description */}
       {description && (
