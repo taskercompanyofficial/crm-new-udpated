@@ -199,7 +199,6 @@ export default function SearchSelect({
                 {isLoading ? (
                   <div className="flex items-center justify-center p-2">
                     <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                    Loading...
                   </div>
                 ) : customizable && inputValue ? (
                   <div className="p-2">
@@ -210,7 +209,7 @@ export default function SearchSelect({
                       onClick={handleAddCustomOption}
                     >
                       <Plus className="h-4 w-4 mr-2" />
-                      Add "{inputValue}"
+                      Add &quot;{inputValue}&quot;
                     </Button>
                   </div>
                 ) : (
@@ -259,7 +258,7 @@ export default function SearchSelect({
                       onClick={handleAddCustomOption}
                     >
                       <Plus className="h-4 w-4 mr-2" />
-                      Add "{inputValue}"
+                      Add &quot;{inputValue}&quot;
                     </Button>
                   </div>
                 )}
