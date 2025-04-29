@@ -64,7 +64,7 @@ export function TasksTableFloatingBar({ table }: TasksTableFloatingBarProps) {
         copyToClipboard(selectedRows.map(row => row.original));
       }
       if ((event.ctrlKey || event.metaKey) && event.key === 'e' && selectedRows.length === 1) {
-        window.open(`${window.location.pathname}/${selectedRows[0].original.id}/edit`, '_blank');
+        window.open(`${window.location.pathname}/${selectedRows[0].original.complain_num}/edit`, '_blank');
       }
     };
 
@@ -207,7 +207,7 @@ export function TasksTableFloatingBar({ table }: TasksTableFloatingBarProps) {
                       variant="outline"
                       size="sm"
                       className="w-8 h-8"
-                      onClick={() => window.open(`${window.location.pathname}/${selectedRows[0].original.id}/edit`, '_blank')}
+                      onClick={() => window.open(`${window.location.pathname}/${selectedRows[0].original.complain_num}/edit`, '_blank')}
                     >
                       <Edit className="w-4 h-4" />
                     </Button>

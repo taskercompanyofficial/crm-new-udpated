@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import {
   Command,
   CommandEmpty,
@@ -10,7 +10,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Plus, ChevronDown, ChevronUp, Loader2, X } from "lucide-react";
+import { Plus, ChevronDown, Loader2, X } from "lucide-react";
 import { CheckIcon } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
@@ -137,9 +137,10 @@ export default function SearchSelect({
 
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <div
+          <button
+            type="button"
             className={cn(
-              "flex flex-col border rounded-md cursor-pointer",
+              "flex flex-col border rounded-md cursor-pointer w-full text-left",
               width === "full" ? "w-full" : "w-64",
               open && "border-primary ring-2 ring-primary/20",
               errorMessage && "border-red-500"
@@ -177,7 +178,7 @@ export default function SearchSelect({
                 )}
               </div>
             </div>
-          </div>
+          </button>
         </PopoverTrigger>
 
         <PopoverContent

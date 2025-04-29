@@ -29,7 +29,7 @@ export default function BasicForm({
   >(`${API_URL}/crm/fetch-branches`);
   return (
     <div className="w-full space-y-2 bg-white dark:bg-gray-800 p-2 rounded">
-      <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         <LabelInputContainer
           type="text"
           id="brand_complaint_no"
@@ -42,8 +42,8 @@ export default function BasicForm({
           errorMessage={errors.brand_complaint_no}
           className="uppercase"
         />
-        <div className="flex gap-2">
-          <div className="w-[50px]">
+        <div className="grid grid-cols-[120px_1fr] gap-2 w-full">
+          <div>
             <SelectInput
               label="Title"
               selected={title}
@@ -65,7 +65,7 @@ export default function BasicForm({
             />
           </div>
           <LabelInputContainer
-            type="text"
+            type="text" 
             autoFocus
             id="applicant-name"
             placeholder="Applicant name"
@@ -92,8 +92,7 @@ export default function BasicForm({
           }
           errorMessage={errors.reference_by}
         />
-      </div>
-      <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
+
         <LabelInputContainer
           type="number"
           id="applicant-phone"

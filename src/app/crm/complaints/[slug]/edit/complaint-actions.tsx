@@ -55,7 +55,7 @@ export default function ComplaintActions({
             {data.complain_num}
           </strong>
         </div>
-        <div className="flex flex-col gap-4 md:flex-row md:gap-4">
+        <div className="flex flex-col gap-4 md:flex-row md:gap-4 items-center">
           <div className="flex gap-2">
             <Label>Is Care Of Customer</Label>
             <Checkbox

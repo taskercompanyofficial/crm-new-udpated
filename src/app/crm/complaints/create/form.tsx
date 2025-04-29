@@ -28,7 +28,7 @@ export default function Form() {
     return [];
   });
 
-  const { data, setData, processing, post, errors } = useForm({
+  const { data, setData, processing, post, errors, reset } = useForm({
     applicant_name: "",
     reference_by: "",
     brand_complaint_no: "",
@@ -67,7 +67,7 @@ export default function Form() {
       const submitPendingComplaints = async () => {
         for (const complaint of pendingComplaints) {
           try {
-            await post(
+            post(
               COMPLAINTS,
               {
                 onSuccess: () => {
@@ -97,25 +97,7 @@ export default function Form() {
       localStorage.setItem("pendingComplaints", JSON.stringify([...pendingComplaints, newComplaint]));
       toast.info("Complaint saved locally. Will submit when online.");
       setHasUnsavedChanges(false);
-      setData({
-        applicant_name: "",
-        reference_by: "",
-        brand_complaint_no: "",
-        applicant_phone: "",
-        applicant_whatsapp: "",
-        brand_id: "",
-        branch_id: "",
-        extra_numbers: "",
-        dealer: "",
-        product: "",
-        complaint_type: "",
-        applicant_adress: "",
-        working_details: "",
-        description: "",
-        status: "open",
-        call_status: "pending",
-      });
-      return;
+      reset();
     }
 
     post(
@@ -123,9 +105,8 @@ export default function Form() {
       {
         onSuccess: (response) => {
           toast.success(response.message);
-          setHasUnsavedChanges(false);
-          const url = `/crm/complaints/${response.data.id}/edit`;
-          window.location.href = url;
+          const url = `/crm/complaints/${response.data.complain_num}/edit`; 
+          router.push(url);
         },
         onError: (error) => {
           toast.error(error.message);

@@ -49,7 +49,7 @@ export default function DuplicateForm({
         onSuccess: (response) => {
           toast.success(response.message);
           setHasUnsavedChanges(false);
-          router.push("/crm/complaints/edit/" + response.data.id);
+          router.push("/crm/complaints/" + response.data.complain_num + "/edit");
         },
         onError: (error) => {
           toast.error(error.message);

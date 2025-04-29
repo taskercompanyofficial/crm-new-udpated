@@ -27,13 +27,14 @@ export function TextareaInput({
   containerClassName,
   predefinedOptions = [],
   customizable = false,
+  value: propValue,
+  onChange,
   ...props
 }: TextareaInputProps) {
   const [charCount, setCharCount] = React.useState(0);
-  const [value, setValue] = React.useState<string>(String(props.value || ''));
+  const [value, setValue] = React.useState<string>(String(propValue || ''));
   const [searchTerm, setSearchTerm] = React.useState('');
   const [customOptions, setCustomOptions] = React.useState<string[]>([]);
-  const [options, setOptions] = React.useState<string[]>(predefinedOptions);
   const [open, setOpen] = React.useState(false);
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
   const dropdownRef = React.useRef<HTMLDivElement>(null);
@@ -41,8 +42,8 @@ export function TextareaInput({
   // Check if there are any options to display
   const hasOptions = predefinedOptions.length > 0 || customOptions.length > 0;
 
-  React.useEffect(() => {
-    setOptions([...predefinedOptions, ...customOptions]);
+  const options = React.useMemo(() => {
+    return [...predefinedOptions, ...customOptions];
   }, [predefinedOptions, customOptions]);
 
   // Handle clicking outside to close dropdown
@@ -57,11 +58,19 @@ export function TextareaInput({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const filteredOptions = searchTerm
-    ? options.filter(option =>
-      option.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-    : options;
+  // Update internal value when prop value changes
+  React.useEffect(() => {
+    setValue(String(propValue || ''));
+    setCharCount(String(propValue || '').length);
+  }, [propValue]);
+
+  const filteredOptions = React.useMemo(() => {
+    return searchTerm
+      ? options.filter(option =>
+          option.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      : options;
+  }, [searchTerm, options]);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newValue = e.target.value;
@@ -74,8 +83,8 @@ export function TextareaInput({
       setOpen(true);
     }
 
-    if (props.onChange) {
-      props.onChange(e);
+    if (onChange) {
+      onChange(e);
     }
   };
 
@@ -95,8 +104,8 @@ export function TextareaInput({
       }
     } as React.ChangeEvent<HTMLTextAreaElement>;
 
-    if (props.onChange) {
-      props.onChange(event);
+    if (onChange) {
+      onChange(event);
     }
   };
 
