@@ -38,6 +38,7 @@ export default function DocumentUploader({
 
   const dropZoneRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const selectTriggerRef = useRef<HTMLButtonElement>(null);
 
   const [isDragging, setIsDragging] = useState(false);
   const [dragCounter, setDragCounter] = useState(0);
@@ -114,7 +115,10 @@ export default function DocumentUploader({
 
       if (e.dataTransfer) {
         const droppedFiles = Array.from(e.dataTransfer.files);
-        validateFiles(droppedFiles) && setFiles(droppedFiles);
+        if (validateFiles(droppedFiles)) {
+          setFiles(droppedFiles);
+          selectTriggerRef.current?.click();
+        }
       }
     };
 
@@ -155,7 +159,10 @@ export default function DocumentUploader({
 
         if (e.dataTransfer) {
           const droppedFiles = Array.from(e.dataTransfer.files);
-          validateFiles(droppedFiles) && setFiles(droppedFiles);
+          if (validateFiles(droppedFiles)) {
+            setFiles(droppedFiles);
+            selectTriggerRef.current?.click();
+          }
         }
       }
     };
@@ -189,7 +196,10 @@ export default function DocumentUploader({
     const selectedFiles = event.target.files;
     if (selectedFiles) {
       const fileArray = Array.from(selectedFiles);
-      validateFiles(fileArray) && setFiles(fileArray);
+      if (validateFiles(fileArray)) {
+        setFiles(fileArray);
+        selectTriggerRef.current?.click();
+      }
       event.target.value = ""; // Reset input
     }
   };
@@ -220,7 +230,7 @@ export default function DocumentUploader({
             onValueChange={setDocumentType}
             disabled={isUploading}
           >
-            <SelectTrigger className="w-full sm:w-[200px]">
+            <SelectTrigger ref={selectTriggerRef} className="w-full sm:w-[200px]">
               <SelectValue placeholder="Document type" />
             </SelectTrigger>
             <SelectContent>
@@ -242,10 +252,10 @@ export default function DocumentUploader({
           <div
             ref={dropZoneRef}
             className={`relative w-full flex-1 rounded border-2 border-dashed px-4 py-3 min-h-[45px] transition-all duration-200 ease-in-out ${isDragging
-                ? "border-primary bg-primary/10 dark:bg-primary/20"
-                : files.length > 0
-                  ? "border-green-500 bg-green-50 dark:bg-green-900/20"
-                  : "border-gray-300 dark:border-gray-600 hover:border-primary dark:hover:border-primary"
+              ? "border-primary bg-primary/10 dark:bg-primary/20"
+              : files.length > 0
+                ? "border-green-500 bg-green-50 dark:bg-green-900/20"
+                : "border-gray-300 dark:border-gray-600 hover:border-primary dark:hover:border-primary"
               }`}
           >
             <input

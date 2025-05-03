@@ -8,6 +8,7 @@ import { saveAs } from 'file-saver';
 import { toast } from "react-toastify";
 import JSZip from 'jszip';
 import Image from "next/image";
+import axios from 'axios'; // Make sure axios is installed in your project
 import {
   ScrollArea,
   ScrollBar
@@ -82,20 +83,30 @@ export default function FilesForm({
   const files =
     typeof data.files === "string" ? JSON.parse(data.files) : data.files || [];
 
+  // Improved single file download function
   const handleDownloadFile = async (file: any) => {
     try {
       setDownloading(true);
 
-      const response = await fetch(file.document_path, {
-        method: 'GET',
-        credentials: 'include',
+      // Create API endpoint to handle the download server-side
+      const response = await axios({
+        url: `/api/download/file`,
+        method: 'POST',
+        responseType: 'blob',
+        data: {
+          filePath: file.document_path,
+          fileName: file.file_name
+        },
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       });
 
-      if (!response.ok) {
+      if (response.status !== 200) {
         throw new Error('Failed to download');
       }
 
-      const blob = await response.blob();
+      const blob = new Blob([response.data]);
       saveAs(blob, file.file_name || 'download');
 
     } catch (err) {
@@ -106,36 +117,92 @@ export default function FilesForm({
     }
   };
 
-
+  // Improved multiple files download function
   const downloadFilesAsZip = async (filesToDownload: any[]) => {
     try {
       setDownloading(true);
-      const zip = new JSZip();
 
-      for (const file of filesToDownload) {
-        const response = await fetch(getImageUrl(file.document_path), {
-          method: 'GET',
-          mode: 'cors',
-          credentials: 'include',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Accept': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type, Authorization'
-          }
-        });
+      // Create API endpoint to handle the ZIP creation server-side
+      const response = await axios({
+        url: `/api/download/zip`,
+        method: 'POST',
+        responseType: 'blob',
+        data: {
+          files: filesToDownload.map(file => ({
+            path: file.document_path,
+            name: file.file_name
+          }))
+        },
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
 
-        if (!response.ok) throw new Error('Download failed');
-
-        const blob = await response.blob();
-        zip.file(file.file_name || `file_${Date.now()}`, blob);
+      if (response.status !== 200) {
+        throw new Error('Failed to download zip');
       }
 
-      const zipBlob = await zip.generateAsync({ type: 'blob' });
+      const blob = new Blob([response.data], { type: 'application/zip' });
       const zipName = data.complain_num ? `${data.complain_num}_files.zip` : 'files.zip';
-      saveAs(zipBlob, zipName);
+      saveAs(blob, zipName);
 
+    } catch (error: any) {
+      console.error('Download error:', error);
+      toast.error("Failed to download files. Please try again later.");
+    } finally {
+      setDownloading(false);
+    }
+  };
+
+  // Fallback approach if server-side ZIP creation fails
+  const downloadFilesAsZipFallback = async (filesToDownload: any[]) => {
+    try {
+      setDownloading(true);
+      const zip = new JSZip();
+      let successCount = 0;
+      let failCount = 0;
+
+      for (const file of filesToDownload) {
+        try {
+          // Try to download each file through the single file download API
+          const response = await axios({
+            url: `/api/download/file`,
+            method: 'POST',
+            responseType: 'blob',
+            data: {
+              filePath: file.document_path,
+              fileName: file.file_name
+            },
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+
+          if (response.status === 200) {
+            zip.file(file.file_name || `file_${Date.now()}`, response.data);
+            successCount++;
+          } else {
+            failCount++;
+          }
+        } catch (err) {
+          console.error(`Error downloading ${file.file_name}:`, err);
+          failCount++;
+        }
+      }
+
+      if (successCount > 0) {
+        const zipBlob = await zip.generateAsync({ type: 'blob' });
+        const zipName = data.complain_num ? `${data.complain_num}_files.zip` : 'files.zip';
+        saveAs(zipBlob, zipName);
+
+        if (failCount > 0) {
+          toast.warning(`${successCount} files zipped successfully. ${failCount} files could not be downloaded.`);
+        } else {
+          toast.success(`${successCount} files zipped successfully.`);
+        }
+      } else {
+        toast.error("Failed to download any files.");
+      }
     } catch (error: any) {
       console.error('Download error:', error);
       toast.error("Failed to download files. Please try again later.");
@@ -147,7 +214,12 @@ export default function FilesForm({
   const handleDownloadSelected = async () => {
     const selectedFilesToDownload = selectedFiles.map(index => files[index]);
     if (selectedFilesToDownload.length > 1) {
-      await downloadFilesAsZip(selectedFilesToDownload);
+      try {
+        await downloadFilesAsZip(selectedFilesToDownload);
+      } catch (error) {
+        // If primary method fails, try fallback
+        await downloadFilesAsZipFallback(selectedFilesToDownload);
+      }
     } else if (selectedFilesToDownload.length === 1) {
       await handleDownloadFile(selectedFilesToDownload[0]);
     }
@@ -155,7 +227,12 @@ export default function FilesForm({
 
   const handleDownloadAll = async () => {
     if (files.length > 1) {
-      await downloadFilesAsZip(files);
+      try {
+        await downloadFilesAsZip(files);
+      } catch (error) {
+        // If primary method fails, try fallback
+        await downloadFilesAsZipFallback(files);
+      }
     } else if (files.length === 1) {
       await handleDownloadFile(files[0]);
     }
