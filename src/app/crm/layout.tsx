@@ -49,11 +49,11 @@ export default async function AuthenticatedLayout({
   return (
     <GoogleOAuthProvider clientId="333114966119-p58epscu427btagfugqtkfv8q3tq1an4.apps.googleusercontent.com">
       <UploadProvider>
-        <SidebarProvider>
+        <SidebarProvider >
           <AppSidebar />
-          <SidebarInset className="overflow-x-hidden">
+          <SidebarInset className="overflow-x-hidden"  >
             <Header userDetails={userDetails} />
-            <div className="p-4 bg-background">{children}</div>
+            <div className="p-4 bg-muted">{children}</div>
           </SidebarInset>
         </SidebarProvider>
       </UploadProvider>

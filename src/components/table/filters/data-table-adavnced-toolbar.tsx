@@ -1,324 +1,40 @@
 import React from "react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Check, ChevronsUpDown, FilterIcon, Trash2 } from "lucide-react";
+import { ListFilter, GripVertical } from "lucide-react";
+import { Sortable, SortableContent, SortableItem, SortableItemHandle } from "@/components/ui/sortable";
+import { useFilters } from "@/hooks/use-filter";
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import { useSearchParams } from "next/navigation";
-import { cn } from "@/lib/utils";
-import { toast } from "react-toastify";
-import { useSession } from "next-auth/react";
-import { API_URL } from "@/lib/apiEndPoints";
-import useFetch from "@/hooks/usefetch";
-import { dataTypeIds } from "@/types";
-import SearchSelect from "@/components/custom/search-select";
-
-interface Filter {
-  id: string;
-  condition: string;
-  value: string;
-}
+  FacetedFilter,
+  FacetedFilterContent,
+  FacetedFilterTrigger,
+} from "@/components/ui/faceted-filter";
+import { FilterItem, LogicOperatorSelector } from "./filter";
 
 interface FilterToolbarProps {
   columns: { accessorKey: string }[] | any;
 }
 
-const formatLabel = (str: string | undefined) => {
-  if (!str) return "";
-  const formattedStr = str.replace(/_/g, " ");
-  return formattedStr.charAt(0).toUpperCase() + formattedStr.slice(1);
-};
-
-const filterConditions = [
-  { value: "like", label: "Contains" },
-  { value: "not like", label: "Does not contain" },
-  { value: "=", label: "Equals" },
-  { value: "!=", label: "Not equals" },
-  { value: "null", label: "Is Empty" },
-  { value: ">", label: "Greater than" },
-  { value: "<", label: "Less than" },
-  { value: ">=", label: "Greater than or equal" },
-  { value: "<=", label: "Less than or equal" },
-  { value: "in", label: "In" },
-  { value: "not in", label: "Not in" },
-  { value: "between", label: "Between" },
-];
-
-const SEARCH_SELECT_FIELDS = ["brand_id", "branch_id", "technician"];
-const DATE_FIELDS = ["created_at", "updated_at"];
-
 export function DataTableFiltersToolbar({ columns }: FilterToolbarProps) {
-  const options = columns
-    .slice(1)
-    .map((column: any) => {
-      const accessor = column.accessorKey || "";
-      return {
-        value: accessor,
-        label: formatLabel(accessor),
-      };
-    })
-    .filter((option: any) => option.value !== "");
-
-  const searchParams = useSearchParams();
-  const session = useSession();
-  const token = session.data?.user?.token || "";
-
-  const { data: brands } = useFetch<dataTypeIds[]>(
-    `${API_URL}/crm/fetch-authorized-brands`,
-  );
-  const { data: branches } = useFetch<dataTypeIds[]>(
-    `${API_URL}/crm/fetch-branches`,
-  );
-  const { data: technicians } = useFetch<dataTypeIds[]>(
-    `${API_URL}/crm/fetch-workers`,
-    token,
-  );
-
-  // Initialize filters from URL, but only if there are actual filters
-  let initialFilters: Filter[] = [];
-  const filterParam = searchParams.get("filters");
-  if (filterParam) {
-    try {
-      const parsed = JSON.parse(filterParam);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        initialFilters = parsed as Filter[];
-      }
-    } catch (e) {
-      toast.error("Failed to parse filter param");
-    }
-  }
-
-  const [filters, setFilters] = React.useState<Filter[]>(initialFilters);
-  const [logic, setLogic] = React.useState<"AND" | "OR">(
-    initialFilters.length > 1
-      ? (searchParams.get("logic") as "AND" | "OR") || "AND"
-      : "AND",
-  );
-
-  // Update URL only when needed
-  React.useEffect(() => {
-    if (typeof window !== "undefined") {
-      const currentPath = window.location.pathname;
-      const currentParams = new URLSearchParams(window.location.search);
-      const searchParams = new URLSearchParams(currentParams);
-
-      if (filters.length > 0) {
-        searchParams.set("filters", JSON.stringify(filters));
-        if (filters.length > 1) {
-          searchParams.set("logic", logic);
-        } else {
-          searchParams.delete("logic");
-        }
-      } else {
-        searchParams.delete("filters");
-        searchParams.delete("logic");
-      }
-
-      const queryString = searchParams.toString();
-      const newUrl = queryString
-        ? `${currentPath}?${queryString}`
-        : currentPath;
-
-      window.history.replaceState(null, "", newUrl);
-    }
-  }, [filters, logic]);
-
-  const updateFilter = (index: number, newFilter: Filter) => {
-    setFilters((prev) => {
-      const updatedFilters = prev.map((f, i) => {
-        if (i !== index) return f;
-
-        // Reset value when filter type changes
-        if (f.id !== newFilter.id) {
-          newFilter.value = "";
-        }
-
-        // Handle like conditions
-        if (
-          ["like", "not like"].includes(newFilter.condition) &&
-          newFilter.value
-        ) {
-          const value = newFilter.value.trim();
-          return {
-            ...newFilter,
-            value: value ? `%${value.replace(/%/g, "")}%` : "", // Remove existing % and wrap value with % if not empty
-          };
-        }
-        return newFilter;
-      });
-
-      return updatedFilters;
-    });
-  };
-
-  const addFilter = () => {
-    if (options.length === 0) return;
-    const available = options.find(
-      (opt: any) => !filters.some((f) => f.id === opt.value),
-    );
-    if (available) {
-      setFilters([
-        ...filters,
-        { id: available.value, condition: "like", value: "" },
-      ]);
-    }
-  };
-
-  const removeFilter = (index: number) => {
-    setFilters((prev) => {
-      const newFilters = prev.filter((_, i) => i !== index);
-      if (newFilters.length <= 1) {
-        setLogic("AND");
-      }
-      return newFilters;
-    });
-  };
-
-  const resetFilters = () => {
-    setFilters([]);
-    setLogic("AND");
-  };
-
-  const getSearchSelectOptions = (fieldId: string) => {
-    switch (fieldId) {
-      case "brand_id":
-        return brands || [];
-      case "branch_id":
-        return branches || [];
-      case "technician":
-        return technicians || [];
-      default:
-        return [];
-    }
-  };
-
-  const renderValueInput = (filter: Filter) => {
-    if (SEARCH_SELECT_FIELDS.includes(filter.id)) {
-      const options = getSearchSelectOptions(filter.id);
-      return (
-        <SearchSelect
-          options={options}
-          className="-mt-1.5"
-          value={filter.value}
-          onChange={(value) =>
-            updateFilter(filters.indexOf(filter), {
-              ...filter,
-              value: value,
-            })
-          }
-        />
-      );
-    }
-
-    if (DATE_FIELDS.includes(filter.id)) {
-      return (
-        <Input
-          type="date"
-          value={filter.value}
-          onChange={(e) =>
-            updateFilter(filters.indexOf(filter), {
-              ...filter,
-              value: e.target.value,
-            })
-          }
-          className="h-8 w-32"
-        />
-      );
-    }
-
-    if (filter.condition === "between") {
-      return (
-        <div className="flex w-64 gap-2">
-          <Input
-            placeholder="Min value"
-            className="h-8"
-            value={filter.value.split(",")[0] || ""}
-            onChange={(e) => {
-              const max = filter.value.split(",")[1] || "";
-              updateFilter(filters.indexOf(filter), {
-                ...filter,
-                value: `${e.target.value},${max}`,
-              });
-            }}
-          />
-          <Input
-            placeholder="Max value"
-            className="h-8"
-            value={filter.value.split(",")[1] || ""}
-            onChange={(e) => {
-              const min = filter.value.split(",")[0] || "";
-              updateFilter(filters.indexOf(filter), {
-                ...filter,
-                value: `${min},${e.target.value}`,
-              });
-            }}
-          />
-        </div>
-      );
-    }
-
-    if (["in", "not in"].includes(filter.condition)) {
-      return (
-        <Input
-          value={filter.value}
-          onChange={(e) => {
-            const value = e.target.value.replace(/[,\s]+/g, '.'); // Replace commas and spaces with dots
-            updateFilter(filters.indexOf(filter), {
-              ...filter,
-              value: value,
-            });
-          }}
-          placeholder="Values separated by dots (.)"
-          className="h-8 w-64"
-        />
-      );
-    }
-
-    if (filter.condition === "null") {
-      return null;
-    }
-
-    return (
-      <Input
-        value={filter.value}
-        onChange={(e) =>
-          updateFilter(filters.indexOf(filter), {
-            ...filter,
-            value: e.target.value.replace(/%/g, ""), // Remove existing % from input
-          })
-        }
-        placeholder="Enter value"
-        className="h-8 w-32"
-      />
-    );
-  };
+  const {
+    filters,
+    logic,
+    options,
+    updateFilter,
+    addFilter,
+    removeFilter,
+    resetFilters,
+    setLogic,
+    handleSortFilters,
+  } = useFilters(columns);
 
   return (
-    <Popover>
-      <PopoverTrigger asChild>
+    <FacetedFilter>
+      <FacetedFilterTrigger asChild>
         <Button variant="outline" className="gap-2">
-          <FilterIcon className="size-3" aria-hidden="true" />
+          <ListFilter className="size-3" aria-hidden="true" />
           Filters
-          {filters.length > 0 && (
+          {filters && filters.length > 0 && (
             <Badge
               variant="secondary"
               className="h-[1.14rem] px-[0.32rem] font-mono text-[0.65rem]"
@@ -327,109 +43,49 @@ export function DataTableFiltersToolbar({ columns }: FilterToolbarProps) {
             </Badge>
           )}
         </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-fit p-4" dir="right">
+      </FacetedFilterTrigger>
+      <FacetedFilterContent className="min-w-md md:min-w-lg w-fit p-4" align="start">
         <div className="flex flex-col gap-2">
-          {filters.length > 0 ? (
-            filters.map((filter, index) => (
-              <div key={index} className="flex items-center gap-2">
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="h-8 w-36 justify-between"
+          {filters && filters.length > 0 ? (
+            <Sortable
+              value={filters}
+              onValueChange={handleSortFilters}
+              getItemValue={(filter) => `${filter.id}-${filters.indexOf(filter)}`}
+            >
+              <SortableContent>
+                <div className="space-y-2">
+                  {filters.map((filter, index) => (
+                    <SortableItem
+                      value={`${filter.id}-${index}`}
+                      key={`${filter.id}-${index}`}
                     >
-                      <span className="truncate">{formatLabel(filter.id)}</span>
-                      <ChevronsUpDown className="size-4 opacity-50" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-72 p-0">
-                    <Command>
-                      <CommandInput placeholder="Search fields..." />
-                      <CommandList>
-                        <CommandEmpty>No fields found.</CommandEmpty>
-                        <CommandGroup>
-                          {options
-                            .filter(
-                              (option: any) =>
-                                option.value === filter.id ||
-                                !filters.some(
-                                  (f, i) =>
-                                    i !== index && f.id === option.value,
-                                ),
-                            )
-                            .map((option: any) => (
-                              <CommandItem
-                                key={option.value}
-                                value={option.value}
-                                onSelect={(value) =>
-                                  updateFilter(index, { ...filter, id: value })
-                                }
-                              >
-                                <span className="truncate">{option.label}</span>
-                                <Check
-                                  className={cn(
-                                    "ml-auto size-4",
-                                    option.value === filter.id
-                                      ? "opacity-100"
-                                      : "opacity-0",
-                                  )}
-                                />
-                              </CommandItem>
-                            ))}
-                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
-
-                <Select
-                  value={filter.condition}
-                  onValueChange={(value) =>
-                    updateFilter(index, { ...filter, condition: value })
-                  }
-                >
-                  <SelectTrigger className="h-8 w-36">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {filterConditions.map((cond) => (
-                      <SelectItem key={cond.value} value={cond.value}>
-                        {cond.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-
-                {renderValueInput(filter)}
-
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => removeFilter(index)}
-                >
-                  <Trash2 className="size-4" />
-                </Button>
-              </div>
-            ))
+                      <div className="flex items-center gap-2 border rounded-md p-2 bg-background">
+                        <SortableItemHandle asChild>
+                          <GripVertical className="size-4 cursor-move text-muted-foreground" />
+                        </SortableItemHandle>
+                        <FilterItem
+                          filter={filter}
+                          index={index}
+                          options={options}
+                          filters={filters}
+                          onUpdate={updateFilter}
+                          onRemove={removeFilter}
+                        />
+                      </div>
+                    </SortableItem>
+                  ))}
+                </div>
+              </SortableContent>
+            </Sortable>
           ) : (
             <p className="text-sm text-muted-foreground">No filters applied.</p>
           )}
 
-          {filters.length > 1 && (
-            <Select
+          {filters && filters.length > 1 && (
+            <LogicOperatorSelector
               value={logic}
-              onValueChange={(value) => setLogic(value as "AND" | "OR")}
-            >
-              <SelectTrigger className="h-8 w-full">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="AND">AND (Match all filters)</SelectItem>
-                <SelectItem value="OR">OR (Match any filter)</SelectItem>
-              </SelectContent>
-            </Select>
+              onChange={setLogic}
+            />
           )}
         </div>
 
@@ -437,17 +93,17 @@ export function DataTableFiltersToolbar({ columns }: FilterToolbarProps) {
           <Button
             size="sm"
             onClick={addFilter}
-            disabled={filters.length >= options.length}
+            disabled={filters && filters.length >= options.length}
           >
             Add filter
           </Button>
-          {filters.length > 0 && (
+          {filters && filters.length > 0 && (
             <Button size="sm" variant="outline" onClick={resetFilters}>
               Reset filters
             </Button>
           )}
         </div>
-      </PopoverContent>
-    </Popover>
+      </FacetedFilterContent>
+    </FacetedFilter>
   );
 }

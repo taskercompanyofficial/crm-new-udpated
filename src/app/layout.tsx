@@ -8,6 +8,7 @@ import { ToastContainer } from "react-toastify";
 import NextTopLoader from "nextjs-toploader";
 import { description, keywords, title } from "@/lib/Meta";
 import { JotaiProvider } from "@/providers/jotai-provider";
+import { NuqsAdapter } from 'nuqs/adapters/next/app'
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -68,28 +69,31 @@ export default function RootLayout({
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
           <ThemeProvider attribute="class" defaultTheme="system">
-            <div vaul-drawer-wrapper="" className="bg-background">
-              <NextTopLoader
-                showSpinner={false}
-                height={4}
-                color="hsl(var(--primary))"
+            <NuqsAdapter>
+
+              <div vaul-drawer-wrapper="" className="bg-background">
+                <NextTopLoader
+                  showSpinner={false}
+                  height={4}
+                  color="hsl(var(--primary))"
+                />
+                <JotaiProvider>{children}</JotaiProvider>
+              </div>
+              <div className="fixed bottom-4 right-4">
+                <ModeToggle />
+              </div>
+              <ToastContainer
+                position="top-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
               />
-              <JotaiProvider>{children}</JotaiProvider>
-            </div>
-            <div className="fixed bottom-4 right-4">
-              <ModeToggle />
-            </div>
-            <ToastContainer
-              position="top-center"
-              autoClose={5000}
-              hideProgressBar={false}
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-            />
+            </NuqsAdapter>
           </ThemeProvider>
         </body>
       </html>
