@@ -116,8 +116,9 @@ type SortableProps<T> = DndContextProps & {
 } & (T extends object ? GetItemValue<T> : Partial<GetItemValue<T>>);
 
 function Sortable<T>(props: SortableProps<T>) {
+  const defaultId = React.useId();
   const {
-    id = React.useId(),
+    id = defaultId,
     value,
     onValueChange,
     modifiers,
@@ -296,7 +297,7 @@ const SortableContent = React.forwardRef<HTMLDivElement, SortableContentProps>(
 
     const items = React.useMemo(() => {
       return context.items.map((item) => context.getItemValue(item));
-    }, [context.items, context.getItemValue]);
+    }, [context.items, context.getItemValue, context]);
 
     const ContentSlot = asChild ? Slot : "div";
 
