@@ -99,32 +99,6 @@ const View = ({ row }: { row: any }) => {
         <span className="mr-2">View</span>
         <Eye className="h-4 w-4" />
       </Button>
-
-      <Credenza>
-        <CredenzaTrigger asChild>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="flex w-full items-center justify-between px-3 py-2 transition-colors hover:bg-gray-100"
-          >
-            <span className="mr-2">Remarks</span>
-            <MessageSquare className="h-4 w-4" />
-          </Button>
-        </CredenzaTrigger>
-        <CredenzaContent className="w-[95vw] max-w-4xl p-4 sm:w-[80vw]">
-          <CredenzaHeader>
-            <CredenzaTitle className="text-lg font-semibold">
-              Update {row.complain_num} Remarks
-            </CredenzaTitle>
-            <CredenzaDescription className="text-sm text-gray-600">
-              Update Your existing Complaint Remarks {row.complain_num}
-            </CredenzaDescription>
-          </CredenzaHeader>
-          <div className="mt-4">
-            <Remarks complaintId={row.id} />
-          </div>
-        </CredenzaContent>
-      </Credenza>
     </div>
   );
 };
