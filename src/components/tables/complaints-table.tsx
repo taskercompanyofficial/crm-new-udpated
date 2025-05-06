@@ -1,5 +1,4 @@
-"use client";
-import React from "react";
+"use client";;
 import { ComplaintsColumns } from "../columns/complaint-column";
 import { DataTable } from "../table/data-table";
 import SelectInput from "../table/filters/select-input";
@@ -7,18 +6,12 @@ import TableFacedFilter from "../table/table-faced-filter";
 import { ComplaintStatusOptions } from "@/lib/otpions";
 import SearchInput from "../table/filters/search-input";
 import CreateBtn from "../table/create-btn";
-import { Edit, Eye, MessageSquare, Redo2 } from "lucide-react";
+import { Edit, Eye, Redo2 } from "lucide-react";
 import { Button } from "../ui/button";
 import { useSession } from "next-auth/react";
-import Remarks from "@/app/crm/complaints/components/remarks";
-import {
-  Credenza,
-  CredenzaContent,
-  CredenzaDescription,
-  CredenzaHeader,
-  CredenzaTitle,
-  CredenzaTrigger,
-} from "@/components/custom/credenza";
+import useFetch from "@/hooks/usefetch";
+import { API_URL } from "@/lib/apiEndPoints";
+import { dataTypeIds } from "@/types";
 
 export default function ComplaintsTable({
   data,
@@ -28,7 +21,12 @@ export default function ComplaintsTable({
   role: string;
 }) {
   const deletable = role === "administrator";
-
+  const { data: brandsData, isLoading: brandsLoading } = useFetch<
+    dataTypeIds[]
+  >(`${API_URL}/crm/fetch-authorized-brands`);
+  const { data: branchesData, isLoading: branchesLoading } = useFetch<
+    dataTypeIds[]
+  >(`${API_URL}/crm/fetch-branches`);
   return (
     <div className="w-full overflow-hidden">
       <DataTable
@@ -42,6 +40,16 @@ export default function ComplaintsTable({
                 param="status"
                 label="Select Status"
                 options={ComplaintStatusOptions}
+              />
+              <SelectInput
+                param="brand_id"
+                label="Select Brand"
+                options={brandsData}
+              />
+              <SelectInput
+                param="branch_id"
+                label="Select Branch"
+                options={branchesData}
               />
             </div>
           </TableFacedFilter>

@@ -24,6 +24,18 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { DATE_FIELDS, FILTER_CONDITIONS, Filter, formatLabel } from "@/hooks/use-filter";
+import {
+    ComplaintStatusOptions,
+    CallStatusOptions,
+    PriorityOptions,
+    StatusOptions,
+    warrantyTypeOptions,
+    complaintTypeOptions,
+    getRoleOptions,
+    ProductOptions,
+    DealerOptions,
+    MessageTypeOptions
+} from "@/lib/otpions";
 
 interface FilterFieldSelectorProps {
     filter: Filter;
@@ -112,7 +124,7 @@ export const FilterConditionSelector = ({
             }
         >
             <SelectTrigger className="h-8 w-36">
-                <SelectValue />
+                <SelectValue placeholder="Select condition" />
             </SelectTrigger>
             <SelectContent>
                 {FILTER_CONDITIONS.map((cond) => (
@@ -136,8 +148,78 @@ export const FilterValueInput = ({
     index,
     onUpdate,
 }: FilterValueInputProps) => {
+    // Get default options based on column accessor
+    const getDefaultOptions = (accessorKey: string) => {
+        switch (accessorKey) {
+            case 'status':
+                return StatusOptions;
+            case 'complaint_status':
+                return ComplaintStatusOptions;
+            case 'call_status':
+                return CallStatusOptions;
+            case 'priority':
+                return PriorityOptions;
+            case 'warranty_type':
+                return warrantyTypeOptions;
+            case 'complaint_type':
+                return complaintTypeOptions;
+            case 'role':
+                return getRoleOptions;
+            case 'product':
+                return ProductOptions;
+            case 'dealer':
+                return DealerOptions;
+            case 'message_type':
+                return MessageTypeOptions;
+            default:
+                return [];
+        }
+    };
+
     if (filter.condition === "null") {
         return null;
+    }
+
+    // Check if the field has predefined options
+    const hasPredefinedOptions = [
+        'status',
+        'complaint_status',
+        'call_status',
+        'priority',
+        'warranty_type',
+        'complaint_type',
+        'role',
+        'product',
+        'dealer',
+        'message_type'
+    ].includes(filter.id);
+
+    if (hasPredefinedOptions) {
+        const options = getDefaultOptions(filter.id);
+        return (
+            <Select
+                value={filter.value}
+                onValueChange={(value) =>
+                    onUpdate(index, {
+                        ...filter,
+                        value: value,
+                    })
+                }
+            >
+                <SelectTrigger className="h-8 w-32">
+                    <SelectValue placeholder="Select value">
+                        {options?.find(opt => opt.value === filter.value)?.label || 'Select value'}
+                    </SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                    {options?.map((option: any) => (
+                        <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                        </SelectItem>
+                    ))}
+                </SelectContent>
+            </Select>
+        );
     }
 
     if (DATE_FIELDS.includes(filter.id)) {
@@ -278,7 +360,9 @@ export const LogicOperatorSelector = ({
     return (
         <Select value={value} onValueChange={(value) => onChange(value as "AND" | "OR")}>
             <SelectTrigger className="h-8 w-full">
-                <SelectValue />
+                <SelectValue placeholder="Select operator">
+                    {value === "AND" ? "AND (Match all filters)" : "OR (Match any filter)"}
+                </SelectValue>
             </SelectTrigger>
             <SelectContent>
                 <SelectItem value="AND">AND (Match all filters)</SelectItem>
