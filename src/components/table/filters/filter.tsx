@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import {
     Select,
     SelectContent,
@@ -34,7 +34,9 @@ import {
     getRoleOptions,
     ProductOptions,
     DealerOptions,
-    MessageTypeOptions
+    MessageTypeOptions,
+    useFetchBrands,
+    useFetchBranches
 } from "@/lib/otpions";
 
 interface FilterFieldSelectorProps {
@@ -72,13 +74,13 @@ export const FilterFieldSelector = ({
                         <CommandGroup>
                             {options
                                 .filter(
-                                    (option: any) =>
+                                    (option) =>
                                         option.value === filter.id ||
                                         !filters.some(
                                             (f, i) => i !== index && f.id === option.value,
                                         ),
                                 )
-                                .map((option: any) => (
+                                .map((option) => (
                                     <CommandItem
                                         key={option.value}
                                         value={option.value}
@@ -148,12 +150,14 @@ export const FilterValueInput = ({
     index,
     onUpdate,
 }: FilterValueInputProps) => {
-    // Get default options based on column accessor
-    const getDefaultOptions = (accessorKey: string) => {
-        switch (accessorKey) {
+    // Using useFetchBrands and useFetchBranches hooks properly
+    const { data: brandData = [] } = useFetchBrands() || {};
+    const { data: branchData = [] } = useFetchBranches() || {};
+    
+    // Get options based on column accessor using useMemo to prevent recalculations
+    const options = useMemo(() => {
+        switch (filter.id) {  
             case 'status':
-                return StatusOptions;
-            case 'complaint_status':
                 return ComplaintStatusOptions;
             case 'call_status':
                 return CallStatusOptions;
@@ -171,10 +175,14 @@ export const FilterValueInput = ({
                 return DealerOptions;
             case 'message_type':
                 return MessageTypeOptions;
+            case 'brand_id':
+                return brandData;
+            case 'branch_id':
+                return branchData;
             default:
                 return [];
         }
-    };
+    }, [filter.id, brandData, branchData]);
 
     if (filter.condition === "null") {
         return null;
@@ -191,11 +199,70 @@ export const FilterValueInput = ({
         'role',
         'product',
         'dealer',
-        'message_type'
+        'message_type',
+        'brand_id',
+        'branch_id',
+        'technician_id'
     ].includes(filter.id);
 
     if (hasPredefinedOptions) {
-        const options = getDefaultOptions(filter.id);
+        if (["in", "not in", "like"].includes(filter.condition)) {
+            return (
+                <Popover>
+                    <PopoverTrigger asChild>
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            className="h-8 w-64 justify-between"
+                        >
+                            <span className="truncate">
+                                {filter.value ? filter.value.split('.').map((v: any) => 
+                                    options?.find((opt: any) => opt.value === v)?.label
+                                ).join(', ') : 'Select values'}
+                            </span>
+                            <ChevronsUpDown className="size-4 opacity-50" />
+                        </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-64 p-0">
+                        <Command>
+                            <CommandInput placeholder="Search values..." />
+                            <CommandList>
+                                <CommandEmpty>No values found.</CommandEmpty>
+                                <CommandGroup>
+                                    {options?.map((option: any) => (
+                                        <CommandItem
+                                            key={option.value}
+                                            value={option.value}
+                                            onSelect={(value) => {
+                                                const currentValues = filter.value ? filter.value.split('.') : [];
+                                                const newValues = currentValues.includes(value) 
+                                                    ? currentValues.filter(v => v !== value)
+                                                    : [...currentValues, value];
+                                                onUpdate(index, {
+                                                    ...filter,
+                                                    value: newValues.join('.')
+                                                });
+                                            }}
+                                        >
+                                            <span className="truncate">{option.label}</span>
+                                            <Check
+                                                className={cn(
+                                                    "ml-auto size-4",
+                                                    filter.value?.split('.').includes(option.value)
+                                                        ? "opacity-100"
+                                                        : "opacity-0",
+                                                )}
+                                            />
+                                        </CommandItem>
+                                    ))}
+                                </CommandGroup>
+                            </CommandList>
+                        </Command>
+                    </PopoverContent>
+                </Popover>
+            );
+        }
+        
         return (
             <Select
                 value={filter.value}
@@ -208,7 +275,7 @@ export const FilterValueInput = ({
             >
                 <SelectTrigger className="h-8 w-32">
                     <SelectValue placeholder="Select value">
-                        {options?.find(opt => opt.value === filter.value)?.label || 'Select value'}
+                        {options?.find((opt: any) => opt.value === filter.value)?.label || 'Select value'}
                     </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
@@ -222,11 +289,43 @@ export const FilterValueInput = ({
         );
     }
 
-    if (DATE_FIELDS.includes(filter.id)) {
+    if (DATE_FIELDS.includes(filter.id) || filter.id === 'created_at' || filter.id === 'updated_at') {
+        if (filter.condition === "between") {
+            return (
+                <div className="flex w-64 gap-2">
+                    <Input
+                        type="date"
+                        placeholder="Start date"
+                        className="h-8"
+                        value={filter.value?.split(",")[0] || ""}
+                        onChange={(e) => {
+                            const end = filter.value?.split(",")[1] || "";
+                            onUpdate(index, {
+                                ...filter,
+                                value: `${e.target.value},${end}`,
+                            });
+                        }}
+                    />
+                    <Input
+                        type="date"
+                        placeholder="End date"
+                        className="h-8"
+                        value={filter.value?.split(",")[1] || ""}
+                        onChange={(e) => {
+                            const start = filter.value?.split(",")[0] || "";
+                            onUpdate(index, {
+                                ...filter,
+                                value: `${start},${e.target.value}`,
+                            });
+                        }}
+                    />
+                </div>
+            );
+        }
         return (
             <Input
                 type="date"
-                value={filter.value}
+                value={filter.value || ""}
                 onChange={(e) =>
                     onUpdate(index, {
                         ...filter,
@@ -244,9 +343,9 @@ export const FilterValueInput = ({
                 <Input
                     placeholder="Min value"
                     className="h-8"
-                    value={filter.value.split(",")[0] || ""}
+                    value={filter.value?.split(",")[0] || ""}
                     onChange={(e) => {
-                        const max = filter.value.split(",")[1] || "";
+                        const max = filter.value?.split(",")[1] || "";
                         onUpdate(index, {
                             ...filter,
                             value: `${e.target.value},${max}`,
@@ -256,9 +355,9 @@ export const FilterValueInput = ({
                 <Input
                     placeholder="Max value"
                     className="h-8"
-                    value={filter.value.split(",")[1] || ""}
+                    value={filter.value?.split(",")[1] || ""}
                     onChange={(e) => {
-                        const min = filter.value.split(",")[0] || "";
+                        const min = filter.value?.split(",")[0] || "";
                         onUpdate(index, {
                             ...filter,
                             value: `${min},${e.target.value}`,
@@ -272,7 +371,7 @@ export const FilterValueInput = ({
     if (["in", "not in"].includes(filter.condition)) {
         return (
             <Input
-                value={filter.value}
+                value={filter.value || ""}
                 onChange={(e) => {
                     const value = e.target.value.replace(/[,\s]+/g, '.');
                     onUpdate(index, {
@@ -288,7 +387,7 @@ export const FilterValueInput = ({
 
     return (
         <Input
-            value={filter.value?.replace(/%/g, "")}
+            value={filter.value?.replace(/%/g, "") || ""}
             onChange={(e) =>
                 onUpdate(index, {
                     ...filter,
@@ -304,7 +403,7 @@ export const FilterValueInput = ({
 interface FilterItemProps {
     filter: Filter;
     index: number;
-    options: any[];
+    options: { value: string; label: string }[];
     filters: Filter[];
     onUpdate: (index: number, filter: Filter) => void;
     onRemove: (index: number) => void;

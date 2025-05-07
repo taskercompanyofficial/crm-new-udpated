@@ -16,6 +16,8 @@ import {
   XCircle,
   PauseCircle,
 } from "lucide-react";
+import useFetch from "@/hooks/usefetch";
+import { API_URL } from "./apiEndPoints";
 
 export const getRoleOptions = [
   { value: "administrator", label: "Administrator", icon: ShieldCheck },
@@ -298,3 +300,19 @@ export const DealerOptions = [
   { value: "CC", label: "CC", id: "18", image: "" },
   { value: "Dealer Pending", label: "Dealer Pending", id: "19", image: "" }
 ];
+
+export const useFetchBranches = () => {
+  const { data, isLoading, error } = useFetch<any>(`${API_URL}/crm/fetch-branches`);
+  return { data, isLoading, error };
+};
+
+export const useFetchBrands = () => {
+  const { data, isLoading, error } = useFetch<any>(`${API_URL}/crm/fetch-authorized-brands`);
+  return { data, isLoading, error };
+};
+
+export const useFetchTechnicians = () => {
+  const { data, isLoading, error } = useFetch<any>(`${API_URL}/crm/fetch-technicians`);
+  return { data, isLoading, error };
+};
+
