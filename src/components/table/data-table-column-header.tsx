@@ -45,16 +45,9 @@ export function DataTableColumnHeader<TData, TValue>({
             }
             variant="ghost"
             size="sm"
-            className="-ml-3 h-8 text-xs font-bold data-[state=open]:bg-accent"
+            className="-ml-3 h-8 text-2xs font-bold data-[state=open]:bg-accent"
           >
-            <span>{title}</span>
-            {column.getCanSort() && column.getIsSorted() === "desc" ? (
-              <ChevronsUpDown className="ml-2 size-2" aria-hidden="true" />
-            ) : column.getIsSorted() === "asc" ? (
-              <ArrowUpIcon className="ml-2 size-2" aria-hidden="true" />
-            ) : (
-              <ArrowUpDown className="ml-2 size-2" aria-hidden="true" />
-            )}
+            <span className="text-2xs">{title}</span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">

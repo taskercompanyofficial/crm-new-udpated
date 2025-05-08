@@ -21,14 +21,11 @@ export default async function page({ searchParams }: { searchParams: any }) {
     to: searchParams.to,
   });
   return (
-    <div className="space-y-2">
-      <PageHeader />
-      <DataFetcher
-        role={userDetails?.role || "user"}
-        endPoint={`${API_URL + COMPLAINTS}?${params}`}
-        pageEndPoint="/complaints"
-        Table={ComplaintsTable}
-      />
-    </div>
+    <DataFetcher
+      role={userDetails?.role || "user"}
+      endPoint={`${API_URL + COMPLAINTS}?${params}`}
+      pageEndPoint="/complaints"
+      Table={ComplaintsTable}
+    />
   );
 }

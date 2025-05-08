@@ -6,6 +6,15 @@ interface PriorityProps {
 }
 
 export const Priority: React.FC<PriorityProps> = ({ priority }) => {
+    // Handle undefined/null priority
+    if (!priority) {
+        return (
+            <Badge className="bg-gray-100 text-gray-800 font-medium">
+                No Priority
+            </Badge>
+        );
+    }
+
     const getPriorityColor = (priority: string) => {
         switch (priority.toLowerCase()) {
             case 'low':

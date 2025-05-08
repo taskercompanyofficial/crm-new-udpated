@@ -26,11 +26,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const token = session?.data?.user?.token;
   const {
     data: user,
-    error,
     isLoading,
   } = useFetch<User>(API_URL + "/user", token);
   return (
-    <Sidebar collapsible="icon" {...props} >
+    <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>

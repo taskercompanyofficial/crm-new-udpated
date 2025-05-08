@@ -93,7 +93,7 @@ export function DataTable<TData, TValue>({
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody>
+          <TableBody className="px-2">
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row, index) => (
                 <TableRow
@@ -109,7 +109,7 @@ export function DataTable<TData, TValue>({
                       return (
                         <TableCell
                           key={cell.id}
-                          className="sticky right-0 whitespace-nowrap bg-inherit text-xs"
+                          className="sticky right-0 whitespace-nowrap bg-inherit text-2xs"
                         >
                           {flexRender(
                             cell.column.columnDef.cell,
@@ -119,7 +119,7 @@ export function DataTable<TData, TValue>({
                       );
                     }
                     return (
-                      <TableCell key={cell.id} className="text-xs">
+                      <TableCell key={cell.id} className="text-2xs">
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext(),

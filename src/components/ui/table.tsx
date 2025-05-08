@@ -5,11 +5,13 @@ const Table = React.forwardRef<
   HTMLTableElement,
   React.HTMLAttributes<HTMLTableElement>
 >(({ className, ...props }, ref) => (
-  <table
-    ref={ref}
-    className={cn("w-full caption-bottom text-[11px]", className)}
-    {...props}
-  />
+  <div className="h-[70vh] overflow-auto bg-white scrollbar-hide">
+    <table
+      ref={ref}
+      className={cn("w-full caption-bottom text-[11px]", className)}
+      {...props}
+    />
+  </div>
 ))
 Table.displayName = "Table"
 
@@ -20,7 +22,7 @@ const TableHeader = React.forwardRef<
   <thead
     ref={ref}
     className={cn(
-      "sticky top-0 z-20 [&_tr]:border-b border-gray-100",
+      "sticky top-0 z-20 [&_tr]:border-b border-gray-100 bg-white",
       className
     )}
     {...props}
@@ -85,16 +87,10 @@ const TableHead = React.forwardRef<
 ))
 TableHead.displayName = "TableHead"
 
-const TableCell = React.forwardRef<
-  HTMLTableCellElement,
-  React.TdHTMLAttributes<HTMLTableCellElement>
->(({ className, ...props }, ref) => (
+const TableCell = React.forwardRef<HTMLTableCellElement, React.TdHTMLAttributes<HTMLTableCellElement>>(({ className, ...props }, ref) => (
   <td
     ref={ref}
-    className={cn(
-      "p-1.5 align-middle text-[11px] [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
-      className
-    )}
+    className={cn("px-2 align-middle text-[11px] [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px] whitespace-nowrap", className)}
     {...props}
   />
 ))
