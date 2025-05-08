@@ -216,9 +216,10 @@ export const FilterValueInput = ({
                             className="h-8 w-64 justify-between"
                         >
                             <span className="truncate">
-                                {filter.value ? filter.value.split('.').map((v: any) => 
-                                    options?.find((opt: any) => opt.value === v)?.label
-                                ).join(', ') : 'Select values'}
+                                {filter.value ? filter.value.split('.').map((v: any) => {
+                                    const option = options?.find((opt: any) => opt.value === v || opt.id?.toString() === v);
+                                    return option?.label || option?.name || v;
+                                }).join(', ') : 'Select values'}
                             </span>
                             <ChevronsUpDown className="size-4 opacity-50" />
                         </Button>
@@ -229,32 +230,36 @@ export const FilterValueInput = ({
                             <CommandList>
                                 <CommandEmpty>No values found.</CommandEmpty>
                                 <CommandGroup>
-                                    {options?.map((option: any) => (
-                                        <CommandItem
-                                            key={option.value}
-                                            value={option.value}
-                                            onSelect={(value) => {
-                                                const currentValues = filter.value ? filter.value.split('.') : [];
-                                                const newValues = currentValues.includes(value) 
-                                                    ? currentValues.filter(v => v !== value)
-                                                    : [...currentValues, value];
-                                                onUpdate(index, {
-                                                    ...filter,
-                                                    value: newValues.join('.')
-                                                });
-                                            }}
-                                        >
-                                            <span className="truncate">{option.label}</span>
-                                            <Check
-                                                className={cn(
-                                                    "ml-auto size-4",
-                                                    filter.value?.split('.').includes(option.value)
-                                                        ? "opacity-100"
-                                                        : "opacity-0",
-                                                )}
-                                            />
-                                        </CommandItem>
-                                    ))}
+                                    {options?.map((option: any) => {
+                                        const optionValue = option.value || option.id?.toString();
+                                        const optionLabel = option.label || option.name;
+                                        return (
+                                            <CommandItem
+                                                key={optionValue}
+                                                value={optionValue}
+                                                onSelect={(value) => {
+                                                    const currentValues = filter.value ? filter.value.split('.') : [];
+                                                    const newValues = currentValues.includes(value) 
+                                                        ? currentValues.filter(v => v !== value)
+                                                        : [...currentValues, value];
+                                                    onUpdate(index, {
+                                                        ...filter,
+                                                        value: newValues.join('.')
+                                                    });
+                                                }}
+                                            >
+                                                <span className="truncate">{optionLabel}</span>
+                                                <Check
+                                                    className={cn(
+                                                        "ml-auto size-4",
+                                                        filter.value?.split('.').includes(optionValue)
+                                                            ? "opacity-100"
+                                                            : "opacity-0",
+                                                    )}
+                                                />
+                                            </CommandItem>
+                                        );
+                                    })}
                                 </CommandGroup>
                             </CommandList>
                         </Command>
@@ -275,13 +280,19 @@ export const FilterValueInput = ({
             >
                 <SelectTrigger className="h-8 w-32">
                     <SelectValue placeholder="Select value">
-                        {options?.find((opt: any) => opt.value === filter.value)?.label || 'Select value'}
+                        {(() => {
+                            const option = options?.find((opt: any) => opt.value === filter.value || opt.id?.toString() === filter.value);
+                            return option?.label || option?.name || 'Select value';
+                        })()}
                     </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                     {options?.map((option: any) => (
-                        <SelectItem key={option.value} value={option.value}>
-                            {option.label}
+                        <SelectItem 
+                            key={option.value || option.id} 
+                            value={option.value || option.id?.toString()}
+                        >
+                            {option.label || option.name}
                         </SelectItem>
                     ))}
                 </SelectContent>
