@@ -12,6 +12,7 @@ export default async function page({ searchParams }: { searchParams: any }) {
     q: searchParams?.q,
     status: searchParams.status,
     brand_id: searchParams.brand_id,
+    branch_id: searchParams.branch_id,
     filters: searchParams.filters,
     logic: searchParams.logic,
     sort: searchParams.sort,
