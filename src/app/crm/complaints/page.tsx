@@ -1,5 +1,4 @@
 import { buildQueryParams } from "@/actions/get-url-params";
-import { PageHeader } from "@/components/custom/page-header";
 import DataFetcher from "@/components/table/DataFetcher";
 import ComplaintsTable from "@/components/tables/complaints-table";
 import { API_URL, COMPLAINTS } from "@/lib/apiEndPoints";

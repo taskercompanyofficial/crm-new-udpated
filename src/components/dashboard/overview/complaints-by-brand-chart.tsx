@@ -25,6 +25,7 @@ import {
   LabelList,
 } from "recharts";
 import ErrorNoData from "@/components/custom/no-data";
+import { Empty } from "antd";
 
 type ChartConfigKey =
   | "feedback_pending"
@@ -355,7 +356,12 @@ function ChartContent({ data }: { data: BrandData }) {
 
 export default function ComplaintsByBrand({ data }: { data: BrandData }) {
   if (!data || !data.brand_data || data.brand_data.length === 0) {
-    return <ErrorNoData />;
+    return
+    <Card>
+      <CardContent>
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No data" className="scale-50" />
+      </CardContent>
+    </Card>
   }
   return (
     <Suspense fallback={<LoadingSkeleton />}>

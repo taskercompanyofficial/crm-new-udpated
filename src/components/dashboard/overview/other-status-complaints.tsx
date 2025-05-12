@@ -30,6 +30,7 @@ import {
 } from "recharts";
 import { useRouter } from "next/navigation";
 import ErrorNoData from "@/components/custom/no-data";
+import { Empty } from "antd";
 
 function LoadingSkeleton() {
   return (
@@ -61,15 +62,15 @@ function ChartContent({ data }: { data: Record<string, { count: number }> }) {
 
   const chartData = data
     ? Object.entries(data)
-        .map(([status, details]) => ({
+      .map(([status, details]) => ({
+        status,
+        statusLabel:
+          ComplaintStatusOptions.find((opt) => opt.value === status)?.label ||
           status,
-          statusLabel:
-            ComplaintStatusOptions.find((opt) => opt.value === status)?.label ||
-            status,
-          count: details?.count || 0,
-          fill: statusColors[status] || "rgba(180, 180, 180, 0.8)",
-        }))
-        .sort((a, b) => b.count - a.count)
+        count: details?.count || 0,
+        fill: statusColors[status] || "rgba(180, 180, 180, 0.8)",
+      }))
+      .sort((a, b) => b.count - a.count)
     : [];
 
   const chartConfig = {
@@ -93,11 +94,11 @@ function ChartContent({ data }: { data: Record<string, { count: number }> }) {
     // The event payload from recharts doesn't directly contain the status
     // We need to find which tick was clicked and map it to our data
     if (event && event.value) {
-      const clickedItem = chartData.find(item => 
-        item.statusLabel === event.value || 
+      const clickedItem = chartData.find(item =>
+        item.statusLabel === event.value ||
         item.statusLabel.split(" ").map((word: string) => word[0]).join("") === event.value
       );
-      
+
       if (clickedItem) {
         handleStatusClick(clickedItem.status);
       }
@@ -117,9 +118,9 @@ function ChartContent({ data }: { data: Record<string, { count: number }> }) {
       </CardHeader>
       <CardContent className="h-[200px]">
         <ChartContainer config={chartConfig} className="h-[200px] w-full">
-          <BarChart 
-            accessibilityLayer 
-            data={chartData} 
+          <BarChart
+            accessibilityLayer
+            data={chartData}
             margin={{ left: 2 }}
           >
             <CartesianGrid vertical={false} />
@@ -192,7 +193,23 @@ export default function OtherStatusComplaints({
   data: Record<string, { count: number }>;
 }) {
   if (!data || Object.keys(data).length === 0) {
-    return <ErrorNoData />;
+    return (
+      <Card className="col-span-6 border-0 shadow-sm">
+        <CardHeader className="pb-2">
+          <div className="flex items-center gap-2">
+            <BarChart2 className="h-4 w-4" />
+            <CardTitle className="text-sm font-medium">Complaints by Status</CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent className="flex items-center justify-center py-8">
+          <Empty
+            image={Empty.PRESENTED_IMAGE_SIMPLE}
+            description="No complaints data available"
+            className="scale-100"
+          />
+        </CardContent>
+      </Card>
+    );
   }
   return (
     <Suspense fallback={<LoadingSkeleton />}>

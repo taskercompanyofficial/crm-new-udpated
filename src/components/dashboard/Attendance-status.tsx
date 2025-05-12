@@ -3,7 +3,7 @@
 import React, { Suspense } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SquareArrowOutUpRight, User, UserMinus } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -24,6 +24,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 import ErrorNoData from "../custom/no-data";
 import { getImageUrl } from "@/lib/utils";
+import { Empty } from "antd";
 
 type UserData = {
   id: string;
@@ -385,7 +386,23 @@ function AttendanceStatusComponent({ data }: { data: AttendanceData }) {
 
 export function AttendanceStatus({ data }: { data: AttendanceData }) {
   if (!data || !data.present || data.present.length === 0) {
-    return <ErrorNoData />;
+    return (
+      <Card className="col-span-6 border-0 shadow-sm">
+        <CardHeader className="pb-2">
+          <div className="flex items-center gap-2">
+            <User className="h-4 w-4" />
+            <CardTitle className="text-sm font-medium">Attendance Status</CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent className="flex items-center justify-center py-8">
+          <Empty
+            image={Empty.PRESENTED_IMAGE_SIMPLE}
+            description="No attendance data available"
+            className="scale-100"
+          />
+        </CardContent>
+      </Card>
+    );
   }
   return (
     <Suspense fallback={<LoadingSkeleton />}>
