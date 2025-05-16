@@ -223,7 +223,7 @@ export default function DocumentUploader({
 
   return (
     <>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 bg-background">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
           <Select
             value={documentType}

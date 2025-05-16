@@ -28,8 +28,8 @@ export default function BasicForm({
     dataTypeIds[]
   >(`${API_URL}/crm/fetch-branches`);
   return (
-    <div className="w-full space-y-2 bg-white dark:bg-gray-800 p-2 rounded">
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+    <div className="w-full space-y-1 bg-white dark:bg-gray-800 p-2 rounded">
+      <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
         <LabelInputContainer
           type="text"
           id="brand_complaint_no"
@@ -129,7 +129,7 @@ export default function BasicForm({
           errorMessage={errors.extra_numbers}
         />
       </div>
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-4">
+      <div className="grid grid-cols-1 gap-2 md:grid-cols-4">
         {!branchesLoading && branchesData ? (
           <SearchSelect
             options={branchesData}
@@ -193,7 +193,6 @@ export default function BasicForm({
             value={data.brand_id}
             onChange={(e) => setData({ ...data, brand_id: e })}
             width="full"
-            className="mt-1"
             customizable
             errorMessage={errors.brand_id}
           />
@@ -222,7 +221,6 @@ export default function BasicForm({
       />
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-
         <TextareaInput
           label="Fault Description"
           name="fault_description"

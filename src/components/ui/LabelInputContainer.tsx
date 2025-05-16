@@ -1,18 +1,19 @@
 "use client";
 
-import React, { useState, InputHTMLAttributes } from "react";
+import React, { useState } from "react";
 import { Eye, EyeOff, Lock } from "lucide-react";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Input, InputProps as AntdInputProps } from "antd";
 
-interface EnhancedInputProps extends InputHTMLAttributes<HTMLInputElement> {
+interface EnhancedInputProps extends Omit<AntdInputProps, 'size'> {
   label?: string;
   description?: string;
   errorMessage?: string;
   labelClassName?: string;
   icon?: React.ReactNode;
   disabled?: boolean;
+  type?: string;
 }
 
 export const LabelInputContainer: React.FC<EnhancedInputProps> = ({
@@ -48,9 +49,10 @@ export const LabelInputContainer: React.FC<EnhancedInputProps> = ({
           </div>
         )}
         <Input
-          type={inputType}
+          type={inputType}          
           className={`${icon ? "pl-10" : ""} ${errorMessage ? "border-red-500" : ""} placeholder:text-xs placeholder:font-mono`}
           placeholder={type === "password" ? "********" : props.placeholder}
+          disabled={disabled}
           {...props}
         />
         {type === "password" && (

@@ -131,7 +131,7 @@ export default function FilesForm({
       />
 
       {Array.isArray(files) && files.length > 0 && (
-        <Card className="border rounded-md shadow-sm">
+        <Card className="border rounded-md shadow-sm bg-background">
           <CardContent className="p-4">
             <div className="flex justify-between items-center mb-4">
               <h3 className="font-medium text-sm">
