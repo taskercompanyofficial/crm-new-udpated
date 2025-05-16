@@ -41,6 +41,7 @@
     "cmdk": "^1.0.0",
     "cors": "^2.8.5",
     "date-fns": "^3.6.0",
+    "dynamsoft-barcode-reader-bundle": "^10.5.3000",
     "file-saver": "^2.0.5",
     "framer-motion": "^12.0.6",
     "html2canvas": "^1.4.1",

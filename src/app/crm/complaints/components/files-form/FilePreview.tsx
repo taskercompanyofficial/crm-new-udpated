@@ -1,7 +1,7 @@
-import Image from "next/image";
 import { Play, Volume2, File } from "lucide-react";
 import { getImageUrl } from "@/lib/utils";
 import { useFileTypes } from "../../hooks/useFileTypes";
+import { Image } from "antd";
 
 interface FilePreviewProps {
   file: any;
