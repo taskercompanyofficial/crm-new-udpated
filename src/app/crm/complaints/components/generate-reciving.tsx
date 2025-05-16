@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Printer } from "lucide-react";
+import { QRCodeSVG } from "qrcode.react"; // Import QRCodeSVG component instead of default import
 
 interface Props {
   complaint: any;
@@ -163,7 +164,7 @@ export default function ProductReceipt({ complaint, username, role }: Props) {
             <h3 style={{ ...companyNameStyle, margin: '0px' }}>Tasker Company</h3>
             <p style={{ ...contactInfoStyle, margin: '0px' }}>
               <strong>CALL - WHATSAPP</strong> 03025117000 -{" "}
-              <strong>Landline</strong> 04236667000
+              <strong>UAN</strong> 0304-111-2717
             </p>
             <p style={{ ...addressStyle, margin: '0px' }}>
               St: 09 Iqbal Park DHA Main Boulevard Lahore
@@ -261,14 +262,22 @@ export default function ProductReceipt({ complaint, username, role }: Props) {
               </div>
             </div>
             <div style={qrCodeStyle}>
-              <img
-                src="/qr-code.png"
-                alt="qr-code"
-                style={{ width: "100px", height: "auto" }}
+              <QRCodeSVG
+                value={`https://www.taskercompany.com/track/${complaint.complain_num}`}
+                size={100}
+                level="H"
+                includeMargin={true}
+                style={{ margin: '0 auto' }}
               />
-              <p style={{ fontSize: "8px", textAlign: "center" }}>
-                Scan QR Code
-              </p>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+                <p style={{ fontSize: "8px", textAlign: "center", margin: 0 }}>
+                  Scan QR Code
+                </p>
+              </div>
             </div>
           </div>
           <div style={{ display: "flex", alignItems: "center" }}>
