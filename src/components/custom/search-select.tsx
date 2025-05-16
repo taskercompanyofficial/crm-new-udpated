@@ -135,7 +135,7 @@ export default function SearchSelect({
               onClick={handleAddCustomOption}
               style={{ width: '100%', textAlign: 'left' }}
             >
-              Add "{searchValue}"
+              Add {searchValue}
             </Button>
           </Space>
         </>
@@ -163,7 +163,7 @@ export default function SearchSelect({
           onClick={handleAddCustomOption}
           style={{ width: '100%', textAlign: 'left', padding: '8px' }}
         >
-          Add "{searchValue}"
+          Add {searchValue}
         </Button>
       ) : null
     ),
