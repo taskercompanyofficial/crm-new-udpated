@@ -41,7 +41,6 @@ export const FilePreview = ({ file, className = "" }: FilePreviewProps) => {
           width={200}
           height={200}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-          unoptimized={true}
         />
       </div>
     );
