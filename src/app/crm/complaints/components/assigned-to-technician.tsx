@@ -1,32 +1,22 @@
-import {
-    Credenza,
-    CredenzaBody,
-    CredenzaContent,
-    CredenzaDescription,
-    CredenzaHeader,
-    CredenzaTitle,
-    CredenzaTrigger,
-} from '@/components/custom/credenza';
+import { useState, useEffect } from 'react';
+import { Button, Modal, Select, Form, Input } from 'antd';
 import { API_URL } from '@/lib/apiEndPoints';
-import SearchSelect from '@/components/custom/search-select';
-import SubmitBtn from '@/components/custom/submit-button';
-import { TextareaInput } from '@/components/custom/TextareaInput';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
 import useForm from '@/hooks/use-form';
 import { dataTypeIds } from '@/types';
-import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 export default function AssignedToTechnician({
     technician,
     data,
     setData,
+    disabled,
 }: {
     technician: dataTypeIds[]
     data: any
     setData: (data: any) => void
+    disabled: boolean
 }) {
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedTechnician, setSelectedTechnician] = useState(data.technician);
     const { data: postData, setData: setPostData, processing, post, errors } = useForm({
         technician: data.technician,
@@ -49,56 +39,60 @@ export default function AssignedToTechnician({
         )?.label || 'Select Technician';
     };
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    const handleSubmit = () => {
         post(API_URL + '/assigned-to-technician', {
             onSuccess: () => {
                 toast.success('Technician assigned successfully');
+                setIsModalOpen(false);
             }
         });
     };
 
     return (
-        <Credenza>
-            <CredenzaTrigger className='w-full space-y-2'>
-                <Label className='flex items-center gap-2'>
-                    Assigned To Technician
-                </Label>
-                <Button variant='outline' className='flex items-center gap-2 w-full'>
+        <div>
+            <div className="space-y-2">
+                <label>Assigned To Technician</label>
+                <Button 
+                    block
+                    onClick={() => !disabled && setIsModalOpen(true)}
+                    disabled={disabled}
+                >
                     {findTechnician(selectedTechnician)}
                 </Button>
-            </CredenzaTrigger>
+            </div>
 
-            <CredenzaContent>
-                <CredenzaHeader>
-                    <CredenzaTitle>
-                        Assigned To Technician
-                    </CredenzaTitle>
-                    <CredenzaDescription>
-                        Select the technician to assign the complaint to.
-                    </CredenzaDescription>
-                </CredenzaHeader>
-                <CredenzaBody className='space-y-2 py-2'>
-                    <form onSubmit={handleSubmit}>
-                        <SearchSelect
-                            options={technician}
-                            label="Technician"
+            <Modal
+                title="Assign Technician"
+                open={isModalOpen}
+                onOk={handleSubmit}
+                onCancel={() => setIsModalOpen(false)}
+                okButtonProps={{ loading: processing }}
+                okText={selectedTechnician ? 'Update Technician' : 'Assign Technician'}
+            >
+                <Form layout="vertical">
+                    <Form.Item label="Technician">
+                        <Select
+                            showSearch
                             value={selectedTechnician}
                             onChange={handleTechnicianChange}
-                            width='full'
+                            options={technician}
+                            placeholder="Select Technician"
+                            filterOption={(input, option) =>
+                                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                            }
                         />
-                        <TextareaInput
-                            label="Additional Info"
+                    </Form.Item>
+
+                    <Form.Item label="Additional Info">
+                        <Input.TextArea
                             value={postData.additional_info}
                             onChange={(e) => setPostData({ ...postData, additional_info: e.target.value })}
-                            placeholder='Enter additional info'
+                            placeholder="Enter additional info"
+                            rows={4}
                         />
-                        <SubmitBtn processing={processing} className='w-full'>
-                            {selectedTechnician ? 'Update Technician' : 'Assign Technician'}
-                        </SubmitBtn>
-                    </form>
-                </CredenzaBody>
-            </CredenzaContent>
-        </Credenza>
-    )
+                    </Form.Item>
+                </Form>
+            </Modal>
+        </div>
+    );
 }

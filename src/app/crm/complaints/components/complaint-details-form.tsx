@@ -11,11 +11,13 @@ export default function ComplaintDetailsForm({
   setData,
   errors,
   technician,
+  jobDone,
 }: {
   data: any;
   setData: (data: any) => void;
   errors: any;
   technician?: dataTypeIds[];
+  jobDone?: boolean;
 }) {
   return (
     <div className="p-4 space-y-2 bg-white rounded-lg shadow-sm dark:bg-slate-900">
@@ -30,8 +32,14 @@ export default function ComplaintDetailsForm({
               autoFocus
               placeholder="Brand Complaint No"
               value={data.brand_complaint_no}
-              onChange={(e) => setData({ ...data, brand_complaint_no: e.target.value })}
-              className="transition-all duration-200 hover:shadow-md"
+              onChange={(e) => {
+                const cursorPosition = e.target.selectionStart;
+                const newValue = e.target.value.toUpperCase();
+                setData({ ...data, brand_complaint_no: newValue });
+                setTimeout(() => e.target.setSelectionRange(cursorPosition, cursorPosition), 0);
+              }}
+              className="transition-all duration-200 hover:shadow-md uppercase"
+              disabled={data.status === "closed"}
             />
           </Form.Item>
 
@@ -50,6 +58,7 @@ export default function ComplaintDetailsForm({
                 setTimeout(() => e.target.setSelectionRange(cursorPosition, cursorPosition), 0);
               }}
               className="transition-all duration-200 hover:shadow-md uppercase"
+              disabled={jobDone}
             />
           </Form.Item>
 
@@ -68,6 +77,7 @@ export default function ComplaintDetailsForm({
                 setTimeout(() => e.target.setSelectionRange(cursorPosition, cursorPosition), 0);
               }}
               className="transition-all duration-200 hover:shadow-md uppercase"
+              disabled={jobDone}
             />
           </Form.Item>
 
@@ -86,6 +96,7 @@ export default function ComplaintDetailsForm({
                 setTimeout(() => e.target.setSelectionRange(cursorPosition, cursorPosition), 0);
               }}
               className="transition-all duration-200 hover:shadow-md uppercase"
+              disabled={jobDone}
             />
           </Form.Item>
 
@@ -99,6 +110,7 @@ export default function ComplaintDetailsForm({
               value={data.extra_numbers}
               onChange={(e) => setData({ ...data, extra_numbers: e.target.value })}
               className="transition-all duration-200 hover:shadow-md"
+              disabled={jobDone}
             />
           </Form.Item>
 
@@ -112,6 +124,7 @@ export default function ComplaintDetailsForm({
               value={data.p_date ? dayjs(data.p_date) : null}
               onChange={(date) => setData({ ...data, p_date: date })}
               className="transition-all duration-200 hover:shadow-md"
+              disabled={jobDone}
             />
           </Form.Item>
           <Form.Item
@@ -124,10 +137,16 @@ export default function ComplaintDetailsForm({
               value={data.mq_nmb}
               onChange={(e) => setData({ ...data, mq_nmb: e.target.value })}
               className="transition-all duration-200"
+              disabled={jobDone}
             />
           </Form.Item>
 
-          <AssignedToTechnician technician={technician || []} data={data} setData={setData} />
+          <AssignedToTechnician
+            technician={technician || []}
+            data={data}
+            setData={setData}
+            disabled={jobDone || false}
+          />
         </div>
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -141,6 +160,7 @@ export default function ComplaintDetailsForm({
               value={data.amount}
               onChange={(e) => setData({ ...data, amount: e.target.value })}
               className="transition-all duration-200"
+              disabled={jobDone}
             />
           </Form.Item>
         </div>
@@ -156,6 +176,7 @@ export default function ComplaintDetailsForm({
               value={data.working_details}
               onChange={(e) => setData({ ...data, working_details: e.target.value })}
               className="min-h-[120px] transition-all duration-200"
+              disabled={data.status === "closed"}
             />
           </Form.Item>
 
@@ -169,6 +190,7 @@ export default function ComplaintDetailsForm({
               value={data.comments_for_technician}
               onChange={(e) => setData({ ...data, comments_for_technician: e.target.value })}
               className="min-h-[120px] transition-all duration-200"
+              disabled={jobDone}
             />
           </Form.Item>
         </div>
@@ -177,7 +199,7 @@ export default function ComplaintDetailsForm({
           status={data.cancellation_reason ? "processing" : "default"}
           text={data.cancellation_reason ? "Cancel" : "Add Cancellation Reason"}
           className="cursor-pointer"
-          onClick={() => setData({ ...data, cancellation_reason: !data.cancellation_reason })}
+          onClick={() => !jobDone && setData({ ...data, cancellation_reason: !data.cancellation_reason })}
         />
 
         <Form.Item
@@ -190,10 +212,11 @@ export default function ComplaintDetailsForm({
             value={data.cancellation_details}
             onChange={(e) => setData({ ...data, cancellation_details: e.target.value })}
             className="min-h-[120px] transition-all duration-200"
+            disabled={jobDone}
           />
         </Form.Item>
 
-        <Vendors />
+        <Vendors disabled={jobDone || false} />
       </Form>
     </div>
   );

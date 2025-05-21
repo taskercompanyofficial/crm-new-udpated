@@ -18,6 +18,7 @@ interface ComplaintTabsProps {
   complaintId: number;
   token: string;
   role: string;
+  jobDone?: boolean;
 }
 
 export default function ComplaintTabs({
@@ -29,12 +30,13 @@ export default function ComplaintTabs({
   technician,
   complaintId,
   token,
+  jobDone,
 }: ComplaintTabsProps) {
   const tabs = [
     {
       key: "basic",
       label: "Basic",
-      children: <BasicForm data={data} setData={setData} errors={errors} />
+      children: <BasicForm data={data} setData={setData} errors={errors} jobDone={jobDone} />
     },
     {
       key: "advanced", 
@@ -44,12 +46,13 @@ export default function ComplaintTabs({
         setData={setData}
         errors={errors}
         technician={technician}
+        jobDone={jobDone}
       />
     },
     {
       key: "attachments",
       label: "Attachments", 
-      children: <FilesForm data={data} setData={setData} errors={errors} />
+      children: <FilesForm data={data} setData={setData} errors={errors} jobDone={jobDone} />
     },
     {
       key: "store",

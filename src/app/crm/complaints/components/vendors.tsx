@@ -13,7 +13,7 @@ interface Service {
   work_description: string;
 }
 
-export default function Services() {
+export default function Services({ disabled }: { disabled: boolean }) {
   const [services, setServices] = React.useState<Service[]>([{
     service_type: "",
     work_type: "",

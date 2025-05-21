@@ -150,6 +150,16 @@ export const ComplaintStatusOptions = [
     color: "96, 125, 139",
   },
   {
+    value: "warrenty-cash",
+    label: "Warrenty cash",
+    color: "96, 125, 139",
+  },
+  {
+    value: "code-pending",
+    label: "Code Pending",
+    color: "96, 125, 139",
+  },
+  {
     value: "amount-pending",
     label: "Amount Pending",
     color: "96, 125, 139",

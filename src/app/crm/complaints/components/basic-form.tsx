@@ -14,10 +14,12 @@ export default function BasicForm({
   data,
   setData,
   errors,
+  jobDone,
 }: {
   data: any;
   setData: (data: any) => void;
   errors: any;
+  jobDone?: boolean;
 }) {
   const { data: brandsData, isLoading: brandsLoading } = useFetch<
     dataTypeIds[]
@@ -41,6 +43,7 @@ export default function BasicForm({
           }
           errorMessage={errors.brand_complaint_no}
           className="uppercase"
+          disabled={jobDone}
         />
         <div className="grid grid-cols-[120px_1fr] gap-2 w-full">
           <div>
@@ -62,6 +65,7 @@ export default function BasicForm({
                 { label: "Mrs.", value: "mrs" }
               ]}
               errorMessage={errors.title}
+              disabled={jobDone}
             />
           </div>
           <LabelInputContainer
@@ -79,6 +83,7 @@ export default function BasicForm({
             errorMessage={errors.applicant_name}
             required
             className="w-full"
+            disabled={jobDone}
           />
         </div>
         <LabelInputContainer
@@ -91,6 +96,7 @@ export default function BasicForm({
             setData({ ...data, reference_by: e.target.value })
           }
           errorMessage={errors.reference_by}
+          disabled={jobDone}
         />
 
         <LabelInputContainer
@@ -104,6 +110,7 @@ export default function BasicForm({
           }
           errorMessage={errors.applicant_phone}
           required
+          disabled={jobDone}
         />
         <LabelInputContainer
           type="number"
@@ -116,6 +123,7 @@ export default function BasicForm({
             setData({ ...data, applicant_whatsapp: e.target.value })
           }
           errorMessage={errors.applicant_whatsapp}
+          disabled={jobDone}
         />
         <LabelInputContainer
           type="text"
@@ -127,6 +135,7 @@ export default function BasicForm({
             setData({ ...data, extra_numbers: e.target.value })
           }
           errorMessage={errors.extra_numbers}
+          disabled={jobDone}
         />
       </div>
       <div className="grid grid-cols-1 gap-2 md:grid-cols-4">
@@ -139,6 +148,7 @@ export default function BasicForm({
             width="full"
             className="transition-all duration-200"
             errorMessage={errors.branch_id}
+            disabled={jobDone}
           />
         ) : (
           <div className="space-y-2">
@@ -166,6 +176,7 @@ export default function BasicForm({
           width="full"
           customizable
           errorMessage={errors.dealer}
+          disabled={jobDone}
         />
         <SearchSelect
           label="Product"
@@ -185,6 +196,7 @@ export default function BasicForm({
           onChange={(value: string) => setData({ ...data, product: value })}
           width="full"
           customizable
+          disabled={jobDone}
         />
         {!brandsLoading && brandsData ? (
           <SearchSelect
@@ -195,6 +207,7 @@ export default function BasicForm({
             width="full"
             customizable
             errorMessage={errors.brand_id}
+            disabled={jobDone}
           />
         ) : (
           <div className="mt-1 space-y-2">
@@ -210,6 +223,7 @@ export default function BasicForm({
         onChange={(value) => setData({ ...data, complaint_type: value })}
         selected={data.complaint_type}
         errorMessage={errors.complaint_type}
+        disabled={jobDone}
       />
       <TextareaInput
         label="Address"
@@ -218,6 +232,7 @@ export default function BasicForm({
         value={data.applicant_adress}
         errorMessage={errors.applicant_adress}
         onChange={(e) => setData({ ...data, applicant_adress: e.target.value })}
+        disabled={jobDone}
       />
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -256,7 +271,7 @@ export default function BasicForm({
           ]}
           required
           placeholder="Describe the AC fault in detail"
-
+          disabled={jobDone}
         />
         <TextareaInput
           label="Working Details"
@@ -268,6 +283,7 @@ export default function BasicForm({
           errorMessage={errors.working_details}
           className="transition-all duration-200"
           customizable={true}
+          disabled={jobDone}
         />
       </div>
     </div>

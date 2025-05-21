@@ -18,6 +18,7 @@ interface FileGridProps {
   onFileDownload: (file: any) => void;
   onFileRemove: (index: number) => void;
   onFilePreview: (file: any) => void;
+  jobDone?: boolean;
 }
 
 export const FileGrid = ({
@@ -28,6 +29,7 @@ export const FileGrid = ({
   onFileDownload,
   onFileRemove,
   onFilePreview,
+  jobDone,
 }: FileGridProps) => {
   return (
     <ScrollArea className="h-96 w-full rounded-md">
@@ -90,26 +92,28 @@ export const FileGrid = ({
                     </Tooltip>
                   </TooltipProvider>
 
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-7 w-7"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onFileRemove(index);
-                          }}
-                        >
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p className="text-xs">Remove</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                  {!jobDone && (
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 w-7"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onFileRemove(index);
+                            }}
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="text-xs">Remove</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  )}
                 </div>
               </div>
             </div>
@@ -120,4 +124,4 @@ export const FileGrid = ({
       <ScrollBar orientation="vertical" />
     </ScrollArea>
   );
-}; 
+};

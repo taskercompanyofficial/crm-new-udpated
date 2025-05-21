@@ -24,6 +24,7 @@ interface SearchSelectProps {
   errorMessage?: string;
   isLoading?: boolean;
   multiple?: boolean;
+  disabled?: boolean;
 }
 
 export default function SearchSelect({
@@ -39,6 +40,7 @@ export default function SearchSelect({
   errorMessage,
   isLoading = false,
   multiple = false,
+  disabled = false,
 }: SearchSelectProps) {
   const [selectedValues, setSelectedValues] = useState<string[]>(
     multiple && value ? value.split(',') : value ? [value] : []
@@ -171,7 +173,8 @@ export default function SearchSelect({
       return option?.label.toString().toLowerCase().includes(input.toLowerCase()) ?? false;
     },
     getPopupContainer: (triggerNode) => triggerNode.parentNode as HTMLElement,
-    dropdownStyle: { zIndex: 9999 }
+    dropdownStyle: { zIndex: 9999 },
+    disabled
   };
 
   return (

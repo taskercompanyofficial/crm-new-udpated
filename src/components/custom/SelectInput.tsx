@@ -17,6 +17,7 @@ interface SelectInputProps {
   onChange: (value: string) => void;
   selected: string;
   placeholder?: string;
+  disabled?: boolean;
 }
 
 export function SelectInput({
@@ -27,6 +28,7 @@ export function SelectInput({
   onChange,
   selected,
   placeholder = "Select an option",
+  disabled,
 }: SelectInputProps) {
   return (
     <div className="space-y-1">
@@ -41,6 +43,7 @@ export function SelectInput({
         style={{ width: "100%" }}
         dropdownMatchSelectWidth={false} // This allows dropdown to expand beyond select width
         optionLabelProp="label" // This ensures full label text is shown
+        disabled={disabled}
       />
       {description && <p className="text-sm text-gray-500">{description}</p>}
       {errorMessage && <p className="text-sm text-red-500">{errorMessage}</p>}
