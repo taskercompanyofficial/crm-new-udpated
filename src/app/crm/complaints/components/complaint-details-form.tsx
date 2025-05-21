@@ -103,19 +103,17 @@ export default function ComplaintDetailsForm({
           </Form.Item>
 
           <Form.Item
-            name="p_date"
             label="Date of Purchase"
             validateStatus={errors.p_date ? "error" : ""}
             help={errors.p_date}
           >
             <DatePicker
               style={{ width: '100%' }}
-              className="transition-all duration-200 hover:shadow-md"
               value={data.p_date ? dayjs(data.p_date) : null}
-              onChange={(date: any) => setData({ ...data, p_date: date ? date.format('YYYY-MM-DD') : null })}
+              onChange={(date) => setData({ ...data, p_date: date })}
+              className="transition-all duration-200 hover:shadow-md"
             />
           </Form.Item>
-
           <Form.Item
             label="MQ Number"
             validateStatus={errors.mq_nmb ? "error" : ""}
