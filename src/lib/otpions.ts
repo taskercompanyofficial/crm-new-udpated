@@ -150,8 +150,8 @@ export const ComplaintStatusOptions = [
     color: "96, 125, 139",
   },
   {
-    value: "warrenty-cash",
-    label: "Warrenty cash",
+    value: "warrenty-slip-cash",
+    label: "Warrenty Slip Cash",
     color: "96, 125, 139",
   },
   {
