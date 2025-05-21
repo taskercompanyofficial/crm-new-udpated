@@ -258,7 +258,7 @@ export default function Form({
           complaintId={Number(complaint?.id || 0)}
           token={token}
           role={role}
-          jobDone={data.job_done || false}
+          jobDone={false}
         />
         <ComplaintFooter
           lastSaveTime={lastSaveTime}
@@ -270,7 +270,7 @@ export default function Form({
           hasUnsavedChanges={hasUnsavedChanges}
           autoSaveEnabled={autoSaveEnabled}
           timeUntilNextSave={timeUntilNextSave}
-          jobDone={data.job_done || false}
+          jobDone={false}
         />
       </ScrollArea>
     </div>
