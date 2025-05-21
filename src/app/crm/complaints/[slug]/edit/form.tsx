@@ -131,13 +131,6 @@ export default function Form({
   const saveFormData = useCallback(() => {
     if (!hasUnsavedChanges) return;
 
-    // Check if trying to close/cancel without customer remarks
-    if ((data.status === "closed" || data.status === "cancelled") &&
-      (!reviewsData || reviewsData.length === 0)) {
-      toast.error("Cannot close or cancel complaint without customer remarks");
-      return;
-    }
-
     if (!isOnline) {
       // Store changes locally when offline
       const newChange = { ...data, timestamp: Date.now() };

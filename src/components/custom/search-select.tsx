@@ -40,14 +40,12 @@ export default function SearchSelect({
   isLoading = false,
   multiple = false,
 }: SearchSelectProps) {
-  // Process the initial value
   const [selectedValues, setSelectedValues] = useState<string[]>(
     multiple && value ? value.split(',') : value ? [value] : []
   );
   const [searchValue, setSearchValue] = useState('');
   const [customOptions, setCustomOptions] = useState<DataTypeIds[]>([]);
 
-  // Combine initial options with custom options
   const allOptions = [...initialOptions, ...customOptions.map(opt => ({
     ...opt,
     label: opt.isCustom ? (
@@ -66,7 +64,6 @@ export default function SearchSelect({
     value: String(option.value)
   }));
 
-  // Update the controlled value when external value changes
   useEffect(() => {
     if (multiple) {
       setSelectedValues(value ? value.split(',') : []);
@@ -121,7 +118,6 @@ export default function SearchSelect({
     setSearchValue('');
   };
 
-  // Dropdown menu for adding custom options
   const dropdownRender = (menu: React.ReactElement) => (
     <>
       {menu}
@@ -143,7 +139,6 @@ export default function SearchSelect({
     </>
   );
 
-  // Prepare Select props
   const selectProps: SelectProps<string | string[], DataTypeIds> = {
     mode: multiple ? 'multiple' : undefined,
     showSearch: true,
@@ -174,7 +169,9 @@ export default function SearchSelect({
     status: errorMessage ? 'error' : undefined,
     filterOption: (input: string, option?: DataTypeIds) => {
       return option?.label.toString().toLowerCase().includes(input.toLowerCase()) ?? false;
-    }
+    },
+    getPopupContainer: (triggerNode) => triggerNode.parentNode as HTMLElement,
+    dropdownStyle: { zIndex: 9999 }
   };
 
   return (
@@ -207,4 +204,4 @@ export default function SearchSelect({
       )}
     </div>
   );
-} 
+}
