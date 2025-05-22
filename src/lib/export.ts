@@ -68,16 +68,58 @@ export function exportTableToExcel<TData>(
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.aoa_to_sheet(wsData);
 
-    // Style the header row with white text on green background
+    // Apply Excel table styling
     const range = XLSX.utils.decode_range(ws['!ref'] || 'A1:A1');
+    
+    // Style all cells with borders
+    for (let row = range.s.r; row <= range.e.r; row++) {
+        for (let col = range.s.c; col <= range.e.c; col++) {
+            const cellRef = XLSX.utils.encode_cell({ r: row, c: col });
+            if (!ws[cellRef]) ws[cellRef] = { v: '' };
+            ws[cellRef].s = {
+                border: {
+                    top: { style: 'thin', color: { rgb: "FF808080" } },
+                    bottom: { style: 'thin', color: { rgb: "FF808080" } },
+                    left: { style: 'thin', color: { rgb: "FF808080" } },
+                    right: { style: 'thin', color: { rgb: "FF808080" } }
+                },
+                alignment: { horizontal: 'center', vertical: 'center' }
+            };
+        }
+    }
+
+    // Enhanced header styling
     for (let col = range.s.c; col <= range.e.c; col++) {
         const cellRef = XLSX.utils.encode_cell({ r: 0, c: col });
-        if (!ws[cellRef]) ws[cellRef] = { v: '' };
         ws[cellRef].s = {
-            fill: { patternType: "solid", fgColor: { rgb: "FF008000" } }, // Green background
-            font: { bold: true, color: { rgb: "FFFFFFFF" } }    // White text
+            fill: { patternType: "solid", fgColor: { rgb: "FF1F497D" } }, // Dark blue background
+            font: { 
+                bold: true, 
+                color: { rgb: "FFFFFFFF" },
+                sz: 12,
+                name: "Arial"
+            },
+            border: {
+                top: { style: 'medium', color: { rgb: "FF808080" } },
+                bottom: { style: 'medium', color: { rgb: "FF808080" } },
+                left: { style: 'medium', color: { rgb: "FF808080" } },
+                right: { style: 'medium', color: { rgb: "FF808080" } }
+            },
+            alignment: { horizontal: 'center', vertical: 'center', wrapText: true }
         };
     }
+
+    // Set column widths
+    const colWidths = headers.map(header => ({
+        wch: Math.max(header.length + 2, 12) // minimum width of 12, or header length + 2
+    }));
+    ws['!cols'] = colWidths;
+
+    // Add autofilter
+    ws['!autofilter'] = { ref: ws['!ref'] || 'A1' };
+
+    // Freeze the header row
+    ws['!freeze'] = { xSplit: 0, ySplit: 1 };
 
     // Add worksheet to workbook
     XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
