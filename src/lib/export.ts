@@ -34,31 +34,27 @@ export function exportTableToExcel<TData>(
         onlySelected = false,
     } = opts;
 
-    // Retrieve headers (column names) and format them
-    const headers = table
-        .getAllLeafColumns()
-        .map((column) => {
-            const id = column.id;
-            // Replace underscores with spaces and capitalize first letter
-            return id
-                .split('_')
-                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                .join(' ');
-        })
-        .filter((_, index, arr) => {
-            const id = table.getAllLeafColumns()[index].id;
-            return !excludeColumns.includes(id as keyof TData | "select" | "actions");
-        });
+    // Get all visible columns
+    const visibleColumns = table.getAllLeafColumns().filter(col => 
+        !excludeColumns.includes(col.id as keyof TData | "select" | "actions")
+    );
 
-    // Get rows data
+    // Retrieve headers (column names) and format them
+    const headers = visibleColumns.map((column) => {
+        const id = column.id;
+        // Replace underscores with spaces and capitalize first letter
+        return id
+            .split('_')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+    });
+
+    // Get rows data - fixed to align with visible columns
     const rows = (onlySelected
         ? table.getFilteredSelectedRowModel().rows
         : table.getRowModel().rows
     ).map((row) =>
-        headers.map((_, index) => {
-            const originalHeader = table.getAllLeafColumns()[index].id;
-            return row.getValue(originalHeader);
-        })
+        visibleColumns.map(column => row.getValue(column.id))
     );
 
     // Create worksheet data with headers
@@ -71,11 +67,14 @@ export function exportTableToExcel<TData>(
     // Apply Excel table styling
     const range = XLSX.utils.decode_range(ws['!ref'] || 'A1:A1');
     
-    // Style all cells with borders
+    // Style all cells with borders and better formatting
     for (let row = range.s.r; row <= range.e.r; row++) {
         for (let col = range.s.c; col <= range.e.c; col++) {
             const cellRef = XLSX.utils.encode_cell({ r: row, c: col });
             if (!ws[cellRef]) ws[cellRef] = { v: '' };
+            
+            // Alternate row colors for better readability
+            const isEvenRow = row % 2 === 0;
             ws[cellRef].s = {
                 border: {
                     top: { style: 'thin', color: { rgb: "FF808080" } },
@@ -83,7 +82,18 @@ export function exportTableToExcel<TData>(
                     left: { style: 'thin', color: { rgb: "FF808080" } },
                     right: { style: 'thin', color: { rgb: "FF808080" } }
                 },
-                alignment: { horizontal: 'center', vertical: 'center' }
+                fill: isEvenRow 
+                    ? { patternType: "solid", fgColor: { rgb: "FFF5F5F5" } }
+                    : { patternType: "solid", fgColor: { rgb: "FFFFFFFF" } },
+                alignment: { 
+                    horizontal: 'left',
+                    vertical: 'center',
+                    wrapText: true
+                },
+                font: {
+                    name: "Arial",
+                    sz: 11
+                }
             };
         }
     }
@@ -92,7 +102,7 @@ export function exportTableToExcel<TData>(
     for (let col = range.s.c; col <= range.e.c; col++) {
         const cellRef = XLSX.utils.encode_cell({ r: 0, c: col });
         ws[cellRef].s = {
-            fill: { patternType: "solid", fgColor: { rgb: "FF1F497D" } }, // Dark blue background
+            fill: { patternType: "solid", fgColor: { rgb: "FF1F497D" } },
             font: { 
                 bold: true, 
                 color: { rgb: "FFFFFFFF" },
@@ -105,13 +115,25 @@ export function exportTableToExcel<TData>(
                 left: { style: 'medium', color: { rgb: "FF808080" } },
                 right: { style: 'medium', color: { rgb: "FF808080" } }
             },
-            alignment: { horizontal: 'center', vertical: 'center', wrapText: true }
+            alignment: { 
+                horizontal: 'center', 
+                vertical: 'center', 
+                wrapText: true 
+            }
         };
     }
 
-    // Set column widths
-    const colWidths = headers.map(header => ({
-        wch: Math.max(header.length + 2, 12) // minimum width of 12, or header length + 2
+    // Set optimized column widths based on content
+    const maxContentLengths = new Array(headers.length).fill(0);
+    wsData.forEach(row => {
+        row.forEach((cell, i) => {
+            const cellLength = String(cell).length;
+            maxContentLengths[i] = Math.max(maxContentLengths[i], cellLength);
+        });
+    });
+
+    const colWidths = maxContentLengths.map(length => ({
+        wch: Math.min(Math.max(length + 2, 12), 50) // Min 12, max 50 characters
     }));
     ws['!cols'] = colWidths;
 

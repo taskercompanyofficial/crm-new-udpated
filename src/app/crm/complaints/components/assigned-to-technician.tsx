@@ -70,7 +70,7 @@ export default function AssignedToTechnician({
                 okText={selectedTechnician ? 'Update Technician' : 'Assign Technician'}
             >
                 <Form layout="vertical">
-                    <Form.Item label="Technician">
+                    <Form.Item label="Technician" >
                         <Select
                             showSearch
                             value={selectedTechnician}
@@ -80,6 +80,8 @@ export default function AssignedToTechnician({
                             filterOption={(input, option) =>
                                 (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
                             }
+                            allowClear
+                            autoFocus={true}
                         />
                     </Form.Item>
 
