@@ -19,6 +19,7 @@ interface FileTableProps {
   onFileDownload: (file: any) => void;
   onFileRemove: (index: number) => void;
   onFilePreview: (file: any) => void;
+  jobDone?: boolean;
 }
 
 export const FileTable = ({
@@ -29,6 +30,7 @@ export const FileTable = ({
   onFileDownload,
   onFileRemove,
   onFilePreview,
+  jobDone
 }: FileTableProps) => {
   const { isVideo, isAudio, isImage } = useFileTypes();
 
@@ -158,23 +160,25 @@ export const FileTable = ({
                     </Tooltip>
                   </TooltipProvider>
 
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-8 w-8"
-                          onClick={() => onFileRemove(index)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p className="text-xs">Remove</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                  {!jobDone && (
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 w-8"
+                            onClick={() => onFileRemove(index)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="text-xs">Remove</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  )}
                 </td>
               </tr>
             ))}
@@ -183,4 +187,4 @@ export const FileTable = ({
       </ScrollArea>
     </div>
   );
-}; 
+};

@@ -14,6 +14,7 @@ import { Switch } from "@/components/ui/switch";
 import { Bell, Lock, Settings as SettingsIcon, User } from "lucide-react"; import { getUserDetails } from "@/lib/getUserDetails";
 import Profile from "./tabs/profile";
 import { User as UserType } from "@/types";
+import Advanced from "./tabs/advanced";
 
 export default async function AccountPage() {
   const { userDetails } = await getUserDetails();
@@ -25,10 +26,12 @@ export default async function AccountPage() {
             <User className="h-4 w-4" />
             Profile
           </TabsTrigger>
-          <TabsTrigger value="settings" className="flex items-center gap-2">
-            <SettingsIcon className="h-4 w-4" />
-            Settings
-          </TabsTrigger>
+          {userDetails?.role === "administrator" && (
+            <TabsTrigger value="settings" className="flex items-center gap-2">
+              <SettingsIcon className="h-4 w-4" />
+              Settings
+            </TabsTrigger>
+          )}
           <TabsTrigger
             value="notifications"
             className="flex items-center gap-2"
@@ -47,35 +50,11 @@ export default async function AccountPage() {
             <Profile userInfo={userDetails as UserType} />
           </div>
         </TabsContent>
-
-        <TabsContent value="settings">
-          <Card>
-            <CardHeader>
-              <CardTitle>Settings</CardTitle>
-              <CardDescription>Manage your account preferences</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="font-medium">Dark Mode</p>
-                  <p className="text-sm text-muted-foreground">
-                    Toggle dark mode theme
-                  </p>
-                </div>
-                <Switch />
-              </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="font-medium">Email Updates</p>
-                  <p className="text-sm text-muted-foreground">
-                    Receive email updates about your account
-                  </p>
-                </div>
-                <Switch defaultChecked />
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+        {userDetails?.role === "administrator" && (
+          <TabsContent value="settings">
+            <Advanced />
+          </TabsContent>
+        )}
 
         <TabsContent value="notifications">
           <Card>

@@ -1,15 +1,9 @@
-import { Button } from "@/components/ui/button";
-import { Eye, Download, Loader2, Play, Volume2, File } from "lucide-react";
-import Image from "next/image";
+import { Button, Modal, Typography, Space, Divider, Image as AntImage } from "antd";
+import { EyeOutlined, DownloadOutlined, LoadingOutlined, PlayCircleOutlined, SoundOutlined, FileOutlined } from "@ant-design/icons";
 import { getImageUrl } from "@/lib/utils";
 import { useFileTypes } from "../../hooks/useFileTypes";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
+
+const { Title, Text } = Typography;
 
 interface FilePreviewDialogProps {
   file: any;
@@ -27,10 +21,10 @@ export const FilePreviewDialog = ({
   const { isVideo, isAudio, isImage } = useFileTypes();
 
   const getFileTypeIcon = (file: any) => {
-    if (isVideo(file)) return <Play className="w-5 h-5" />;
-    if (isAudio(file)) return <Volume2 className="w-5 h-5" />;
-    if (isImage(file)) return <Eye className="w-5 h-5" />;
-    return <File className="w-5 h-5" />;
+    if (isVideo(file)) return <PlayCircleOutlined style={{ fontSize: '16px' }} />;
+    if (isAudio(file)) return <SoundOutlined style={{ fontSize: '16px' }} />;
+    if (isImage(file)) return <EyeOutlined style={{ fontSize: '16px' }} />;
+    return <FileOutlined style={{ fontSize: '16px' }} />;
   };
 
   const renderMediaPreview = (file: any) => {
@@ -38,7 +32,8 @@ export const FilePreviewDialog = ({
       return (
         <video
           controls
-          className="w-full max-h-[70vh]"
+          className="w-full"
+          style={{ maxHeight: '70vh' }}
         >
           <source src={getImageUrl(file.document_path)} />
           Your browser does not support the video tag.
@@ -48,16 +43,16 @@ export const FilePreviewDialog = ({
 
     if (isAudio(file)) {
       return (
-        <div className="w-full p-8 bg-slate-50 rounded-lg">
+        <div style={{ width: '100%', padding: '32px', background: '#f9fafb', borderRadius: '8px' }}>
           <audio
             controls
-            className="w-full"
+            style={{ width: '100%' }}
           >
             <source src={getImageUrl(file.document_path)} />
             Your browser does not support the audio tag.
           </audio>
-          <div className="mt-4 flex justify-center">
-            <Volume2 className="w-24 h-24 text-slate-400" />
+          <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'center' }}>
+            <SoundOutlined style={{ fontSize: '96px', color: '#94a3b8' }} />
           </div>
         </div>
       );
@@ -65,72 +60,127 @@ export const FilePreviewDialog = ({
 
     if (isImage(file)) {
       return (
-        <Image
+        <AntImage
           src={getImageUrl(file.document_path)}
           alt={file.file_name || "Image"}
-          width={800}
-          height={600}
-          className="object-contain w-full max-h-[70vh]"
-          unoptimized={true}
+          style={{ width: '100%', maxHeight: '70vh', objectFit: 'contain' }}
+          preview={{
+            mask: <div><EyeOutlined /> Preview</div>,
+            maskClassName: "flex items-center justify-center gap-2"
+          }}
         />
       );
     }
 
     return (
-      <div className="flex flex-col items-center justify-center p-8 bg-slate-50 rounded-lg">
-        <File className="w-24 h-24 text-slate-400 mb-4" />
-        <p className="text-slate-600 font-medium text-center">
+      <div style={{ 
+        display: 'flex', 
+        flexDirection: 'column', 
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        padding: '32px', 
+        background: '#f9fafb', 
+        borderRadius: '8px' 
+      }}>
+        <FileOutlined style={{ fontSize: '96px', color: '#94a3b8', marginBottom: '16px' }} />
+        <Text strong style={{ color: '#475569', textAlign: 'center' }}>
           {file.file_name || "File"}
-        </p>
+        </Text>
       </div>
     );
   };
 
+  // For images, we'll use Ant Design's built-in gallery feature
+  if (file && isImage(file)) {
+    return (
+      <div style={{ display: 'none' }}>
+        <AntImage.PreviewGroup
+          preview={{
+            visible: !!file,
+            onVisibleChange: (visible) => {
+              if (!visible) onClose();
+            },
+            destroyOnClose: true,
+            countRender: () => null,
+            toolbarRender: (_, { transform: { scale }, actions: { onZoomIn, onZoomOut } }) => (
+              <Space>
+                <Button onClick={onZoomOut} icon={<EyeOutlined />}>Zoom Out</Button>
+                <Button onClick={onZoomIn} icon={<EyeOutlined />}>Zoom In</Button>
+                <Button 
+                  onClick={() => window.open(getImageUrl(file?.document_path), '_blank')}
+                  icon={<EyeOutlined />}
+                >
+                  Open in New Tab
+                </Button>
+                <Button
+                  type="primary"
+                  icon={downloading ? <LoadingOutlined /> : <DownloadOutlined />}
+                  onClick={() => onDownload(file)}
+                  disabled={downloading}
+                >
+                  Download
+                </Button>
+              </Space>
+            )
+          }}
+        >
+          <AntImage
+            src={getImageUrl(file.document_path)}
+            alt={file.file_name || "Image"}
+            style={{ display: 'none' }}
+          />
+        </AntImage.PreviewGroup>
+      </div>
+    );
+  }
+
+  // For non-image files, use the regular modal
   return (
-    <Dialog open={!!file} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            {getFileTypeIcon(file)}
-            <span>{file?.file_name || 'Media Preview'}</span>
-          </DialogTitle>
-        </DialogHeader>
-        <div className="flex flex-col items-center gap-4">
-          {file && (
-            <div className="relative w-full overflow-auto">
-              {renderMediaPreview(file)}
-            </div>
-          )}
-        </div>
-        <DialogFooter className="flex sm:justify-between gap-2">
-          <p className="text-sm text-muted-foreground">
-            {file?.file_size
-              ? `Size: ${(file.file_size / 1024).toFixed(1)} KB`
-              : ""}
-          </p>
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              onClick={() => window.open(getImageUrl(file?.document_path), '_blank')}
-            >
-              <Eye className="w-4 h-4 mr-2" />
-              Open in New Tab
-            </Button>
-            <Button
-              variant="default"
-              onClick={() => onDownload(file)}
-              disabled={downloading}
-            >
-              {downloading ? (
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              ) : (
-                <Download className="w-4 h-4 mr-2" />
-              )}
-              Download
-            </Button>
+    <Modal
+      open={!!file}
+      onCancel={onClose}
+      footer={null}
+      width={800}
+      centered
+      destroyOnClose={true}
+      title={
+        <Space>
+          {getFileTypeIcon(file)}
+          <span>{file?.file_name || 'Media Preview'}</span>
+        </Space>
+      }
+    >
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        {file && (
+          <div style={{ position: 'relative', width: '100%', overflow: 'auto' }}>
+            {renderMediaPreview(file)}
           </div>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        )}
+      </div>
+      <Divider style={{ marginTop: '16px', marginBottom: '16px' }} />
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Text type="secondary" style={{ fontSize: '14px' }}>
+          {file?.file_size
+            ? `Size: ${(file.file_size / 1024).toFixed(1)} KB`
+            : ""}
+        </Text>
+        <Space>
+          <Button
+            icon={<EyeOutlined />}
+            onClick={() => window.open(getImageUrl(file?.document_path), '_blank')}
+          >
+            Open in New Tab
+          </Button>
+          <Button
+            type="primary"
+            icon={downloading ? <LoadingOutlined /> : <DownloadOutlined />}
+            onClick={() => onDownload(file)}
+            disabled={downloading}
+          >
+            Download
+          </Button>
+        </Space>
+      </div>
+    </Modal>
   );
-}; 
+};

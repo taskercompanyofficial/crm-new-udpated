@@ -8,7 +8,7 @@ import { saveAs } from 'file-saver';
 import { toast } from "react-toastify";
 import JSZip from 'jszip';
 import Image from "next/image";
-import axios from 'axios'; // Make sure axios is installed in your project
+import axios from 'axios';
 import {
   ScrollArea,
   ScrollBar
@@ -44,10 +44,12 @@ export default function FilesForm({
   data,
   setData,
   errors,
+  jobDone
 }: {
   data: any;
   setData: (data: any) => void;
   errors: any;
+  jobDone?: boolean;
 }) {
   const session = useSession();
   const token = session?.data?.user?.token;
@@ -71,6 +73,8 @@ export default function FilesForm({
   };
 
   const handleRemoveFile = (index: number) => {
+    if (jobDone) return;
+    
     let currentFiles = data.files;
     if (typeof currentFiles === "string") {
       currentFiles = JSON.parse(currentFiles);
@@ -121,17 +125,17 @@ export default function FilesForm({
     );
   };
 
- 
-
   return (
     <div className="space-y-6">
-      <DocumentUploader
-        onDone={handleDocumentUpload}
-        errorMessage={errors.files}
-      />
+      {!jobDone && (
+        <DocumentUploader
+          onDone={handleDocumentUpload}
+          errorMessage={errors.files}
+        />
+      )}
 
       {Array.isArray(files) && files.length > 0 && (
-        <Card className="border rounded-md shadow-sm">
+        <Card className="border rounded-md shadow-sm bg-background">
           <CardContent className="p-4">
             <div className="flex justify-between items-center mb-4">
               <h3 className="font-medium text-sm">
@@ -156,6 +160,7 @@ export default function FilesForm({
                 onFileDownload={handleDownloadFile}
                 onFileRemove={handleRemoveFile}
                 onFilePreview={setSelectedMedia}
+                jobDone={jobDone}
               />
             ) : (
               <FileTable
@@ -166,22 +171,25 @@ export default function FilesForm({
                 onFileDownload={handleDownloadFile}
                 onFileRemove={handleRemoveFile}
                 onFilePreview={setSelectedMedia}
+                jobDone={jobDone}
               />
             )}
 
             <div className="flex flex-wrap gap-2 mt-4">
-              <Button
-                variant="destructive"
-                size="sm"
-                className="text-xs"
-                onClick={() => {
-                  setData({ ...data, files: [] });
-                  setSelectedFiles([]);
-                }}
-              >
-                <Trash2 className="w-3.5 h-3.5 mr-1.5" />
-                Clear All Files
-              </Button>
+              {!jobDone && (
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  className="text-xs"
+                  onClick={() => {
+                    setData({ ...data, files: [] });
+                    setSelectedFiles([]);
+                  }}
+                >
+                  <Trash2 className="w-3.5 h-3.5 mr-1.5" />
+                  Clear All Files
+                </Button>
+              )}
               <Button
                 variant="outline"
                 size="sm"

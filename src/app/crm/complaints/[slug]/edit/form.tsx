@@ -14,9 +14,8 @@ import ComplaintActions from "./complaint-actions";
 import ComplaintFooter from "./complaint-footer";
 import useAutoSave from "@/hooks/complaint/use-auto-save";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Loader2, Redo2, Undo2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Button } from "@/components/ui/button";
 
 export default function Form({
   complaint,
@@ -72,6 +71,8 @@ export default function Form({
     call_status: complaint?.call_status || "",
     cancellation_reason: complaint?.cancellation_reason || "",
     cancellation_details: complaint?.cancellation_details || "",
+    job_done: complaint?.job_done || false,
+    job_done_date: complaint?.job_done_date || "",
   });
 
   // Fetch customer reviews
@@ -130,13 +131,6 @@ export default function Form({
   // Save form data
   const saveFormData = useCallback(() => {
     if (!hasUnsavedChanges) return;
-
-    // Check if trying to close/cancel without customer remarks
-    if ((data.status === "closed" || data.status === "cancelled") &&
-      (!reviewsData || reviewsData.length === 0)) {
-      toast.error("Cannot close or cancel complaint without customer remarks");
-      return;
-    }
 
     if (!isOnline) {
       // Store changes locally when offline
@@ -264,6 +258,7 @@ export default function Form({
           complaintId={Number(complaint?.id || 0)}
           token={token}
           role={role}
+          jobDone={false}
         />
         <ComplaintFooter
           lastSaveTime={lastSaveTime}
@@ -275,6 +270,7 @@ export default function Form({
           hasUnsavedChanges={hasUnsavedChanges}
           autoSaveEnabled={autoSaveEnabled}
           timeUntilNextSave={timeUntilNextSave}
+          jobDone={false}
         />
       </ScrollArea>
     </div>

@@ -11,6 +11,7 @@ import SendMessageCustomerBtn from '../../components/send-message-cutomer-btn';
 import { Checkbox } from '@/components/ui/checkbox';
 import { copyToClipboard } from '@/hooks/copy-to-clipboard';
 import { GenerateBill } from '../../components/generate-bill';
+import JobDone from './job-done';
 
 interface ComplaintActionsProps {
   data: any;
@@ -124,6 +125,7 @@ export default function ComplaintActions({
             <ClipboardCopyIcon className="w-4 h-4" />
           </Button>
           <GenerateBill complaint={data} />
+          <JobDone complaint={data} onSubmit={onSubmit} />
           <div className="flex gap-2 items-center">
             <Checkbox
               checked={autoSaveEnabled}

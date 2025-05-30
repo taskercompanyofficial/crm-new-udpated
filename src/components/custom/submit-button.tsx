@@ -3,7 +3,7 @@ import { Button, type ButtonProps } from "@/components/ui/button";
 import { Loader } from "lucide-react";
 
 interface SubmitBtnProps extends ButtonProps {
-  processing: boolean; // Adds a processing state
+  processing: boolean; 
   children?: React.ReactNode;
 }
 

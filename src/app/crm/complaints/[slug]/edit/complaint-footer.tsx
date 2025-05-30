@@ -11,6 +11,7 @@ interface ComplaintFooterProps {
   hasUnsavedChanges: boolean;
   autoSaveEnabled: boolean;
   timeUntilNextSave: number;
+  jobDone?: boolean;
 }
 
 export default function ComplaintFooter({
@@ -22,7 +23,8 @@ export default function ComplaintFooter({
   filledDataFieldsCount,
   hasUnsavedChanges,
   autoSaveEnabled,
-  timeUntilNextSave
+  timeUntilNextSave,
+  jobDone
 }: ComplaintFooterProps) {
   return (
     <div className="mt-6 rounded-lg bg-gradient-to-r from-blue-50 to-indigo-50 p-4 dark:from-slate-800 dark:to-slate-900">
@@ -52,12 +54,12 @@ export default function ComplaintFooter({
           <div className="text-sm text-gray-500 dark:text-gray-400">
             Form completion: {filledDataFieldsCount}/{dataFieldsCount}
           </div>
-          {hasUnsavedChanges && autoSaveEnabled && (
+          {hasUnsavedChanges && autoSaveEnabled && !jobDone && (
             <div className="text-sm text-red-500">
               * Unsaved changes (Auto-saving in {timeUntilNextSave}s)
             </div>
           )}
-          {hasUnsavedChanges && !autoSaveEnabled && (
+          {hasUnsavedChanges && !autoSaveEnabled && !jobDone && (
             <div className="text-sm text-red-500">
               * Unsaved changes (Auto-save disabled)
             </div>

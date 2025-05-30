@@ -104,6 +104,11 @@ export const ComplaintStatusOptions = [
     color: "139, 195, 74",
   },
   {
+    value: "part-in-service-center",
+    label: "Part in Service Center",
+    color: "139, 195, 74",
+  },
+  {
     value: "delivery-pending",
     label: "Delivery Pending",
     color: "205, 220, 57",
@@ -138,6 +143,21 @@ export const ComplaintStatusOptions = [
     value: "completed",
     label: "Completed",
     color: "76, 175, 80",
+  },
+  {
+    value: "cashback-dealer",
+    label: "Cashback Dealer",
+    color: "96, 125, 139",
+  },
+  {
+    value: "warrenty-slip-cash",
+    label: "Warrenty Slip Cash",
+    color: "96, 125, 139",
+  },
+  {
+    value: "code-pending",
+    label: "Code Pending",
+    color: "96, 125, 139",
   },
   {
     value: "amount-pending",
@@ -297,8 +317,9 @@ export const DealerOptions = [
   { value: "Subhan Electronics", label: "Subhan Electronics", id: "15", image: "" },
   { value: "AM Electronics", label: "AM Electronics", id: "16", image: "" },
   { value: "Friends Electronics", label: "Friends Electronics", id: "17", image: "" },
-  { value: "CC", label: "CC", id: "18", image: "" },
-  { value: "Dealer Pending", label: "Dealer Pending", id: "19", image: "" }
+  { value: "SR Electronics", label: "SR Electronics", id: "18", image: "" },
+  { value: "CC", label: "CC", id: "19", image: "" },
+  { value: "Dealer Pending", label: "Dealer Pending", id: "20", image: "" }
 ];
 
 export const useFetchBranches = () => {

@@ -42,6 +42,19 @@ function ComplaintsChart({
 }: {
   complaintsInRange: ComplaintData[];
 }) {
+  return <>{JSON.stringify(complaintsInRange)}</>
+  const hasData = complaintsInRange.some(item => item.count > 0);
+  if (!hasData) {
+    return (
+      <Card className="col-span-full">
+        <CardContent className="flex flex-col items-center justify-center py-6">
+          <AlertTriangle className="h-8 w-8 text-muted-foreground" />
+          <p className="mt-2 text-sm text-muted-foreground">No complaints data available</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       {complaintsInRange.map((item) => (

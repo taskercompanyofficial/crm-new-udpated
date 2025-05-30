@@ -1,26 +1,26 @@
 "use client";
-import React, { Suspense } from "react";
-import {
-  AreaChart,
-  Area,
-  Tooltip as ReTooltip,
-  ResponsiveContainer,
-} from "recharts";
-import { CheckCircle, XCircle, AlertCircle, BarChart2 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Suspense } from "react";
+import { 
+  CheckCircle, 
+  XCircle, 
+  AlertCircle, 
+  FileText, 
+  ArrowUp, 
+  ArrowDown, 
+  Minus,
+  Clock
+} from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-
-interface ChartData {
-  date: string;
-  count: number;
-}
+import { Empty } from "antd";
+import { Badge } from "@/components/ui/badge";
 
 interface StatusData {
   count: number;
   trend?: string;
-  data?: ChartData[];
+  data?: any[];
 }
 
 interface ComplaintStatusData {
@@ -35,7 +35,7 @@ interface ComplaintStatusData {
   };
 }
 
-interface ChartsByStatusProps {
+interface ComplaintStatusProps {
   complaintStatusData?: ComplaintStatusData;
 }
 
@@ -53,39 +53,83 @@ function LoadingSkeleton() {
           <CardContent>
             <Skeleton className="mb-4 h-8 w-20" />
             <Skeleton className="h-[50px] w-full" />
-            <Skeleton className="mt-2 h-4 w-32" />
-            <Skeleton className="mt-3 h-1 w-full" />
           </CardContent>
+          <CardFooter>
+            <Skeleton className="h-4 w-32" />
+          </CardFooter>
         </Card>
       ))}
     </div>
   );
 }
 
-function ChartContent({ complaintStatusData }: ChartsByStatusProps) {
+function NoDataDisplay() {
+  return (
+    <Card className="col-span-full p-6">
+      <div className="flex flex-col items-center justify-center text-center">
+        <Empty
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+          description={
+            <div>
+              <h3 className="mt-4 text-lg font-semibold text-gray-900">No Complaint Data Available</h3>
+              <p className="mt-2 text-sm text-gray-600">There are currently no complaints recorded in the system.</p>
+            </div>
+          }
+        />
+      </div>
+    </Card>
+  );
+}
+
+function getTrendIcon(trend: string) {
+  if (!trend) return <Minus className="h-4 w-4" />;
+  
+  const value = parseFloat(trend);
+  if (value > 0) return <ArrowUp className="h-4 w-4 text-red-500" />;
+  if (value < 0) return <ArrowDown className="h-4 w-4 text-green-500" />;
+  return <Minus className="h-4 w-4 text-gray-400" />;
+}
+
+function getTrendText(trend: string) {
+  if (!trend) return "No change";
+  
+  const value = parseFloat(trend);
+  if (value === 0) return "No change";
+  
+  const absValue = Math.abs(value);
+  if (value > 0) return `${absValue}% increase`;
+  return `${absValue}% decrease`;
+}
+
+function StatusContent({ complaintStatusData }: ComplaintStatusProps) {
   const router = useRouter();
 
+  if (!complaintStatusData || Object.keys(complaintStatusData).length === 0) {
+    return (
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <NoDataDisplay />
+      </div>
+    );
+  }
+
+  const today = new Date();
+  const todayStr = today.toISOString().split("T")[0];
+  
   const items = [
     {
       title: "Active Complaints",
-      icon: (
-        <div className="flex gap-2">
-          <CheckCircle className="h-5 w-5 text-indigo-600" />
-          <AlertCircle className="h-5 w-5 text-amber-600" />
-        </div>
-      ),
+      icon: <AlertCircle className="h-5 w-5 text-amber-500" />,
       data: {
         count:
           (complaintStatusData?.open_and_pending.opened.count || 0) +
           (complaintStatusData?.open_and_pending["in-progress"].count || 0),
-        trend: complaintStatusData?.open_and_pending.opened.trend,
-        data: complaintStatusData?.open_and_pending.opened.data,
+        trend: "0%",
       },
       status: "active",
       color: {
-        text: "text-indigo-600",
-        border: "rgb(99, 102, 241)",
-        background: "rgba(99, 102, 241, 0.1)",
+        text: "text-amber-600",
+        bg: "bg-amber-50",
+        border: "border-amber-200",
       },
       tooltip: "Open and in-progress complaints",
       details: {
@@ -93,70 +137,59 @@ function ChartContent({ complaintStatusData }: ChartsByStatusProps) {
         inProgress:
           complaintStatusData?.open_and_pending["in-progress"].count || 0,
       },
+      queryUrl: `/crm/complaints?filters=[{"id":"status","condition":"in","value":"open.in-progress"},{"id":"updated_at","condition":"like","value":"${todayStr}"}]`,
     },
     {
       title: "Closed Complaints",
-      icon: <XCircle className="h-5 w-5 text-emerald-600" />,
+      icon: <CheckCircle className="h-5 w-5 text-emerald-600" />,
       data: complaintStatusData?.others.closed,
       status: "closed",
       color: {
         text: "text-emerald-600",
-        border: "rgb(34, 197, 94)",
-        background: "rgba(34, 197, 94, 0.1)",
+        bg: "bg-emerald-50",
+        border: "border-emerald-200",
       },
       tooltip: "Successfully resolved complaints",
+      queryUrl: `/crm/complaints?filters=[{"id":"status","condition":"in","value":"open.closed.amount-pending.feedback-pending.completed.pending-by-brand"},{"id":"updated_at","condition":"like","value":"${todayStr}"}]`,
     },
     {
       title: "Rejected Complaints",
-      icon: <AlertCircle className="h-5 w-5 text-red-600" />,
+      icon: <XCircle className="h-5 w-5 text-red-600" />,
       data: complaintStatusData?.others.rejected,
       status: "cancelled",
       color: {
         text: "text-red-600",
-        border: "rgb(244, 63, 94)",
-        background: "rgba(244, 63, 94, 0.1)",
+        bg: "bg-red-50",
+        border: "border-red-200",
       },
       tooltip: "Complaints marked as invalid or rejected",
+      queryUrl: `/crm/complaints?filters=[{"id":"status","condition":"in","value":"cancelled"},{"id":"updated_at","condition":"like","value":"${todayStr}"}]`,
     },
     {
       title: "Total Complaints",
-      icon: <BarChart2 className="h-5 w-5 text-violet-600" />,
+      icon: <FileText className="h-5 w-5 text-blue-600" />,
       data: complaintStatusData?.others.total,
       status: "all",
       color: {
-        text: "text-violet-600",
-        border: "rgb(139, 92, 246)",
-        background: "rgba(139, 92, 246, 0.1)",
+        text: "text-blue-600",
+        bg: "bg-blue-50",
+        border: "border-blue-200",
       },
       tooltip: "Total number of complaints received",
+      queryUrl: `/crm/complaints?filters=[{"id":"created_at","condition":"like","value":"${todayStr}"}]`,
     },
   ];
-  const today = new Date();
-  const todayStr = today.toISOString().split("T")[0];
+
   return (
-    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {items.map((item, index) => (
         <Card
           key={index}
-          className="group relative cursor-pointer overflow-hidden rounded-xl shadow-lg transition-all duration-300 hover:scale-105"
-          onClick={() => {
-            if (item.status === "closed") {
-              router.push(
-                `/crm/complaints?filters=[{"id":"status","condition":"in","value":"open.closed.amount-pending.feedback-pending.completed.pending-by-brand"},{"id":"updated_at","condition":"like","value":"${todayStr}"}]`,
-              );
-            } else if (item.status === "cancelled") {
-              router.push(
-                `/crm/complaints?filters=[{"id":"status","condition":"in","value":"cancelled"},{"id":"updated_at","condition":"like","value":"${todayStr}"}]`,
-              );
-            } else if (item.status === "all") {
-              router.push(
-                `/crm/complaints?filters=[{"id":"created_at","condition":"like","value":"${todayStr}"}]`,
-              );
-            }
-          }}
+          className={`group relative cursor-pointer overflow-hidden rounded-xl shadow-md transition-all duration-300 hover:shadow-lg ${item.color.border}`}
+          onClick={() => window.open(item.queryUrl, '_blank')}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-white/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-
+          <div className={`absolute top-0 h-1 w-full ${item.color.bg}`} />
+          
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
               <CardTitle className="group/tooltip relative text-sm font-medium text-gray-800 transition-colors duration-200 group-hover:text-gray-900">
@@ -165,120 +198,78 @@ function ChartContent({ complaintStatusData }: ChartsByStatusProps) {
                   {item.tooltip}
                 </span>
               </CardTitle>
-              <div className="transform transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110">
+              <Badge className={`${item.color.bg} ${item.color.text}`}>
                 {item.icon}
-              </div>
+              </Badge>
             </div>
           </CardHeader>
 
           <CardContent>
-            <div
-              className={`text-2xl font-bold ${item.color.text} transition-all duration-300 group-hover:scale-110`}
-            >
-              {item.data?.count ?? 0}
-              {item.details && (
-                <div className="mt-1 text-xs font-normal text-gray-500">
-                  <Link
-                    href={`/crm/complaints?filters=[{"id":"status","condition":"like","value":"open"},{"id":"created_at","condition":"like","value":"${todayStr}"}]`}
-                    className="text-indigo-600"
-                  >
-                    {item.details.open} open
-                  </Link>
-                  {" • "}
-                  <Link
-                    href={`/crm/complaints?filters=[{"id":"status","condition":"not in","value":"open.closed.amount-pending.feedback-pending.cancelled.completed.pending-by-brand"},{"id":"created_at","condition":"like","value":"${todayStr}"}]`}
-                    className="text-amber-600"
-                  >
-                    {item.details.inProgress} in progress
-                  </Link>
+            <div className="flex items-end justify-between">
+              <div>
+                <div className={`text-3xl font-bold ${item.color.text} transition-all duration-300 group-hover:scale-105`}>
+                  {(item.data?.count || 0) > 0 ? item.data?.count : 0}
+                </div>
+                
+                {item.details && item.data?.count > 0 && (
+                  <div className="mt-2 flex flex-col gap-1 text-xs text-gray-500">
+                    <div className="flex items-center gap-2">
+                      <div className="flex h-2 w-2 rounded-full bg-indigo-500"></div>
+                      <Link
+                        href={`/crm/complaints?filters=[{"id":"status","condition":"like","value":"open"},{"id":"created_at","condition":"like","value":"${todayStr}"}]`}
+                        className="text-indigo-600"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {item.details.open} open
+                      </Link>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="h-2 w-2 rounded-full bg-amber-500"></div>
+                      <Link
+                        href={`/crm/complaints?filters=[{"id":"status","condition":"not in","value":"open.closed.amount-pending.feedback-pending.cancelled.completed.pending-by-brand"},{"id":"created_at","condition":"like","value":"${todayStr}"}]`}
+                        className="text-amber-600"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {item.details.inProgress} in progress
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              {!item.details && (item.data?.count || 0) === 0 && (
+                <div className="mt-2 scale-75">
+                  <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No data" />
                 </div>
               )}
             </div>
-
-            <div className="mt-2 h-[50px] transition-transform duration-300 group-hover:translate-y-1">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={item.data?.data ?? []}>
-                  <defs>
-                    <linearGradient
-                      id={`gradient-${index}`}
-                      x1="0"
-                      y1="0"
-                      x2="0"
-                      y2="1"
-                    >
-                      <stop
-                        offset="0%"
-                        stopColor={item.color.border}
-                        stopOpacity={0.8}
-                      />
-                      <stop
-                        offset="100%"
-                        stopColor={item.color.border}
-                        stopOpacity={0.2}
-                      />
-                    </linearGradient>
-                  </defs>
-                  <ReTooltip
-                    content={({ active, payload }) => {
-                      if (active && payload && payload.length) {
-                        return (
-                          <div className="rounded-lg border border-gray-200 bg-white/90 p-2 shadow-lg backdrop-blur-sm">
-                            <p className="text-sm font-medium">{`Date: ${payload[0].payload.date}`}</p>
-                            <p className="text-sm font-medium">{`Count: ${payload[0].payload.count}`}</p>
-                          </div>
-                        );
-                      }
-                      return null;
-                    }}
-                  />
-                  <Area
-                    type="monotone"
-                    dataKey="count"
-                    stroke={item.color.border}
-                    fill={`url(#gradient-${index})`}
-                    strokeWidth={2}
-                    animationDuration={1000}
-                    animationEasing="ease-in-out"
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-
-            <p
-              className={`mt-2 flex items-center gap-1 text-xs font-medium ${
-                (item.data?.trend ?? "").startsWith("-")
-                  ? "text-red-600"
-                  : "text-emerald-600"
-              } transition-all duration-300 group-hover:gap-2`}
-            >
-              <span>{item.data?.trend ?? "0%"}</span>
-              <span className="transition-transform duration-300 group-hover:translate-x-1">
-                from last month
-              </span>
-            </p>
-
-            <div className="mt-3 h-1 w-full rounded-full bg-gray-100">
-              <div
-                className="h-1 rounded-full transition-all duration-500 ease-out"
-                style={{
-                  width: `${((item.data?.count ?? 0) / (complaintStatusData?.others.total.count || 1)) * 100}%`,
-                  backgroundColor: item.color.border,
-                }}
-              />
-            </div>
           </CardContent>
+          
+          <CardFooter className={`flex items-center gap-2 border-t ${item.color.border} py-2 text-xs font-medium`}>
+            <Clock className="h-3 w-3 text-gray-400" />
+            <span className="text-gray-500">Updated today</span>
+            <div className="flex-1"></div>
+            <div className="flex items-center gap-1">
+              {getTrendIcon(item.data?.trend || "0%")}
+              <span className={item.data?.trend && parseFloat(item.data.trend) > 0 ? "text-red-500" : 
+                            item.data?.trend && parseFloat(item.data.trend) < 0 ? "text-green-500" : 
+                            "text-gray-400"}>
+                {getTrendText(item.data?.trend || "0%")}
+              </span>
+            </div>
+          </CardFooter>
         </Card>
       ))}
     </div>
   );
 }
 
-export default function ChartsByStatus({
+export default function ComplaintStatus({
   complaintStatusData,
-}: ChartsByStatusProps) {
+}: ComplaintStatusProps) {
   return (
     <Suspense fallback={<LoadingSkeleton />}>
-      <ChartContent complaintStatusData={complaintStatusData} />
+      <StatusContent complaintStatusData={complaintStatusData} />
     </Suspense>
   );
 }

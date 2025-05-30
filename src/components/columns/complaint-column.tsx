@@ -43,24 +43,10 @@ export const ComplaintsColumns = (): ColumnDef<ComplaintsType>[] => [
     },
   },
   {
-    accessorKey: "created_at",
+    accessorKey: "tat",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Job Age" />
     ),
-    cell: ({ row }) => {
-      const created_at = row.getValue("created_at") as Date;
-      const status = String(row.getValue("status"));
-
-      // Calculate pending days if complaint is not closed or cancelled
-      if (status.toLowerCase() !== "closed" && status.toLowerCase() !== "cancelled") {
-        const today = new Date();
-        const diffTime = Math.abs(today.getTime() - new Date(created_at).getTime());
-        const pendingDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        return `${pendingDays} Day Pending`;
-      }
-
-      return "-";
-    }
   },
   {
     accessorKey: "complain_num",

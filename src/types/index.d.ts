@@ -207,6 +207,8 @@ export type ComplaintsType = {
   priority: string;
   cancellation_reason: string | null;
   cancellation_details: string | null;
+  job_done: boolean;
+  job_done_date: string | null;
 };
 export type ComplaintDetailsType = {
   id: number;

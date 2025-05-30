@@ -1,7 +1,7 @@
-import Image from "next/image";
 import { Play, Volume2, File } from "lucide-react";
 import { getImageUrl } from "@/lib/utils";
 import { useFileTypes } from "../../hooks/useFileTypes";
+import { Image } from "antd";
 
 interface FilePreviewProps {
   file: any;
@@ -41,7 +41,6 @@ export const FilePreview = ({ file, className = "" }: FilePreviewProps) => {
           width={200}
           height={200}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-          unoptimized={true}
         />
       </div>
     );

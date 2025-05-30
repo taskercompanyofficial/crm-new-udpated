@@ -1,5 +1,4 @@
 import { buildQueryParams } from "@/actions/get-url-params";
-import { PageHeader } from "@/components/custom/page-header";
 import DataFetcher from "@/components/table/DataFetcher";
 import ComplaintsTable from "@/components/tables/complaints-table";
 import { API_URL, COMPLAINTS } from "@/lib/apiEndPoints";
@@ -12,6 +11,7 @@ export default async function page({ searchParams }: { searchParams: any }) {
     q: searchParams?.q,
     status: searchParams.status,
     brand_id: searchParams.brand_id,
+    branch_id: searchParams.branch_id,
     filters: searchParams.filters,
     logic: searchParams.logic,
     sort: searchParams.sort,
