@@ -237,6 +237,10 @@ export default function ViewComplaint({ complaint }: { complaint: any }) {
                   <span className="text-xs bg-orange-50 text-orange-700 px-1.5 py-0.5 rounded">Outdoor</span>
                   <span className="text-sm block mt-1">{complaint.serial_number_oud || "N/A"}</span>
                 </div>
+                <div>
+                  <span className="text-xs bg-orange-50 text-orange-700 px-1.5 py-0.5 rounded">MQ Number</span>
+                  <span className="text-sm block mt-1">{complaint.mq_nmb || "N/A"}</span>
+                </div>
               </div>
             </div>
 
