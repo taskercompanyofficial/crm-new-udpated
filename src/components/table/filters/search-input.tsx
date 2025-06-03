@@ -1,45 +1,14 @@
 "use client";
-import { Input } from "@/components/ui/input";
-import { debounce } from "lodash";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useRef, useState } from "react";
+import { Input, InputRef } from "antd";
+import { useQueryState } from "nuqs";
+import { useRef, useEffect } from "react";
 
 export default function SearchInput() {
-  const searchParams = useSearchParams();
-  const { replace } = useRouter();
-  const pathname = usePathname();
-  const [searchValue, setSearchValue] = useState(searchParams.get("q") || "");
+  const [searchQuery, setSearchQuery] = useQueryState("q", {
+    shallow: true,
+    defaultValue: ""
+  });
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const debouncedSearchRef = useRef(
-    debounce((query: string) => {
-      const params = new URLSearchParams(searchParams.toString());
-      if (query) {
-        params.set("q", query);
-      } else {
-        params.delete("q");
-      }
-      replace(`${pathname}?${params.toString()}`);
-    }, 300),
-  );
-
-  // Update the debounced function when dependencies change
-  useEffect(() => {
-    debouncedSearchRef.current = debounce((query: string) => {
-      const params = new URLSearchParams(searchParams.toString());
-      if (query) {
-        params.set("q", query);
-      } else {
-        params.delete("q");
-      }
-      replace(`${pathname}?${params.toString()}`);
-    }, 300);
-
-    // Cleanup the debounce function
-    return () => {
-      debouncedSearchRef.current.cancel();
-    };
-  }, [searchParams, replace, pathname]);
 
   // Handle Ctrl+F keyboard shortcut
   useEffect(() => {
@@ -60,18 +29,17 @@ export default function SearchInput() {
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setSearchValue(value);
-    debouncedSearchRef.current(value);
+    setSearchQuery(value || null);
   };
 
   return (
     <div className="relative w-full md:w-[300px]">
       <Input
-        ref={inputRef}
+        ref={inputRef as unknown as React.RefObject<InputRef>}
         type="search"
         placeholder="Search..."
         onChange={handleSearch}
-        value={searchValue}
+        value={searchQuery ?? ""}
         autoFocus={true}
         className="w-full rounded bg-background h-8"
       />

@@ -5,7 +5,7 @@ import useForm from "@/hooks/use-form"
 import { LOGIN_CHECK_URL } from "@/lib/apiEndPoints"
 import { LogInIcon } from "lucide-react"
 import { signIn } from "next-auth/react"
-import { toast } from "react-toastify"
+import { message } from "antd"
 
 export default function Login() {
   const { data, setData, processing, post } = useForm({
@@ -14,22 +14,23 @@ export default function Login() {
   })
   const submitHandler = () => {
     post(LOGIN_CHECK_URL, {
-      onSuccess: (response) => {
-        toast.promise(signIn("credentials", {
-          email: data.email,
-          password: data.password,
-          redirect: true,
-          callbackUrl: "/crm"
-        }),
-          {
-            pending: "Credentials being verified...",
-            success: "Login successful",
-            error: "Login failed"
-          }
-        )
+      onSuccess: async (response) => {
+        const key = 'login';
+        message.loading({ content: 'Credentials being verified...', key });
+        try {
+          await signIn("credentials", {
+            email: data.email,
+            password: data.password,
+            redirect: true,
+            callbackUrl: "/crm"
+          });
+          message.success({ content: 'Login successful', key });
+        } catch (error) {
+          message.error({ content: 'Login failed', key });
+        }
       },
       onError: (response) => {
-        toast.error(response.message)
+        message.error(response.message);
       }
     })
   }
