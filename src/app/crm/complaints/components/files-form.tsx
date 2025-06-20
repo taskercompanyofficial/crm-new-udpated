@@ -1,40 +1,17 @@
 import { Button } from "@/components/ui/button";
-import { Trash2, Eye, Download, Loader2, Play, Volume2, File } from "lucide-react";
-import React, { useState } from "react";
+import { Trash2, Download, Loader2 } from "lucide-react";
+import { useState } from "react";
 import DocumentUploader from "@/components/custom/document-uploader";
-import { getImageUrl } from "@/lib/utils";
 import { useSession } from "next-auth/react";
-import { saveAs } from 'file-saver';
-import { toast } from "react-toastify";
-import JSZip from 'jszip';
-import Image from "next/image";
-import axios from 'axios';
-import {
-  ScrollArea,
-  ScrollBar
-} from "@/components/ui/scroll-area";
 import {
   Tabs,
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import {
   Card,
   CardContent,
 } from "@/components/ui/card";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { FileGrid } from "./files-form/FileGrid";
 import { FileTable } from "./files-form/FileTable";
 import { FilePreviewDialog } from "./files-form/FilePreviewDialog";
