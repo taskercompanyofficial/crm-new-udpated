@@ -215,7 +215,7 @@ export default function ProductReceipt({ complaint, username, role }: Props) {
             </div>
             <div>
               <strong>Advance:</strong>{" "}
-              <span style={underlinedTextStyle}></span>
+              <span style={underlinedTextStyle}> {complaint.amount} PKR</span>
             </div>
           </div>
           <p style={{ textAlign: "center", fontSize: "10px" }}>
