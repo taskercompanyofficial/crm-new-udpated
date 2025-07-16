@@ -108,7 +108,7 @@ export default function ViewComplaint({ complaint }: { complaint: any }) {
             size="sm"
             className="flex items-center gap-2 print:hidden"
           >
-            <Link href={`/crm/complaints/${complaint.complain_num}/chat`}>
+            <Link href={`/crm/complaints/${complaint.room_id}/chat`}>
               <MessageSquare className="h-4 w-4" />
               Chat
             </Link>

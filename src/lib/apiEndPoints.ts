@@ -20,4 +20,5 @@ export const ATTENDANCE = "/crm/attendance";
 export const ROUTESMETA = API_URL + "/routes_meta";
 export const INVENTORIES = "/crm/inventory";
 export const DAILY_ATTENDANCE_STATS = "/crm/daily-attendance-stats";
-export const MESSAGE_CHAT_ROOMS = "/messages/chat-rooms";
+export const MESSAGE_CHAT_ROOMS = "/crm/chat-rooms";
+export const MESSAGE_CHAT_MESSAGES = "/crm/chat-messages";
