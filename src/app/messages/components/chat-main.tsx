@@ -45,6 +45,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { useSession } from "next-auth/react"
 import useFetch from "@/hooks/usefetch"
 import { API_URL, MESSAGE_CHAT_ROOMS } from "@/lib/apiEndPoints"
+import ChatInput from "@/app/crm/complaints/[slug]/chat/chat-input"
 
 interface ChatMainProps {
   selectedChat: string
@@ -89,7 +90,6 @@ export function ChatMain({ selectedChat }: ChatMainProps): JSX.Element {
   const token = session?.user?.token
   const { data: chatData } = useFetch<ChatData>(`${API_URL}${MESSAGE_CHAT_ROOMS}/${selectedChat}`, token)
 
-  const [message, setMessage] = useState<string>("")
   const [messages, setMessages] = useState<Message[]>([])
   const [isRecording, setIsRecording] = useState<boolean>(false)
   const [recordingTime, setRecordingTime] = useState<number>(0)
@@ -97,9 +97,7 @@ export function ChatMain({ selectedChat }: ChatMainProps): JSX.Element {
   const [selectedMessages, setSelectedMessages] = useState<Set<string>>(new Set())
   const [isMultiSelectMode, setIsMultiSelectMode] = useState<boolean>(false)
   const [replyingTo, setReplyingTo] = useState<Message | null>(null)
-  const scrollAreaRef = useRef<HTMLDivElement>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
-  const fileInputRef = useRef<HTMLInputElement>(null)
   const recordingInterval = useRef<NodeJS.Timeout>()
 
   // Transform API messages to component format
@@ -150,58 +148,7 @@ export function ChatMain({ selectedChat }: ChatMainProps): JSX.Element {
     }
   }, [isRecording])
 
-  const handleSendMessage = (): void => {
-    if (!message.trim()) return
 
-    const newMessage: Message = {
-      id: Date.now().toString(),
-      sender: "Support",
-      content: message,
-      timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-      isOwn: true,
-      status: "sent",
-      type: "text",
-      isStarred: false,
-    }
-
-    setMessages((prev) => [...prev, newMessage])
-    setMessage("")
-    setReplyingTo(null)
-
-    // Simulate message status updates
-    setTimeout(() => {
-      setMessages((prev) => prev.map((msg) => (msg.id === newMessage.id ? { ...msg, status: "delivered" } : msg)))
-    }, 1000)
-
-    setTimeout(() => {
-      setMessages((prev) => prev.map((msg) => (msg.id === newMessage.id ? { ...msg, status: "read" } : msg)))
-    }, 2000)
-  }
-
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    const file = event.target.files?.[0]
-    if (!file) return
-
-    const fileType = file.type.startsWith("image/") ? "image" : "file"
-    const newMessage: Message = {
-      id: Date.now().toString(),
-      sender: "Support",
-      timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-      isOwn: true,
-      status: "sent",
-      type: fileType,
-      fileUrl: URL.createObjectURL(file),
-      fileName: file.name,
-      fileSize: (file.size / 1024 / 1024).toFixed(2) + " MB",
-      isStarred: false,
-    }
-
-    setMessages((prev) => [...prev, newMessage])
-  }
-
-  const startRecording = (): void => {
-    setIsRecording(true)
-  }
 
   const stopRecording = (): void => {
     setIsRecording(false)
@@ -322,8 +269,8 @@ export function ChatMain({ selectedChat }: ChatMainProps): JSX.Element {
         return (
           <div
             className={`rounded-2xl overflow-hidden transition-all duration-200 ${msg.isOwn
-                ? "bg-gradient-to-br from-blue-500 to-blue-600 text-white"
-                : "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
+              ? "bg-gradient-to-br from-blue-500 to-blue-600 text-white"
+              : "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
               } ${isSelected ? "ring-2 ring-blue-500" : ""}`}
           >
             <Dialog>
@@ -370,8 +317,8 @@ export function ChatMain({ selectedChat }: ChatMainProps): JSX.Element {
         return (
           <div
             className={`rounded-2xl p-4 flex items-center gap-3 min-w-[220px] transition-all duration-200 ${msg.isOwn
-                ? "bg-gradient-to-br from-blue-500 to-blue-600 text-white"
-                : "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
+              ? "bg-gradient-to-br from-blue-500 to-blue-600 text-white"
+              : "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
               } ${isSelected ? "ring-2 ring-blue-500" : ""}`}
           >
             <Button
@@ -402,8 +349,8 @@ export function ChatMain({ selectedChat }: ChatMainProps): JSX.Element {
         return (
           <div
             className={`rounded-2xl p-4 transition-all duration-200 ${msg.isOwn
-                ? "bg-gradient-to-br from-blue-500 to-blue-600 text-white"
-                : "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
+              ? "bg-gradient-to-br from-blue-500 to-blue-600 text-white"
+              : "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
               } ${isSelected ? "ring-2 ring-blue-500" : ""}`}
           >
             <div className="flex items-center gap-3">
@@ -430,8 +377,8 @@ export function ChatMain({ selectedChat }: ChatMainProps): JSX.Element {
         return (
           <div
             className={`rounded-2xl p-4 max-w-[400px] transition-all duration-200 ${msg.isOwn
-                ? "bg-gradient-to-br from-blue-500 to-blue-600 text-white"
-                : "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
+              ? "bg-gradient-to-br from-blue-500 to-blue-600 text-white"
+              : "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
               } ${isSelected ? "ring-2 ring-blue-500" : ""}`}
           >
             <p className="text-sm leading-relaxed">{msg.content}</p>
@@ -459,6 +406,19 @@ export function ChatMain({ selectedChat }: ChatMainProps): JSX.Element {
         </div>
       </div>
     )
+  }
+
+  const handleSendMessage = (message: string): void => {
+    setMessages((prev) => [...prev, {
+      id: Date.now().toString(),
+      sender: "support",
+      content: message,
+      timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      isOwn: true,
+      status: "sent",
+      type: "text",
+      isStarred: false,
+    }])
   }
 
   return (
@@ -563,7 +523,7 @@ export function ChatMain({ selectedChat }: ChatMainProps): JSX.Element {
                           </AvatarFallback>
                         </Avatar>
                       )}
-                      <div className="min-w-0 relative">{renderMessage(msg)}</div>
+                      <div className="min-w-0 relative mt-2">{renderMessage(msg)}</div>
                     </div>
                   </div>
                 </ContextMenuTrigger>
@@ -631,81 +591,12 @@ export function ChatMain({ selectedChat }: ChatMainProps): JSX.Element {
           </Button>
         </div>
       )}
-      
+
       {/* Message Input */}
-      <div className="p-4 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-t shrink-0">
-        <div className="flex items-center gap-3">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button size="icon" variant="ghost" className="hover:bg-blue-50 dark:hover:bg-blue-900/20">
-                <Paperclip className="h-5 w-5" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start">
-              <DropdownMenuItem onClick={() => fileInputRef.current?.click()}>
-                <ImageIcon className="h-4 w-4 mr-2" />
-                Photo & Video
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => fileInputRef.current?.click()}>
-                <File className="h-4 w-4 mr-2" />
-                Document
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          <input
-            ref={fileInputRef}
-            type="file"
-            className="hidden"
-            accept="image/*,video/*,.pdf,.doc,.docx,.txt"
-            onChange={handleFileUpload}
-          />
-
-          <div className="flex-1 relative">
-            <Input
-              placeholder="Type a message..."
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              onKeyPress={(e) => e.key === "Enter" && !isRecording && handleSendMessage()}
-              className="pr-12 rounded-full border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500"
-              disabled={isRecording}
-            />
-            <Button
-              size="icon"
-              variant="ghost"
-              className="absolute right-1 top-1/2 transform -translate-y-1/2 hover:bg-blue-50 dark:hover:bg-blue-900/20"
-            >
-              <Smile className="h-4 w-4" />
-            </Button>
-          </div>
-
-          {message.trim() ? (
-            <Button
-              onClick={handleSendMessage}
-              disabled={isRecording}
-              className="rounded-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700"
-            >
-              <Send className="h-4 w-4" />
-            </Button>
-          ) : (
-            <Button
-              size="icon"
-              variant={isRecording ? "destructive" : "default"}
-              className={`rounded-full ${isRecording
-                  ? "bg-red-500 hover:bg-red-600"
-                  : "bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700"
-                }`}
-              onMouseDown={startRecording}
-              onMouseUp={stopRecording}
-              onMouseLeave={stopRecording}
-              onTouchStart={startRecording}
-              onTouchEnd={stopRecording}
-            >
-              <Mic className="h-4 w-4" />
-            </Button>
-          )}
-        </div>
-      </div>
+      <ChatInput
+        chatRoomId={parseInt(selectedChat)}
+        onSendMessage={handleSendMessage}
+      />
     </div>
   )
 }

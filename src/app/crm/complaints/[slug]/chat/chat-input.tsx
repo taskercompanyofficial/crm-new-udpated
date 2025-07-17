@@ -9,7 +9,7 @@ import { API_URL, MESSAGE_CHAT_MESSAGES } from '@/lib/apiEndPoints'
 import { useSession } from 'next-auth/react'
 import { revalidate } from '@/actions/revalidate'
 
-export default function ChatInput({ chatRoomId }: { chatRoomId: number }) {
+export default function ChatInput({ chatRoomId, onSendMessage }: { chatRoomId: number, onSendMessage: (message: string) => void }) {
     const { data: session } = useSession();
     const [message, setMessage] = useState('');
     const [isRecording, setIsRecording] = useState(false);
@@ -18,6 +18,8 @@ export default function ChatInput({ chatRoomId }: { chatRoomId: number }) {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const mediaPreviewRef = useRef<HTMLDivElement>(null);
     const [isTyping, setIsTyping] = useState(false);
+    const [recordingTime, setRecordingTime] = useState(0);
+    const recordingInterval = useRef<NodeJS.Timeout>();
 
     const handleSendMessage = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -30,14 +32,14 @@ export default function ChatInput({ chatRoomId }: { chatRoomId: number }) {
             const formData = new FormData();
             formData.append('chat_room_id', chatRoomId.toString());
             formData.append('sender_type', 'support');
-            
+
             if (mediaFile) {
                 formData.append('media', mediaFile);
-                formData.append('type', mediaFile.type.startsWith('image/') ? 'image' : 
-                                     mediaFile.type.startsWith('audio/') ? 'audio' : 
-                                     mediaFile.type.startsWith('video/') ? 'video' : 'file');
+                formData.append('type', mediaFile.type.startsWith('image/') ? 'image' :
+                    mediaFile.type.startsWith('audio/') ? 'audio' :
+                        mediaFile.type.startsWith('video/') ? 'video' : 'file');
             }
-            
+
             if (trimmed) {
                 formData.append('message', trimmed);
                 formData.append('type', mediaFile ? 'mixed' : 'text');
@@ -52,6 +54,7 @@ export default function ChatInput({ chatRoomId }: { chatRoomId: number }) {
             revalidate({ path: `/crm/complaints/${chatRoomId}` })
             setMessage('');
             setMediaFile(null);
+            onSendMessage(trimmed);
         } catch (error) {
             console.error("Message send failed", error);
         } finally {
@@ -92,12 +95,16 @@ export default function ChatInput({ chatRoomId }: { chatRoomId: number }) {
             mediaRecorder.start();
             setIsRecording(true);
 
+            recordingInterval.current = setInterval(() => {
+                setRecordingTime((prev) => prev + 1);
+            }, 1000);
+
             // Stop recording after 1 minute
             setTimeout(() => {
                 if (mediaRecorder.state === 'recording') {
                     mediaRecorder.stop();
                     stream.getTracks().forEach(track => track.stop());
-                    setIsRecording(false);
+                    stopRecording();
                 }
             }, 60000);
         } catch (error) {
@@ -107,18 +114,28 @@ export default function ChatInput({ chatRoomId }: { chatRoomId: number }) {
 
     const stopRecording = () => {
         setIsRecording(false);
+        if (recordingInterval.current) {
+            clearInterval(recordingInterval.current);
+        }
+        setRecordingTime(0);
+    };
+
+    const formatRecordingTime = (seconds: number): string => {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}:${secs.toString().padStart(2, "0")}`;
     };
 
     return (
         <div className="p-4 border-t bg-background/95 backdrop-blur-sm">
-            <input 
-                type="file" 
+            <input
+                type="file"
                 ref={fileInputRef}
                 onChange={handleFileSelect}
                 accept="image/*,video/*,audio/*,application/*"
                 className="hidden"
             />
-            
+
             {mediaFile && (
                 <div ref={mediaPreviewRef} className="mb-2 p-2 bg-muted rounded-md flex items-center justify-between">
                     <span className="text-sm truncate">{mediaFile.name}</span>
@@ -152,6 +169,7 @@ export default function ChatInput({ chatRoomId }: { chatRoomId: number }) {
                     onClick={isRecording ? stopRecording : startRecording}
                 >
                     <Mic className="h-4 w-4" />
+                    {isRecording && <span className="absolute -top-6 text-xs">{formatRecordingTime(recordingTime)}</span>}
                 </Button>
 
                 <div className="flex-1 relative">
