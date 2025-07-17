@@ -88,7 +88,16 @@ interface ChatData {
 export function ChatMain({ selectedChat }: ChatMainProps): JSX.Element {
   const { data: session } = useSession()
   const token = session?.user?.token
-  const { data: chatData } = useFetch<ChatData>(`${API_URL}${MESSAGE_CHAT_ROOMS}/${selectedChat}`, token)
+  const [refresh, setRefresh] = useState(false);
+  const { data: chatData } = useFetch<ChatData>(`${API_URL}${MESSAGE_CHAT_ROOMS}/${selectedChat}`, token, refresh)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setRefresh(prev => !prev);
+    }, 10000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const [messages, setMessages] = useState<Message[]>([])
   const [isRecording, setIsRecording] = useState<boolean>(false)
@@ -99,7 +108,6 @@ export function ChatMain({ selectedChat }: ChatMainProps): JSX.Element {
   const [replyingTo, setReplyingTo] = useState<Message | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const recordingInterval = useRef<NodeJS.Timeout>()
-
   // Transform API messages to component format
   const transformApiMessage = (apiMsg: ApiMessage): Message => {
     return {
