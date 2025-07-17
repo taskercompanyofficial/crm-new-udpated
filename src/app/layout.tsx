@@ -79,9 +79,6 @@ export default function RootLayout({
                 />
                 <JotaiProvider>{children}</JotaiProvider>
               </div>
-              <div className="fixed bottom-4 right-4">
-                <ModeToggle />
-              </div>
               <ToastContainer
                 position="top-center"
                 autoClose={5000}

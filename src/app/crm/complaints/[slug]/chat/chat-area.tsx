@@ -411,7 +411,7 @@ export default function ChatArea({ messages = [], slug }: ChatAreaProps) {
         }
         return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
     };
-
+    
     const renderMessage = useCallback((msg: Message, index: number) => {
         const isOwnMessage = msg.sender_type === 'support';
         const isSelected = selectedMessages.has(msg.id);
@@ -680,7 +680,10 @@ export default function ChatArea({ messages = [], slug }: ChatAreaProps) {
                         )}
                     </ScrollArea>
                 </CardContent>
-                <ChatInput chatRoomId={slug as unknown as number} />
+                <ChatInput
+                    chatRoomId={parseInt(slug as unknown as string)}
+                    onSendMessage={() => { }}
+                />
             </Card>
 
             {/* Media Modal */}

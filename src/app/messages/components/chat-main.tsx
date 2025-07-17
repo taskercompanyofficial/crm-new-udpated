@@ -46,6 +46,7 @@ import { useSession } from "next-auth/react"
 import useFetch from "@/hooks/usefetch"
 import { API_URL, MESSAGE_CHAT_ROOMS } from "@/lib/apiEndPoints"
 import ChatInput from "@/app/crm/complaints/[slug]/chat/chat-input"
+import { getImageUrl } from "@/lib/utils"
 
 interface ChatMainProps {
   selectedChat: string
@@ -88,16 +89,17 @@ interface ChatData {
 export function ChatMain({ selectedChat }: ChatMainProps): JSX.Element {
   const { data: session } = useSession()
   const token = session?.user?.token
-  const [refresh, setRefresh] = useState(false);
+  const [refresh, setRefresh] = useState(false)
   const { data: chatData } = useFetch<ChatData>(`${API_URL}${MESSAGE_CHAT_ROOMS}/${selectedChat}`, token, refresh)
 
+  // Auto-refresh chat data every 10 seconds
   useEffect(() => {
     const interval = setInterval(() => {
-      setRefresh(prev => !prev);
-    }, 10000);
+      setRefresh(prev => !prev)
+    }, 10000)
 
-    return () => clearInterval(interval);
-  }, []);
+    return () => clearInterval(interval)
+  }, [])
 
   const [messages, setMessages] = useState<Message[]>([])
   const [isRecording, setIsRecording] = useState<boolean>(false)
@@ -108,24 +110,24 @@ export function ChatMain({ selectedChat }: ChatMainProps): JSX.Element {
   const [replyingTo, setReplyingTo] = useState<Message | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const recordingInterval = useRef<NodeJS.Timeout>()
-  // Transform API messages to component format
-  const transformApiMessage = (apiMsg: ApiMessage): Message => {
-    return {
-      id: apiMsg.id.toString(),
-      sender: apiMsg.sender_type === "support" ? "Support" : "User",
-      content: apiMsg.message,
-      timestamp: new Date(apiMsg.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-      isOwn: apiMsg.sender_type === "support", // Assuming support messages are "own" messages
-      status: "read", // Default status
-      type: apiMsg.type as "text" | "image" | "file" | "voice",
-      fileUrl: apiMsg.media_url || undefined,
-      fileName: apiMsg.media_url ? apiMsg.media_url.split('/').pop() : undefined,
-      fileSize: undefined, // Not provided in API
-      duration: undefined, // Not provided in API
-      isStarred: false,
-    }
-  }
 
+  // Transform API messages to component format
+  const transformApiMessage = (apiMsg: ApiMessage): Message => ({
+    id: apiMsg.id.toString(),
+    sender: apiMsg.sender_type === "support" ? "Support" : "User",
+    content: apiMsg.message,
+    timestamp: new Date(apiMsg.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+    isOwn: apiMsg.sender_type === "support",
+    status: "read",
+    type: apiMsg.type as "text" | "image" | "file" | "voice",
+    fileUrl: apiMsg.media_url || undefined,
+    fileName: apiMsg.media_url ? apiMsg.media_url.split('/').pop() : undefined,
+    fileSize: undefined,
+    duration: undefined,
+    isStarred: false,
+  })
+
+  // Update messages when chat data changes
   useEffect(() => {
     if (chatData?.data?.messages) {
       const transformedMessages = chatData.data.messages.map(transformApiMessage)
@@ -133,10 +135,12 @@ export function ChatMain({ selectedChat }: ChatMainProps): JSX.Element {
     }
   }, [chatData])
 
+  // Auto-scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [messages])
 
+  // Handle recording timer
   useEffect(() => {
     if (isRecording) {
       recordingInterval.current = setInterval(() => {
@@ -155,8 +159,6 @@ export function ChatMain({ selectedChat }: ChatMainProps): JSX.Element {
       }
     }
   }, [isRecording])
-
-
 
   const stopRecording = (): void => {
     setIsRecording(false)
@@ -179,10 +181,8 @@ export function ChatMain({ selectedChat }: ChatMainProps): JSX.Element {
   }
 
   const toggleVoicePlay = (messageId: string): void => {
-    if (playingVoice === messageId) {
-      setPlayingVoice(null)
-    } else {
-      setPlayingVoice(messageId)
+    setPlayingVoice(playingVoice === messageId ? null : messageId)
+    if (playingVoice !== messageId) {
       setTimeout(() => setPlayingVoice(null), 3000)
     }
   }
@@ -195,16 +195,9 @@ export function ChatMain({ selectedChat }: ChatMainProps): JSX.Element {
 
   const handleMessageSelect = (messageId: string): void => {
     const newSelected = new Set(selectedMessages)
-    if (newSelected.has(messageId)) {
-      newSelected.delete(messageId)
-    } else {
-      newSelected.add(messageId)
-    }
+    newSelected.has(messageId) ? newSelected.delete(messageId) : newSelected.add(messageId)
     setSelectedMessages(newSelected)
-
-    if (newSelected.size === 0) {
-      setIsMultiSelectMode(false)
-    }
+    setIsMultiSelectMode(newSelected.size > 0)
   }
 
   const enterMultiSelectMode = (messageId: string): void => {
@@ -256,8 +249,8 @@ export function ChatMain({ selectedChat }: ChatMainProps): JSX.Element {
     }
   }
 
-  const getTypeColor = (type: string): string => {
-    switch (type) {
+  const getTypeColor = (status: string): string => {
+    switch (status) {
       case "open":
         return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
       case "closed":
@@ -271,21 +264,20 @@ export function ChatMain({ selectedChat }: ChatMainProps): JSX.Element {
 
   const renderMessage = (msg: Message): JSX.Element => {
     const isSelected = selectedMessages.has(msg.id)
+    const baseClasses = `rounded-2xl transition-all duration-200 ${msg.isOwn
+      ? "bg-gradient-to-br from-blue-500 to-blue-600 text-white"
+      : "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
+      } ${isSelected ? "ring-2 ring-blue-500" : ""}`
 
     switch (msg.type) {
       case "image":
         return (
-          <div
-            className={`rounded-2xl overflow-hidden transition-all duration-200 ${msg.isOwn
-              ? "bg-gradient-to-br from-blue-500 to-blue-600 text-white"
-              : "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
-              } ${isSelected ? "ring-2 ring-blue-500" : ""}`}
-          >
+          <div className={baseClasses}>
             <Dialog>
               <DialogTrigger asChild>
                 <div className="cursor-pointer hover:opacity-90 transition-opacity">
                   <img
-                    src={msg.fileUrl || "/placeholder.svg"}
+                    src={getImageUrl(msg.fileUrl || "")}
                     alt={msg.fileName || "Image"}
                     className="max-w-[280px] max-h-[200px] object-cover w-full"
                   />
@@ -294,7 +286,7 @@ export function ChatMain({ selectedChat }: ChatMainProps): JSX.Element {
               <DialogContent className="max-w-4xl max-h-[90vh] p-0 bg-black/95">
                 <div className="relative">
                   <img
-                    src={msg.fileUrl || "/placeholder.svg"}
+                    src={getImageUrl(msg.fileUrl || "")}
                     alt={msg.fileName || "Image"}
                     className="w-full h-auto max-h-[80vh] object-contain"
                   />
@@ -323,12 +315,7 @@ export function ChatMain({ selectedChat }: ChatMainProps): JSX.Element {
 
       case "voice":
         return (
-          <div
-            className={`rounded-2xl p-4 flex items-center gap-3 min-w-[220px] transition-all duration-200 ${msg.isOwn
-              ? "bg-gradient-to-br from-blue-500 to-blue-600 text-white"
-              : "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
-              } ${isSelected ? "ring-2 ring-blue-500" : ""}`}
-          >
+          <div className={`${baseClasses} p-4 flex items-center gap-3 min-w-[220px]`}>
             <Button
               size="icon"
               variant={msg.isOwn ? "secondary" : "default"}
@@ -355,12 +342,7 @@ export function ChatMain({ selectedChat }: ChatMainProps): JSX.Element {
 
       case "file":
         return (
-          <div
-            className={`rounded-2xl p-4 transition-all duration-200 ${msg.isOwn
-              ? "bg-gradient-to-br from-blue-500 to-blue-600 text-white"
-              : "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
-              } ${isSelected ? "ring-2 ring-blue-500" : ""}`}
-          >
+          <div className={`${baseClasses} p-4`}>
             <div className="flex items-center gap-3">
               <div className={`p-3 rounded-xl ${msg.isOwn ? "bg-white/20" : "bg-blue-100 dark:bg-blue-900/30"}`}>
                 <File className="h-6 w-6" />
@@ -383,12 +365,7 @@ export function ChatMain({ selectedChat }: ChatMainProps): JSX.Element {
 
       default:
         return (
-          <div
-            className={`rounded-2xl p-4 max-w-[400px] transition-all duration-200 ${msg.isOwn
-              ? "bg-gradient-to-br from-blue-500 to-blue-600 text-white"
-              : "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
-              } ${isSelected ? "ring-2 ring-blue-500" : ""}`}
-          >
+          <div className={`${baseClasses} p-4 max-w-[400px]`}>
             <p className="text-sm leading-relaxed">{msg.content}</p>
             <div className={`flex items-center gap-1 mt-2 ${msg.isOwn ? "justify-end" : "justify-start"}`}>
               {msg.isStarred && <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />}
@@ -417,7 +394,7 @@ export function ChatMain({ selectedChat }: ChatMainProps): JSX.Element {
   }
 
   const handleSendMessage = (message: string): void => {
-    setMessages((prev) => [...prev, {
+    const newMessage: Message = {
       id: Date.now().toString(),
       sender: "support",
       content: message,
@@ -426,7 +403,8 @@ export function ChatMain({ selectedChat }: ChatMainProps): JSX.Element {
       status: "sent",
       type: "text",
       isStarred: false,
-    }])
+    }
+    setMessages((prev) => [...prev, newMessage])
   }
 
   return (
