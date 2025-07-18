@@ -18,9 +18,6 @@ import { useSession } from "next-auth/react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TextareaInput } from "@/components/custom/TextareaInput";
 import { toast } from "react-toastify";
-import useForm from "@/hooks/use-form";
-import SubmitBtn from "@/components/custom/submit-button";
-import useFetch from "@/hooks/usefetch";
 import CustomerRemarks from "./remarks/cutomer-remarks";
 import CsoRemarks from "./remarks/cso-remarks";
 
@@ -136,7 +133,7 @@ export default function Remarks({ complaintId }: { complaintId: number }) {
   return (
     <div className="flex flex-col gap-4">
       <Tabs
-        defaultValue="all"
+        defaultValue="review"
         className="flex h-[500px] flex-col gap-4 sm:flex-row"
       >
         <TabsList className="flex min-w-[120px] flex-row justify-start space-y-2 bg-gray-100 sm:flex-col md:h-full md:min-w-[200px]">

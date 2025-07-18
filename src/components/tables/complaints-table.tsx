@@ -6,7 +6,7 @@ import TableFacedFilter from "../table/table-faced-filter";
 import { ComplaintStatusOptions } from "@/lib/otpions";
 import SearchInput from "../table/filters/search-input";
 import CreateBtn from "../table/create-btn";
-import { Edit, Eye, Redo2, RefreshCw } from "lucide-react";
+import { Edit, Eye, Feather, Redo2, RefreshCw } from "lucide-react";
 import { Button as ShadcnButton } from "../ui/button";
 import { useSession } from "next-auth/react";
 import useFetch from "@/hooks/usefetch";
@@ -22,6 +22,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import Remarks from "@/app/crm/complaints/components/remarks";
 
 export default function ComplaintsTable({
   data,
@@ -136,7 +137,21 @@ const View = ({ row }: { row: any }) => {
       >
         <span>View</span>
       </Button>
-
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button
+            type="text"
+            block
+            className="flex items-center justify-between px-3 py-2 hover:bg-gray-100"
+            icon={<Feather className="h-4 w-4" />}
+          >
+            <span>Get Feedback</span>
+          </Button>
+        </DialogTrigger>
+        <DialogContent fullscreen>
+          <Remarks complaintId={row.id} />
+        </DialogContent>
+      </Dialog>
       {(row.status === "closed" || row.status === "cancelled") && role === "administrator" && (
         <Dialog>
           <DialogTrigger asChild>

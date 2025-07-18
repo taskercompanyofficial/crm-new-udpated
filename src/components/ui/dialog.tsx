@@ -49,9 +49,10 @@ function DialogOverlay({
 function DialogContent({
   className,
   children,
+  fullscreen = false,
   ...props
-}: React.ComponentProps<typeof DialogPrimitive.Content>) {
-  const [isFullscreen, setIsFullscreen] = React.useState(false)
+}: React.ComponentProps<typeof DialogPrimitive.Content> & { fullscreen?: boolean }) {
+  const [isFullscreen, setIsFullscreen] = React.useState(fullscreen)
 
   return (
     <DialogPortal data-slot="dialog-portal">
@@ -60,7 +61,7 @@ function DialogContent({
         data-slot="dialog-content"
         className={cn(
           "bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed z-50 grid gap-3 border shadow-md duration-200",
-          isFullscreen 
+          isFullscreen
             ? "inset-0 rounded-none p-6"
             : "top-[50%] left-[50%] w-full max-w-[calc(100%-1rem)] translate-x-[-50%] translate-y-[-50%] rounded p-4 sm:max-w-md",
           className
