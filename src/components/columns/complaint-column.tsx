@@ -8,6 +8,7 @@ import Status from "@/components/table/status";
 import Link from "next/link";
 import ReadMore from "@/components/custom/readmore";
 import { Priority } from "../table/priority";
+import { StarIcon } from "lucide-react";
 
 export const ComplaintsColumns = (): ColumnDef<ComplaintsType>[] => [
   {
@@ -230,13 +231,31 @@ export const ComplaintsColumns = (): ColumnDef<ComplaintsType>[] => [
     },
   },
   {
-    accessorKey: "happy_call_remarks",
+    accessorKey: "customer_reviews",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Happy Call Remarks" />
+      <DataTableColumnHeader column={column} title="Customer Reviews" />
     ),
     cell: ({ row }) => {
-      const happy_call_remarks = row.getValue("happy_call_remarks") as string;
-      return <ReadMore text={happy_call_remarks} />;
+      const reviews = row.getValue("customer_reviews") as Array<{
+        rating: number;
+        reason: string | null;
+        comment: string | null;
+        created_at: string;
+      }>;
+
+      if (!reviews?.length) return <span className="text-sm text-muted-foreground">No reviews</span>;
+
+      return (
+        <div className="space-y-1.5">
+          {reviews.map((review, index) => (
+            <div key={index} className="text-xs">
+              {review.comment && (
+                <ReadMore text={review.comment} />
+              )}
+            </div>
+          ))}
+        </div>
+      );
     },
   },
   {
