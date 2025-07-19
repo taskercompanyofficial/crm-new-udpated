@@ -117,6 +117,10 @@ export const ComplaintsColumns = (): ColumnDef<ComplaintsType>[] => [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Reviews" />
     ),
+    cell: ({ row }) => {
+      const reviews = row.getValue("reviews") as string;
+      return <ReadMore text={reviews} />;
+    },
   },
   {
     accessorKey: "technician",
