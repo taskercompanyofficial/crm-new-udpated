@@ -112,7 +112,12 @@ export const ComplaintsColumns = (): ColumnDef<ComplaintsType>[] => [
       return <ReadMore text={description} />;
     },
   },
-
+  {
+    accessorKey: "reviews",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Reviews" />
+    ),
+  },
   {
     accessorKey: "technician",
     header: ({ column }) => (
@@ -230,34 +235,7 @@ export const ComplaintsColumns = (): ColumnDef<ComplaintsType>[] => [
       return <ReadMore text={working_details} />;
     },
   },
-  {
-    accessorKey: "customer_reviews",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Customer Reviews" />
-    ),
-    cell: ({ row }) => {
-      const reviews = row.getValue("customer_reviews") as Array<{
-        rating: number;
-        reason: string | null;
-        comment: string | null;
-        created_at: string;
-      }>;
 
-      if (!reviews?.length) return <span className="text-sm text-muted-foreground">No reviews</span>;
-
-      return (
-        <div className="space-y-1.5">
-          {reviews.map((review, index) => (
-            <div key={index} className="text-xs">
-              {review.comment && (
-                <ReadMore text={review.comment} />
-              )}
-            </div>
-          ))}
-        </div>
-      );
-    },
-  },
   {
     accessorKey: "created_at",
     header: ({ column }) => (
