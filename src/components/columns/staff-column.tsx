@@ -72,6 +72,12 @@ export const StaffCoulmns = (): ColumnDef<WorkersType>[] => [
     ),
   },
   {
+    accessorKey: "role",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Role" />
+    ),
+  },
+  {
     accessorKey: "created_at",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Created At" />
