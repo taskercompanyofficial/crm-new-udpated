@@ -11,6 +11,7 @@ import {
   Users,
   PackageSearch,
   MessagesSquare,
+  Image,
 } from "lucide-react";
 type Submenu = {
   href: string;
@@ -73,10 +74,10 @@ export function getMenuList(
           ],
         },
         {
-          href: "/crm/market-place",
-          label: "Market Place",
-          active: pathname === "/crm/market-place",
-          icon: Package,
+          href: "/crm/gallery",
+          label: "Gallery",
+          active: pathname === "/crm/gallery",
+          icon: Image,
           submenus: [],
         },
         {
