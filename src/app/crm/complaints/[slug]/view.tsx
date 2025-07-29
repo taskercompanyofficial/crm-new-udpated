@@ -572,7 +572,7 @@ export default function ViewComplaint({ complaint }: { complaint: any }) {
                             {isImage ? (
                               <a href={getImageUrl(file.document_path)} target="_blank" rel="noopener noreferrer" className="block">
                                 <div className="relative aspect-square overflow-hidden">
-                                  <Image
+                                  <img
                                     src={getImageUrl(file.document_path)}
                                     alt={file.document_type}
                                     fill
