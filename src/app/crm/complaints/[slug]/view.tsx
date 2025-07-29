@@ -575,7 +575,6 @@ export default function ViewComplaint({ complaint }: { complaint: any }) {
                                   <img
                                     src={getImageUrl(file.document_path)}
                                     alt={file.document_type}
-                                    fill
                                     className="object-cover transition-all duration-300 group-hover:scale-110"
                                   />
                                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
