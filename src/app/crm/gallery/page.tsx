@@ -168,11 +168,10 @@ export default function Gallery() {
                                     <Play className="w-12 h-12 text-white/80" />
                                 </div>
                             ) : (
-                                <Image
+                                <img
                                     src={getImageUrl(image.document_path)}
                                     alt={image.file_name}
-                                    fill
-                                    className="object-cover"
+                                    className="object-cover w-full h-full"
                                 />
                             )}
                         </div>
