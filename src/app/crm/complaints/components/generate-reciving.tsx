@@ -167,11 +167,7 @@ export default function ProductReceipt({ complaint, username, role }: Props) {
               <strong>UAN</strong> 0304-111-2717
             </p>
             <p style={{ ...addressStyle, margin: '0px' }}>
-              {complaint.branch_id === 1 
-                ? "St: 09 Iqbal Park DHA Main Boulevard Lahore" 
-                : complaint.branch_id === 2 
-                  ? "Dhok Kala Khan Service Road, National Highway, Rawalpindi"
-                  : "St: 09 Iqbal Park DHA Main Boulevard Lahore"}
+              Dhok Kala Khan Service Road, National Highway, Rawalpindi
             </p>
           </div>
           <div style={detailsRowStyle}>
