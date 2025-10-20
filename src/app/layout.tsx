@@ -9,7 +9,8 @@ import NextTopLoader from "nextjs-toploader";
 import { description, keywords, title } from "@/lib/Meta";
 import { JotaiProvider } from "@/providers/jotai-provider";
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
-import QueryProvider from "@/providers/query-provider";
+import QueryProvider from "@/providers/query-provider
+  
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -95,6 +96,7 @@ export default function RootLayout({
               </NuqsAdapter>
             </ThemeProvider>
           </QueryProvider>
+          <ModeToggle />
         </body>
       </html>
     </AuthProvider>
