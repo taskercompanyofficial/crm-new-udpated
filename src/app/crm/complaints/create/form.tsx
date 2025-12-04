@@ -105,7 +105,7 @@ export default function Form() {
       {
         onSuccess: (response) => {
           toast.success(response.message);
-          const url = `/crm/complaints/${response.data.complain_num}/edit`; 
+          const url = `/crm/complaints/${response.data.id}/edit`;
           router.push(url);
         },
         onError: (error) => {
