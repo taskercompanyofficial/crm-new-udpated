@@ -40,7 +40,7 @@ export function formatDate(
 }
 
 export const getImageUrl = (path: string): string => {
-  return `${Env.API_URL}/storage/public/${path}`;
+  return `${Env.API_URL}/storage/${path}`;
 };
 
 export function toSentenceCase(str: string) {
