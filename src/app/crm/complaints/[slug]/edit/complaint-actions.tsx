@@ -12,6 +12,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { copyToClipboard } from '@/hooks/copy-to-clipboard';
 import { GenerateBill } from '../../components/generate-bill';
 import JobDone from './job-done';
+import { ComplaintsType } from '@/types';
 
 interface ComplaintActionsProps {
   data: any;
@@ -29,6 +30,7 @@ interface ComplaintActionsProps {
   toggleAutoSave: () => void;
   errors: any;
   id: number;
+  complaint?: ComplaintsType
 }
 
 export default function ComplaintActions({
@@ -47,6 +49,7 @@ export default function ComplaintActions({
   toggleAutoSave,
   errors,
   id,
+  complaint
 }: ComplaintActionsProps) {
   return (
     <div className="bg-white dark:bg-slate-900 rounded-lg border border-muted shadow-sm">
@@ -119,7 +122,7 @@ export default function ComplaintActions({
           <Button
             variant="outline"
             size="sm"
-            onClick={() => copyToClipboard(data)}
+            onClick={() => copyToClipboard(complaint)}
             disabled={processing}
           >
             <ClipboardCopyIcon className="w-4 h-4" />

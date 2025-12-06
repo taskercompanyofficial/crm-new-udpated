@@ -19,13 +19,13 @@ export const copyToClipboard = (data: any | any[]) => {
 
 📦 *Product Details*
 *Product:* ${data.product || "N/A"}
-*Brand:* ${data.brand_id || "N/A"}
+*Brand:* ${data.brand.name || "N/A"}
 *Model:* ${data.model || "N/A"}
 *Serial (IND):* ${data.serial_number_ind || "N/A"}
 *Serial (OUD):* ${data.serial_number_oud || "N/A"}
 
 🔧 *Service Information*
-*Branch:* ${data.branch_id || "N/A"}
+*Branch:* ${data.branch.name || "N/A"}
 *Type:* ${data.complaint_type}
 *Complaint:* ${data.description}
 

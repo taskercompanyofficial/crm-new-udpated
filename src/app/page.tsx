@@ -1,11 +1,10 @@
 "use client";
 import { useUserDetails } from "@/lib/getUserInclient";
-import { useRouter } from "next/navigation";
+import { CloseOutlined, LoadingOutlined, MessageOutlined, SendOutlined } from "@ant-design/icons";
+import { Avatar, Button, Card, Col, Input, Layout, Row, Skeleton, Typography } from "antd";
 import Image from "next/image";
-import Link from "next/link";
-import { Button, Card, Layout, Row, Col, Typography, Alert, Skeleton, Modal, Input, Avatar } from "antd";
-import { MessageOutlined, SendOutlined, LoadingOutlined, CloseOutlined } from "@ant-design/icons";
-import { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 
 const { Content } = Layout;
 const { Title, Paragraph } = Typography;

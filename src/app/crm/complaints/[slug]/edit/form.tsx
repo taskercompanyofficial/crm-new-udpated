@@ -246,6 +246,7 @@ export default function Form({
         toggleAutoSave={toggleAutoSave}
         errors={errors}
         id={complaint?.id || 0}
+        complaint={complaint}
       />
       <ScrollArea>
         <ComplaintTabs

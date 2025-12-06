@@ -209,6 +209,8 @@ export type ComplaintsType = {
   cancellation_details: string | null;
   job_done: boolean;
   job_done_date: string | null;
+brand:BrandsType;
+  branch:BranchesType;
 };
 export type ComplaintDetailsType = {
   id: number;

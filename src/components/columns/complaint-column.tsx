@@ -1,14 +1,12 @@
-import React from "react";
-import { ColumnDef } from "@tanstack/react-table";
-import { Checkbox } from "@/components/ui/checkbox";
-import { ComplaintsType } from "@/types";
-import { formatDate } from "@/lib/utils";
+import ReadMore from "@/components/custom/readmore";
 import { DataTableColumnHeader } from "@/components/table/data-table-column-header";
 import Status from "@/components/table/status";
+import { Checkbox } from "@/components/ui/checkbox";
+import { formatDate } from "@/lib/utils";
+import { ComplaintsType } from "@/types";
+import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
-import ReadMore from "@/components/custom/readmore";
 import { Priority } from "../table/priority";
-import { StarIcon } from "lucide-react";
 
 export const ComplaintsColumns = (): ColumnDef<ComplaintsType>[] => [
   {
@@ -129,16 +127,24 @@ export const ComplaintsColumns = (): ColumnDef<ComplaintsType>[] => [
     ),
   },
   {
-    accessorKey: "brand_id",
+    accessorKey: "brand",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Brand Name" />
     ),
+    cell: ({ row }) => {
+      const brand = row.original.brand;
+      return <span>{brand?.name}</span>;
+    },
   },
   {
     accessorKey: "branch_id",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Branch Name" />
     ),
+    cell: ({ row }) => {
+      const branch = row.original.branch;
+      return <span>{branch?.name}</span>;
+    },
   },
   {
     accessorKey: "extra_numbers",
